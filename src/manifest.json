@@ -5,10 +5,11 @@
     "page": "background.html"
   },
   "browser_action": {
-    "default_popup": "popup.html"    
+    "default_popup": "popup.html",
+    "default_icon": "logo.png"
   },
   "icons": {
-    
+    "128": "icon.png"
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

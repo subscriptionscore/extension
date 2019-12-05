@@ -6,7 +6,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
-var fileExtensions = [
+const prodPlugins = [
+  // clean the build folder
+  new CleanWebpackPlugin(),
+]
+const fileExtensions = [
   'jpg',
   'jpeg',
   'png',
@@ -19,7 +23,7 @@ var fileExtensions = [
   'woff2'
 ];
 
-var options = {
+const options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
     popup: path.join(__dirname, 'src', 'js', 'popup', 'index.js'),
@@ -55,9 +59,8 @@ var options = {
     ]
   },
   resolve: {},
-  plugins: [
-    // clean the build folder
-    new CleanWebpackPlugin(),
+  plugins: [    
+    ...prodPlugins,
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new CopyWebpackPlugin([
@@ -73,6 +76,10 @@ var options = {
             })
           );
         }
+      },
+      {
+        from: 'assets',
+        to: 'assets'
       }
     ]),
     new HtmlWebpackPlugin({
@@ -90,7 +97,8 @@ var options = {
       filename: 'background.html',
       chunks: ['background']
     }),
-    new WriteFilePlugin()
+    new WriteFilePlugin(),
+    new webpack.optimize.ModuleConcatenationPlugin()
   ]
 };
 
