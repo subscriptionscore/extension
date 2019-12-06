@@ -66,14 +66,16 @@ const options = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
-              sourceMap: isDevelopment
+              modules: {
+                localIdentName: `[name]__[local]___[hash:base64:5]`
+              },
+              sourceMap: !!isDevelopment
             }
           },
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: isDevelopment
+              sourceMap: !!isDevelopment
             }
           }
         ]
@@ -87,7 +89,7 @@ const options = {
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: isDevelopment
+              sourceMap: !!isDevelopment
             }
           }
         ]

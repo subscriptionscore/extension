@@ -1,5 +1,9 @@
 export const initialState = {
-  page: 'appearance'
+  page: 'appearance',
+  settings: {
+    colorSet: 'normal',
+    darkMode: false
+  }
 };
 
 export default (state = initialState, action) => {
@@ -8,6 +12,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         page: action.data
+      };
+    }
+    case 'save-setting': {
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          ...action.data
+        }
       };
     }
     default:

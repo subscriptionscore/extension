@@ -1,0 +1,57 @@
+@import '../../../../styles/common/colors.scss';
+
+.section {
+  margin-bottom: 40px;
+}
+
+.ranks {
+  display: flex;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+  }
+
+  &:before {
+    width: 16px;
+    height: 16px;
+    border: 1px solid $color-highlight;
+    background: white;
+    left: 0;
+  }
+  &:after {
+    width: 8px;
+    height: 8px;
+    background-color: $color-highlight;
+    left: 4px;
+    visibility: hidden;
+  }
+}
+
+.rank {
+  margin-right: 10px;
+}
+
+.radio {
+  display: none;
+
+  &:checked ~ .ranks:after {
+    visibility: visible;
+  }
+}
+
+.dark-mode {
+  display: flex;
+
+  h2 {
+    margin-left: 5px;
+  }
+}
