@@ -5,11 +5,14 @@ const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const prodPlugins = [
   // clean the build folder
-  new CleanWebpackPlugin(),
-]
+  new CleanWebpackPlugin()
+];
 const fileExtensions = [
   'jpg',
   'jpeg',
@@ -55,11 +58,46 @@ const options = {
         test: /\.html$/,
         loader: 'html-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.module\.s[ac]ss$/,
+        loader: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: isDevelopment
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: isDevelopment
+            }
+          }
+        ]
+      },
+      {
+        test: /\.s[ac]ss$/,
+        exclude: /\.module.(s[ac]ss)$/,
+        loader: [
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: isDevelopment
+            }
+          }
+        ]
       }
     ]
   },
-  resolve: {},
-  plugins: [    
+  resolve: {
+    extensions: ['.js', '.jsx', '.scss']
+  },
+  plugins: [
     ...prodPlugins,
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
@@ -98,7 +136,11 @@ const options = {
       chunks: ['background']
     }),
     new WriteFilePlugin(),
-    new webpack.optimize.ModuleConcatenationPlugin()
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new MiniCssExtractPlugin({
+      filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+      chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+    })
   ]
 };
 

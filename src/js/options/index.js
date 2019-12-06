@@ -1,8 +1,9 @@
+import OptionPages from './pages';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 const App = () => {
-  return <div>Hello world</div>;
+  return <OptionPages />;
 };
 
 ReactDOM.render(<App />, document.querySelector('#root'));

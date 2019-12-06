@@ -46,6 +46,8 @@
     "write-file-webpack-plugin": "^4.5.1"
   },
   "dependencies": {
-    
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0"
   }
 }
