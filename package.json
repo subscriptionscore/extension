@@ -21,6 +21,7 @@
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
+    "@welldone-software/why-did-you-render": "^3.3.9",
     "babel": "^6.23.0",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
@@ -46,8 +47,11 @@
     "write-file-webpack-plugin": "^4.5.1"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "email-addresses": "^3.1.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
+    "psl": "^1.6.0",
     "sass-loader": "^8.0.0"
   }
 }

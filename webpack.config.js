@@ -13,6 +13,7 @@ const prodPlugins = [
   // clean the build folder
   new CleanWebpackPlugin()
 ];
+
 const fileExtensions = [
   'jpg',
   'jpeg',
@@ -29,7 +30,10 @@ const fileExtensions = [
 const options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
-    popup: path.join(__dirname, 'src', 'js', 'popup', 'index.js'),
+    popup: [
+      'babel-polyfill',
+      path.join(__dirname, 'src', 'js', 'popup', 'index.js')
+    ],
     options: path.join(__dirname, 'src', 'js', 'options', 'index.js'),
     background: path.join(__dirname, 'src', 'js', 'background', 'index.js')
   },
@@ -98,7 +102,7 @@ const options = {
     extensions: ['.js', '.jsx', '.scss']
   },
   plugins: [
-    ...prodPlugins,
+    ...(isDevelopment ? [] : prodPlugins),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new CopyWebpackPlugin([

@@ -1,0 +1,19 @@
+.popup {
+  background-color: white;
+  color: black;
+  padding: 1em 2em;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #333639;
+    color: white;
+  }
+}
+
+.loading {
+}
+
+.addresses {
+  ul {
+    list-style: none;
+  }
+}
