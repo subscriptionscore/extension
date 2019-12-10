@@ -1,0 +1,54 @@
+@import '../../../styles/common/colors.scss';
+
+.container {
+  height: 100%;
+  padding: 40px;
+  display: flex;
+
+  h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  h2 {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
+
+.nav {
+  width: 200px;
+  list-style: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.item {
+  cursor: pointer;
+  transition: background-color 150ms ease-in-out;
+
+  &:hover {
+    .link {
+      background-color: $color-grey-light;
+    }
+  }
+}
+
+.link {
+  display: block;
+  padding: 0 10px;
+  line-height: 32px;
+  margin-bottom: 5px;
+  color: $color-grey-dark;
+  border-left: 3px solid transparent;
+
+  &.active {
+    background: $color-grey-light;
+    border-color: $color-highlight;
+    color: $color-font-dark;
+  }
+}
+
+.content {
+  flex: 1;
+  margin-left: 50px;
+}
