@@ -1,0 +1,39 @@
+@import './colors.scss';
+
+$themes: (
+  light: (
+    backgroundColor: $background--light,
+    textColor: $text--light,
+    navColor: $nav-text--light,
+    navActiveBackground: $nav-active-background--light
+  ),
+  dark: (
+    backgroundColor: $background--dark,
+    textColor: $text--dark,
+    navColor: $nav-text--dark,
+    navActiveBackground: $nav-active-background--dark
+  )
+);
+
+@mixin themify($themes: $themes) {
+  @each $theme, $map in $themes {
+    [data-color-theme='#{$theme}'] & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge(
+          $theme-map,
+          (
+            $key: $value
+          )
+        ) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function theme($key) {
+  @return map-get($theme-map, $key);
+}

@@ -1,0 +1,13 @@
+@import '../../styles/common/themes.scss';
+
+.app-theme-wrapper,
+.app-container {
+  height: 100%;
+}
+
+.app-container {
+  @include themify() {
+    color: theme('textColor');
+    background-color: theme('backgroundColor');
+  }
+}

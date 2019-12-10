@@ -28,24 +28,31 @@ $rating-scale: (
   @if $colorblind {
     &[data-rank='A+'] {
       background-color: map-get($colorblind-scale, 'A+');
+      color: lighten(map-get($colorblind-scale, 'A'), 75%);
     }
     &[data-rank='A'] {
       background-color: map-get($colorblind-scale, 'A');
+      color: darken(map-get($colorblind-scale, 'A'), 50%);
     }
     &[data-rank='B'] {
       background-color: map-get($colorblind-scale, 'B');
+      color: darken(map-get($colorblind-scale, 'B'), 65%);
     }
     &[data-rank='C'] {
       background-color: map-get($colorblind-scale, 'C');
+      color: darken(map-get($colorblind-scale, 'C'), 75%);
     }
     &[data-rank='D'] {
       background-color: map-get($colorblind-scale, 'D');
+      color: darken(map-get($colorblind-scale, 'D'), 75%);
     }
     &[data-rank='E'] {
       background-color: map-get($colorblind-scale, 'E');
+      color: darken(map-get($colorblind-scale, 'E'), 55%);
     }
     &[data-rank='F'] {
       background-color: map-get($colorblind-scale, 'F');
+      color: lighten(map-get($colorblind-scale, 'F'), 85%);
     }
     &[data-rank='unknown'] {
       opacity: 0.25;
@@ -57,24 +64,31 @@ $rating-scale: (
   } @else {
     &[data-rank='A+'] {
       background-color: map-get($normal-scale, 'A+');
+      color: lighten(map-get($normal-scale, 'A'), 75%);
     }
     &[data-rank='A'] {
       background-color: map-get($normal-scale, 'A');
+      color: darken(map-get($normal-scale, 'A'), 50%);
     }
     &[data-rank='B'] {
       background-color: map-get($normal-scale, 'B');
+      color: darken(map-get($normal-scale, 'B'), 65%);
     }
     &[data-rank='C'] {
       background-color: map-get($normal-scale, 'C');
+      color: darken(map-get($normal-scale, 'C'), 75%);
     }
     &[data-rank='D'] {
       background-color: map-get($normal-scale, 'D');
+      color: darken(map-get($normal-scale, 'D'), 75%);
     }
     &[data-rank='E'] {
       background-color: map-get($normal-scale, 'E');
+      color: darken(map-get($normal-scale, 'E'), 55%);
     }
     &[data-rank='F'] {
       background-color: map-get($normal-scale, 'F');
+      color: lighten(map-get($normal-scale, 'F'), 85%);
     }
     &[data-rank='unknown'] {
       opacity: 0.25;
