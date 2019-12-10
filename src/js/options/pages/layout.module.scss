@@ -1,4 +1,5 @@
 @import '../../../styles/common/colors.scss';
+@import '../../../styles/common/themes.scss';
 
 .container {
   height: 100%;
@@ -28,23 +29,30 @@
 
   &:hover {
     .link {
-      background-color: $color-grey-light;
+      @include themify() {
+        background-color: theme('navActiveBackground');
+      }
     }
   }
 }
 
 .link {
+  @include themify() {
+    color: theme('navColor');
+  }
+
   display: block;
   padding: 0 10px;
   line-height: 32px;
   margin-bottom: 5px;
-  color: $color-grey-dark;
   border-left: 3px solid transparent;
 
   &.active {
-    background: $color-grey-light;
+    @include themify() {
+      background-color: theme('navActiveBackground');
+    }
+
     border-color: $color-highlight;
-    color: $color-font-dark;
   }
 }
 

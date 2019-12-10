@@ -5,8 +5,16 @@ $color-lowlight: #0f1832;
 $color-dark-bg: #292b36;
 $color-extra-dark-bg: #1d1e26;
 
-$color-grey-light: #f1f1f1;
-$color-grey-dark: #606367;
-
 $color-font-dark: #353739;
 $color-font-light: #efefef;
+
+// Themes
+$background--light: #ffffff;
+$text--light: #353739;
+$nav-active-background--light: #f1f1f1;
+$nav-text--light: #606367;
+
+$background--dark: #323639;
+$text--dark: #efefef;
+$nav-active-background--dark: #4b4b4b;
+$nav-text--dark: #dbdcdc;
