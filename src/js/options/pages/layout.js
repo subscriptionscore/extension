@@ -1,5 +1,4 @@
-import React, { createContext, useCallback, useMemo, useReducer } from 'react';
-import reducer, { initialState } from './reducer';
+import React, { useMemo, useState } from 'react';
 
 import Appearance from './appearance';
 import Billing from './billing';
@@ -22,51 +21,40 @@ const NAV_ITEMS = [
   }
 ];
 
-export const OptionsContext = createContext({ state: initialState });
-
 const Layout = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [page, setPage] = useState('appearance');
 
   const content = useMemo(() => {
-    if (state.page === 'appearance') {
+    if (page === 'appearance') {
       return <Appearance />;
     }
-    if (state.page === 'preferences') {
+    if (page === 'preferences') {
       return <Preferences />;
     }
-    if (state.page === 'billing') {
+    if (page === 'billing') {
       return <Billing />;
     }
-  }, [state.page]);
-
-  const changePage = useCallback(
-    page => {
-      dispatch({ type: 'set-page', data: page });
-    },
-    [dispatch]
-  );
+  }, [page]);
 
   return (
-    <OptionsContext.Provider value={{ state, dispatch }}>
-      <div className={styles.container}>
-        <ul className={styles.nav}>
-          {NAV_ITEMS.map(item => {
-            const classes = cx({
-              [styles.link]: true,
-              [styles.active]: state.page === item.value
-            });
-            return (
-              <li key={item.value} className={styles.item}>
-                <a className={classes} onClick={() => changePage(item.value)}>
-                  {item.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-        <div className={styles.content}>{content}</div>
-      </div>
-    </OptionsContext.Provider>
+    <div className={styles.container}>
+      <ul className={styles.nav}>
+        {NAV_ITEMS.map(item => {
+          const classes = cx({
+            [styles.link]: true,
+            [styles.active]: page === item.value
+          });
+          return (
+            <li key={item.value} className={styles.item}>
+              <a className={classes} onClick={() => setPage(item.value)}>
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      <div className={styles.content}>{content}</div>
+    </div>
   );
 };
 

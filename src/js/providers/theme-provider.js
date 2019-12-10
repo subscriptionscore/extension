@@ -3,25 +3,22 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState
 } from 'react';
 
-const ThemeContext = createContext({
-  theme: 'light',
-  toggle: () => {}
-});
+import { useUser } from './user-provider';
+
+const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  const [user, dispatch] = useUser();
 
-  // on mount
-  useEffect(() => {
-    const lsTheme = localStorage.getItem('theme');
-    if (lsTheme) {
-      console.log('local storage theme', lsTheme);
-      setTheme(lsTheme);
-    }
-  }, []);
+  const initialTheme = user.settings.darkMode ? 'dark' : 'light';
+
+  const [theme, setTheme] = useState(initialTheme);
+
+  const value = useMemo(() => ({ theme, toggle: onToggle }), [theme, onToggle]);
 
   // useEffect(() => {
 
@@ -34,18 +31,11 @@ export const ThemeProvider = ({ children }) => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     console.log('toggle theme to:', newTheme);
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-  }, [theme]);
+    dispatch({ type: 'save-setting', data: { darkMode: theme === 'dark' } });
+  }, [dispatch, theme]);
 
   return (
-    <ThemeContext.Provider
-      value={{
-        theme: theme,
-        toggle: () => onToggle()
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };
 
