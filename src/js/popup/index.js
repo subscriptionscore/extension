@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import useGraphql from '../hooks/use-graphql';
 import './reset.scss';
 import styles from './popup.module.scss';
+import { getCurrentTabUrl } from '../utils/tabs';
 
 const gql = `
 query Search($domain: String!) {
@@ -19,6 +20,7 @@ query Search($domain: String!) {
 }
 `;
 const App = ({ domain = 'linkedin.com' }) => {
+  getCurrentTabUrl();
   const options = useMemo(
     () => ({
       variables: {

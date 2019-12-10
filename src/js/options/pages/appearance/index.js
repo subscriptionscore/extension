@@ -1,10 +1,10 @@
 import React, { useCallback, useContext } from 'react';
 
-import { FormCheckbox } from '../../../../components/form';
+import { FormCheckbox } from '../../../components/form';
 import { OptionsContext } from '../layout';
-import Rank from '../../../../components/rank';
+import Rank from '../../../components/rank';
 import styles from './appearance.module.scss';
-import { useTheme } from '../../../../utils/providers/theme-provider';
+import { useTheme } from '../../../providers/theme-provider';
 
 const AppearancePage = () => {
   return (

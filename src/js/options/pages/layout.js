@@ -4,8 +4,8 @@ import reducer, { initialState } from './reducer';
 import Appearance from './appearance';
 import Billing from './billing';
 import Preferences from './preferences';
-import cx from 'classnames';
 import styles from './layout.module.scss';
+import cx from '../../utils/classnames';
 
 const NAV_ITEMS = [
   {

@@ -1,7 +1,7 @@
 import '../../styles/global/layout.scss';
 import './app.scss';
 
-import { ThemeProvider, useTheme } from '../../utils/providers/theme-provider';
+import { ThemeProvider, useTheme } from '../providers/theme-provider';
 
 import Layout from './pages/layout';
 import React from 'react';

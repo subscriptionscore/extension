@@ -1,5 +1,5 @@
 import React from 'react';
-import cx from 'classnames';
+import cx from '../../utils/classnames';
 import styles from './rank.module.scss';
 
 const Rank = ({ rank = 'A+', colorblind = false }) => {
