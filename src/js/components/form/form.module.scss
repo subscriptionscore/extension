@@ -1,4 +1,30 @@
 @import '../../../styles/common/colors.scss';
+@import '../../../styles/common/themes.scss';
+
+.input {
+  border-radius: 5px;
+  height: 42px;
+  padding: 0 5px;
+  margin-bottom: 0;
+  width: 100%;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: 0;
+  border: 2px solid transparent;
+  -webkit-appearance: none;
+
+  @include themify() {
+    background-color: theme('inputBackground');
+    border-color: theme('inputBorder');
+    color: theme('textColor');
+  }
+
+  &:focus {
+    @include themify() {
+      border-color: theme('inputBorderFocus');
+    }
+  }
+}
 
 .checkbox {
   display: none;

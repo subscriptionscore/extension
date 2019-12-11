@@ -1,0 +1,27 @@
+@import '../../../../styles/common/colors.scss';
+
+.section {
+  margin-bottom: 40px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+
+  input {
+    flex: 1;
+    margin-right: 10px;
+  }
+}
+
+.key {
+  margin: 5px 0;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.035);
+  border-radius: 4px;
+  display: inline-block;
+  margin-right: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  font-size: 14px;
+}

@@ -16,3 +16,16 @@ export const FormCheckbox = ({ id, name, label, ...props }) => {
     </label>
   );
 };
+
+export const FormInput = ({ id, name, label, ...props }) => {
+  return (
+    <input
+      {...props}
+      id={id}
+      type="text"
+      name={name}
+      className={styles.input}
+      spellCheck="false"
+    />
+  );
+};
