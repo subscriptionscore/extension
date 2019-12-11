@@ -1,6 +1,7 @@
 @import '../../../styles/mixins/ranks.scss';
 
 .rank {
+  display: inline-block;
 }
 
 .value {
@@ -22,4 +23,11 @@
   &.colorblind {
     @include ranking($colorblind: true);
   }
+}
+
+.compact {
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+  line-height: 20px;
 }
