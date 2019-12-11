@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     // todo temporary
-    const user = localStorage.getItem('user');
+    const user = get();
     dispatch({ type: 'load', data: user });
   }, []);
 
@@ -47,17 +47,36 @@ const reducer = (state = initialState, action) => {
       };
     }
     case 'save-setting': {
-      return {
+      const newState = {
         ...state,
         settings: {
           ...state.settings,
           ...action.data
         }
       };
+      set(newState);
+      return newState;
+    }
+    case 'set-license-key': {
+      const newState = {
+        ...state,
+        licenseKey: action.data
+      };
+      set(newState);
+      return newState;
     }
     default:
       return state;
   }
 };
+
+function set(user) {
+  localStorage.setItem('user', JSON.stringify(user));
+}
+function get() {
+  const userStr = localStorage.getItem('user');
+  if (userStr) return JSON.parse(userStr);
+  return {};
+}
 
 export const useUser = () => useContext(UserContext);

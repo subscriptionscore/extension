@@ -3,10 +3,14 @@ import React, { useMemo, useState } from 'react';
 import Appearance from './appearance';
 import Billing from './billing';
 import Preferences from './preferences';
-import styles from './layout.module.scss';
 import cx from '../../utils/classnames';
+import styles from './layout.module.scss';
 
 const NAV_ITEMS = [
+  {
+    label: 'Billing',
+    value: 'billing'
+  },
   {
     label: 'Appearance',
     value: 'appearance'
@@ -14,25 +18,21 @@ const NAV_ITEMS = [
   {
     label: 'Preferences',
     value: 'preferences'
-  },
-  {
-    label: 'Billing',
-    value: 'billing'
   }
 ];
 
 const Layout = () => {
-  const [page, setPage] = useState('appearance');
+  const [page, setPage] = useState(NAV_ITEMS[0].value);
 
   const content = useMemo(() => {
+    if (page === 'billing') {
+      return <Billing />;
+    }
     if (page === 'appearance') {
       return <Appearance />;
     }
     if (page === 'preferences') {
       return <Preferences />;
-    }
-    if (page === 'billing') {
-      return <Billing />;
     }
   }, [page]);
 

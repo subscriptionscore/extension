@@ -1,0 +1,47 @@
+@import '../../../styles/common/colors.scss';
+@import '../../../styles/common/themes.scss';
+
+.btn {
+  @include themify() {
+    background-color: theme('buttonBackground');
+  }
+
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  transition: box-shadow ease-in-out 150ms, transform ease-in-out 150ms,
+    background-color ease-in-out 50ms;
+  cursor: pointer;
+  transform: translateY(0);
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  outline: none;
+
+  &:hover {
+    @include themify() {
+      background-color: theme('buttonBackgroundHover');
+    }
+  }
+  &:focus {
+    @include themify() {
+      background-color: theme('buttonBackgroundHover');
+    }
+  }
+
+  &:disabled {
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0.5;
+    color: rgba(0, 0, 0, 0.8);
+    cursor: no-drop;
+
+    &:hover,
+    &:focus {
+      background: rgba(0, 0, 0, 0.5);
+    }
+  }
+}
