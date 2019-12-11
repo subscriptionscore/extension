@@ -6,18 +6,32 @@ import React, {
   useReducer
 } from 'react';
 
+import useStorage from '../hooks/use-storage';
+
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [, setStorage] = useStorage();
 
   const value = useMemo(() => [state, dispatch], [state, dispatch]);
 
   useEffect(() => {
-    // todo temporary
-    const user = get();
-    dispatch({ type: 'load', data: user });
+    getUser()
+      .then(data => {
+        dispatch({ type: 'load', data });
+      })
+      .catch(() => {
+        console.error('no loady');
+      });
   }, []);
+
+  // set the chrome storage
+  useEffect(() => {
+    if (!state.loading) {
+      setStorage(state.settings);
+    }
+  }, [setStorage, state.loading, state.settings]);
 
   const content = useMemo(() => (state.loading ? null : children), [
     children,
@@ -26,7 +40,7 @@ export const UserProvider = ({ children }) => {
   return <UserContext.Provider value={value}>{content}</UserContext.Provider>;
 };
 
-const initialState = {
+export const initialState = {
   settings: {
     darkMode: false,
     colorSet: 'normal'
@@ -47,36 +61,27 @@ const reducer = (state = initialState, action) => {
       };
     }
     case 'save-setting': {
-      const newState = {
+      return {
         ...state,
         settings: {
           ...state.settings,
           ...action.data
         }
       };
-      set(newState);
-      return newState;
     }
     case 'set-license-key': {
-      const newState = {
+      return {
         ...state,
         licenseKey: action.data
       };
-      set(newState);
-      return newState;
     }
     default:
       return state;
   }
 };
 
-function set(user) {
-  localStorage.setItem('user', JSON.stringify(user));
-}
-function get() {
-  const userStr = localStorage.getItem('user');
-  if (userStr) return JSON.parse(userStr);
-  return {};
+function getUser() {
+  return new Promise(resolve => resolve(initialState));
 }
 
 export const useUser = () => useContext(UserContext);
