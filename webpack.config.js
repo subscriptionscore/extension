@@ -34,8 +34,14 @@ const options = {
       'babel-polyfill',
       path.join(__dirname, 'src', 'js', 'popup', 'index.js')
     ],
-    options: path.join(__dirname, 'src', 'js', 'options', 'index.js'),
-    background: path.join(__dirname, 'src', 'js', 'background', 'index.js')
+    options: [
+      'babel-polyfill',
+      path.join(__dirname, 'src', 'js', 'options', 'index.js')
+    ],
+    background: [
+      'babel-polyfill',
+      path.join(__dirname, 'src', 'js', 'background', 'chrome', 'index.js')
+    ]
   },
   output: {
     path: path.join(__dirname, 'build'),

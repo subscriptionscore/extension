@@ -11,6 +11,9 @@
     "node": true,
     "es6": true
   },
+  "globals": {
+    "chrome": true
+  },
   "settings": {
     "react": {
       "version": "16.7.0-alpha.2"

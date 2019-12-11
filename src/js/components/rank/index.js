@@ -2,7 +2,7 @@ import React from 'react';
 import cx from '../../utils/classnames';
 import styles from './rank.module.scss';
 
-const Rank = ({ rank = 'A+', colorblind = false }) => {
+const Rank = ({ rank = 'A+', compact, colorblind = false }) => {
   return (
     <div className={styles.rank}>
       <span
@@ -10,10 +10,11 @@ const Rank = ({ rank = 'A+', colorblind = false }) => {
         className={cx({
           [styles.value]: true,
           [styles.normal]: !colorblind,
-          [styles.colorblind]: colorblind
+          [styles.colorblind]: colorblind,
+          [styles.compact]: compact
         })}
       >
-        {rank}
+        {rank === 'unknown' ? '?' : rank}
       </span>
     </div>
   );

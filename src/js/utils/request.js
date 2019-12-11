@@ -1,4 +1,4 @@
-const GRAPHQL_URL = 'https://api.leavemealone.app/graphql';
+const GRAPHQL_URL = 'http://localhost:2346/graphql';
 
 async function doRequest(url, params = {}) {
   const method = params.method || 'GET';
