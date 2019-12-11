@@ -1,0 +1,30 @@
+@import '../../styles/common/colors.scss';
+
+.domain-score {
+  background-color: $background--dark;
+
+  h2 {
+    padding: 10px 20px;
+  }
+}
+
+.loading {
+}
+
+.content {
+  background-color: $background--darker;
+  ul {
+    list-style: none;
+  }
+}
+
+.title {
+  font-size: 16px;
+  margin-left: 0.5em;
+}
+
+.empty {
+  background-color: $background--dark;
+  padding: 15px 20px;
+  min-height: 80px;
+}

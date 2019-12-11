@@ -2,14 +2,12 @@ import React, { useMemo } from 'react';
 import Rank from '../components/rank';
 
 import './reset.scss';
-import styles from './popup.module.scss';
-
-import useBadge from '../hooks/use-badge';
+import styles from './domain-score.module.scss';
+import Score from '../components/score';
 import useDomainScore from '../hooks/use-domain-score';
 
 export default function DomainScore({ url }) {
   const { value, loading, error, domain } = useDomainScore(url);
-  useBadge({ url, data: value ? value.searchDomain : null });
 
   const content = useMemo(() => {
     if (loading) {
@@ -25,7 +23,10 @@ export default function DomainScore({ url }) {
               <span className={styles.title}>{domain}</span>
             </h2>
           </div>
-          <div className={styles.empty}>No data for this domain</div>
+          <div className={styles.content}>
+            We don't have enough data to score this website's subscription
+            emails yet.
+          </div>
         </>
       );
     }
@@ -43,23 +44,20 @@ export default function DomainScore({ url }) {
             <span className={styles.title}>{normalizedDomain || domain}</span>
           </h2>
         </div>
-        <div className={styles.addresses}>
-          {/* <Score emailScore={scoreData} /> */}
-          <ul>
+        <div className={styles.content}>
+          <Score emailScore={scoreData} />
+          {/* <ul>
             {scores.map(({ rank, score, email }) => (
               <li key={email}>
                 <span>{rank}</span>
                 <span>{email}</span>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </>
     );
   }, [domain, error, loading, value]);
-  return (
-    <div className={styles.popup}>
-      <div className={styles.domainScore}>{content}</div>
-    </div>
-  );
+
+  return <div className={styles.domainScore}>{content}</div>;
 }

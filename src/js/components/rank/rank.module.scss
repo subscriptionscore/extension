@@ -17,11 +17,11 @@
   border: 2px solid rgba(0, 0, 0, 0.25);
 
   &.normal {
-    @include ranking();
+    @include ranking($useBg: true, $useFont: true);
   }
 
   &.colorblind {
-    @include ranking($colorblind: true);
+    @include ranking($useBg: true, $useFont: true, $colorblind: true);
   }
 }
 

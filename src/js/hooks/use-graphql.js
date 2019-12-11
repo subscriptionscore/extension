@@ -22,5 +22,4 @@ function useGraphQl(query, options = {}) {
   return state;
 }
 
-useGraphQl.whyDidYouRender = true;
 export default useGraphQl;

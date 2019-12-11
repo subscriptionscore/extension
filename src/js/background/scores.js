@@ -1,6 +1,8 @@
 import { graphqlRequest } from '../utils/request';
+import isMailProvider from '../utils/is-mail-provider';
 
-// just get the rank
+// just get the rank to show in the
+// subscription score icon
 const gql = `
 query Search($domain: String!) {
   searchDomain(domain: $domain) {    
@@ -9,15 +11,9 @@ query Search($domain: String!) {
 }
 `;
 
-const mailProviders = ['gmail.com', 'outlook.com', 'yahoo.com'];
-
 export async function getDomainScore(url) {
   const { hostname: domain } = new URL(url);
-  // if the url is a common mail provider then
-  // don't do the lookup as scores from every
-  // person who sends from @gmail.com is not useful
-  const isMailProvider = mailProviders.includes(domain);
-  if (isMailProvider) {
+  if (isMailProvider(domain)) {
     return null;
   }
   const options = {
