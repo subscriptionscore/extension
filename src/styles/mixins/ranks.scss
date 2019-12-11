@@ -24,35 +24,73 @@ $rating-scale: (
   high: #ec6d62
 );
 
-@mixin ranking($colorblind: false) {
+@function rankColor($rank) {
+  @return map-get($normal-scale, $rank);
+}
+
+@function ratingColor($rating) {
+  @return map-get($rating-scale, $rating);
+}
+
+@mixin rating() {
+  @each $rating, $color in $rating-scale {
+    &[data-rating='#{$rating}'] {
+      color: $color;
+    }
+  }
+}
+@mixin trend() {
+  display: inline-block;
+  width: 10px;
+  height: 15px;
+  border: 10px solid transparent;
+  border-left-width: 6px;
+  border-right-width: 6px;
+  margin: 0 10px;
+
+  &[data-trend='up'] {
+    border-bottom-color: map-get($rating-scale, 'low');
+  }
+
+  &[data-trend='down'] {
+    border-top-color: map-get($rating-scale, 'high');
+  }
+}
+
+@mixin rankingFontColor {
+  @each $rank, $color in $normal-scale {
+    &[data-rank='#{$rank}'] {
+      color: $color;
+    }
+  }
+}
+
+@mixin ranking($useBg: true, $useFont: true, $colorblind: false) {
+  $scale: $normal-scale;
   @if $colorblind {
+    $scale: $colorblind-scale;
+  }
+  @if $useBg {
     &[data-rank='A+'] {
-      background-color: map-get($colorblind-scale, 'A+');
-      color: lighten(map-get($colorblind-scale, 'A'), 75%);
+      background-color: map-get($scale, 'A+');
     }
     &[data-rank='A'] {
-      background-color: map-get($colorblind-scale, 'A');
-      color: darken(map-get($colorblind-scale, 'A'), 50%);
+      background-color: map-get($scale, 'A');
     }
     &[data-rank='B'] {
-      background-color: map-get($colorblind-scale, 'B');
-      color: darken(map-get($colorblind-scale, 'B'), 65%);
+      background-color: map-get($scale, 'B');
     }
     &[data-rank='C'] {
-      background-color: map-get($colorblind-scale, 'C');
-      color: darken(map-get($colorblind-scale, 'C'), 75%);
+      background-color: map-get($scale, 'C');
     }
     &[data-rank='D'] {
-      background-color: map-get($colorblind-scale, 'D');
-      color: darken(map-get($colorblind-scale, 'D'), 75%);
+      background-color: map-get($scale, 'D');
     }
     &[data-rank='E'] {
-      background-color: map-get($colorblind-scale, 'E');
-      color: darken(map-get($colorblind-scale, 'E'), 55%);
+      background-color: map-get($scale, 'E');
     }
     &[data-rank='F'] {
-      background-color: map-get($colorblind-scale, 'F');
-      color: lighten(map-get($colorblind-scale, 'F'), 85%);
+      background-color: map-get($scale, 'F');
     }
     &[data-rank='unknown'] {
       opacity: 0.25;
@@ -61,38 +99,31 @@ $rating-scale: (
         content: '-';
       }
     }
-  } @else {
+  }
+  @if $useFont {
     &[data-rank='A+'] {
-      background-color: map-get($normal-scale, 'A+');
-      color: lighten(map-get($normal-scale, 'A'), 75%);
+      color: lighten(map-get($scale, 'A'), 75%);
     }
     &[data-rank='A'] {
-      background-color: map-get($normal-scale, 'A');
-      color: darken(map-get($normal-scale, 'A'), 50%);
+      color: darken(map-get($scale, 'A'), 50%);
     }
     &[data-rank='B'] {
-      background-color: map-get($normal-scale, 'B');
-      color: darken(map-get($normal-scale, 'B'), 65%);
+      color: darken(map-get($scale, 'B'), 65%);
     }
     &[data-rank='C'] {
-      background-color: map-get($normal-scale, 'C');
-      color: darken(map-get($normal-scale, 'C'), 75%);
+      color: darken(map-get($scale, 'C'), 75%);
     }
     &[data-rank='D'] {
-      background-color: map-get($normal-scale, 'D');
-      color: darken(map-get($normal-scale, 'D'), 75%);
+      color: darken(map-get($scale, 'D'), 75%);
     }
     &[data-rank='E'] {
-      background-color: map-get($normal-scale, 'E');
-      color: darken(map-get($normal-scale, 'E'), 55%);
+      color: darken(map-get($scale, 'E'), 55%);
     }
     &[data-rank='F'] {
-      background-color: map-get($normal-scale, 'F');
-      color: lighten(map-get($normal-scale, 'F'), 85%);
+      color: lighten(map-get($scale, 'F'), 85%);
     }
     &[data-rank='unknown'] {
       opacity: 0.25;
-      background-color: rgb(241, 239, 239);
       &:after {
         content: '-';
       }

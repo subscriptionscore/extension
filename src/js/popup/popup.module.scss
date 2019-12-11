@@ -1,24 +1,11 @@
 .popup {
-  background-color: white;
+  background-color: #333639;
+  border: 1px solid rgba(black, 0.5);
   color: black;
-  padding: 2em 1.5em;
   min-width: 320px;
 
   @media (prefers-color-scheme: dark) {
     background-color: #333639;
     color: white;
   }
-}
-
-.loading {
-}
-
-.addresses {
-  ul {
-    list-style: none;
-  }
-}
-.title {
-  font-size: 16px;
-  margin-left: 0.5em;
 }

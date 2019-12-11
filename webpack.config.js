@@ -76,6 +76,7 @@ const options = {
           {
             loader: 'css-loader',
             options: {
+              localsConvention: 'camelCase',
               modules: {
                 localIdentName: `[name]__[local]___[hash:base64:5]`
               },
