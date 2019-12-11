@@ -1,10 +1,9 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 
 import { FormCheckbox } from '../../../components/form';
-import { OptionsContext } from '../layout';
 import Rank from '../../../components/rank';
 import styles from './appearance.module.scss';
-import { useTheme } from '../../../providers/theme-provider';
+import { useUser } from '../../../providers/user-provider';
 
 const AppearancePage = () => {
   return (
@@ -18,15 +17,13 @@ const AppearancePage = () => {
 export default AppearancePage;
 
 function Colors() {
-  const { state, dispatch } = useContext(OptionsContext);
-  const { theme, toggle: toggleTheme } = useTheme();
+  const [{ settings }, dispatch] = useUser();
 
-  const { colorSet, darkMode } = state.settings;
+  const { colorSet, darkMode } = settings;
 
   const onChangeDarkMode = useCallback(() => {
     dispatch({ type: 'save-setting', data: { darkMode: !darkMode } });
-    toggleTheme();
-  }, [darkMode, dispatch, toggleTheme]);
+  }, [darkMode, dispatch]);
 
   return (
     <form>
