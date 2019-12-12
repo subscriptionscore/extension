@@ -1,3 +1,4 @@
+import { listPreferences, setPreferences } from '../utils/preferences';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 function useStorage(query) {
@@ -9,7 +10,7 @@ function useStorage(query) {
 
   useEffect(() => {
     setState({ loading: true });
-    getPreferences()
+    listPreferences()
       .then(response => {
         setState({ loading: false, value: response });
       })
@@ -25,28 +26,6 @@ function useStorage(query) {
 
   const value = useMemo(() => [state, set], [state, set]);
   return value;
-}
-
-function getPreferences() {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(['preferences'], result => {
-      const prefs = result['preferences'];
-      console.log('[storage]: got preferences', prefs);
-      if (!prefs) {
-        return reject();
-      }
-      return resolve(prefs);
-    });
-  });
-}
-
-function setPreferences(prefs) {
-  return new Promise(resolve => {
-    chrome.storage.sync.set({ preferences: prefs }, () => {
-      console.log('[storage]: set preferences', prefs);
-      return resolve(prefs);
-    });
-  });
 }
 
 export default useStorage;
