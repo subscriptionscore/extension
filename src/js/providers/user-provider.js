@@ -12,22 +12,15 @@ import useStorage from '../hooks/use-storage';
 
 const UserContext = createContext(null);
 
-const gql = `
-query User($licenceKey: String!) {
-  getUserByLicenceKey(licenceKey: $licenceKey) {
-    id
-    email
-    licenceKey
-    preferences
-  }
-}
-`;
-
 const initialState = {
-  preferences: {
-    darkMode: false,
-    colorSet: 'normal'
+  user: {
+    preferences: {
+      darkMode: false,
+      colorSet: 'normal'
+    }
   },
+  licenceKey: '',
+  loading: false,
   initialised: false,
   loaded: false
 };
@@ -43,11 +36,16 @@ export const UserProvider = ({ children }) => {
   // initialise the preferences
   useEffect(() => {
     if (!prefsLoading && !state.initialised) {
-      // console.log('has chrome prefs', initialPreferences);
       let data = initialState;
       if (initialPreferences) {
-        data = { ...data, preferences: initialPreferences };
+        data = {
+          ...data,
+          user: {
+            preferences: initialPreferences
+          }
+        };
       }
+      console.log('prefs loaded not yet init');
       dispatch({
         type: 'init',
         data
@@ -65,38 +63,39 @@ export const UserProvider = ({ children }) => {
   // set the chrome storage on preferences changed
   useEffect(() => {
     if (state.initialised) {
-      setStorage(state.preferences);
+      setStorage(state.user.preferences);
     }
-  }, [setStorage, state.initialised, state.preferences]);
+  }, [setStorage, state.initialised, state.user.preferences]);
 
   // save the user on preferences changed
   useEffect(() => {
     if (state.loaded) {
-      console.log('saving user prefss', state.preferences);
+      console.log('saving user prefs', state.user.preferences);
     }
-  }, [state.loaded, state.preferences]);
+  }, [state.loaded, state.user.preferences]);
 
   const value = useMemo(() => [state, dispatch], [state, dispatch]);
 
   const onSubmitLicenceKey = useCallback(
     async licenceKey => {
       try {
-        let user = await getUser(licenceKey);
-        // if user doesn't have any prefs then use the ones from Chrome
-        if (!user.preferences) {
-          user = {
-            ...user,
-            preferences: state.preferences
-          };
+        dispatch({ type: 'reset' });
+        const user = await getUser(licenceKey);
+        if (!user) {
+          throw new Error('invalid licence key');
         }
-        console.log('loading user', user);
-        dispatch({ type: 'load', data: user });
+        const mappedUser = mapUser(user, state);
+        console.log('loading user', mappedUser);
+        dispatch({ type: 'load', data: mappedUser });
       } catch (err) {
-        console.error('no loady, what do?');
         console.error(err);
+        dispatch({
+          type: 'error',
+          data: `That licence key is invalid, please try again or contact support.`
+        });
       }
     },
-    [state.preferences]
+    [state]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
@@ -117,16 +116,35 @@ const reducer = (state = initialState, action) => {
       const user = data;
       return {
         ...state,
-        ...user,
+        user,
+        loading: false,
+        error: false,
         loaded: true
+      };
+    }
+    case 'error': {
+      return {
+        ...state,
+        loading: false,
+        error: action.data
+      };
+    }
+    case 'reset': {
+      return {
+        ...state,
+        loading: false,
+        error: false
       };
     }
     case 'save-setting': {
       return {
         ...state,
-        preferences: {
-          ...state.preferences,
-          ...action.data
+        user: {
+          ...state.user,
+          preferences: {
+            ...state.user.preferences,
+            ...action.data
+          }
         }
       };
     }
@@ -141,15 +159,41 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-function getUser(licenceKey) {
-  return new Promise(resolve =>
-    resolve({
-      id: '1234',
-      email: 'danielle@squarecat.io',
-      licenseKey: licenceKey
-    })
-  );
-  // return graphqlRequest(gql, { licenceKey });
+const gql = `
+query User($licenceKey: ID!) {
+  getUserByLicenceKey(licenceKey: $licenceKey) {
+    email
+    licenceKey
+    preferences {
+      darkMode
+      colorSet
+    }
+  }
+}
+`;
+
+async function getUser(licenceKey) {
+  const options = { variables: { licenceKey } };
+  const { getUserByLicenceKey } = await graphqlRequest(gql, options);
+  return getUserByLicenceKey;
+}
+
+function mapUser(user, state) {
+  const preferences = Object.keys(user.preferences).reduce((out, key) => {
+    const pref = user.preferences[key];
+    if (pref !== null) {
+      return {
+        ...out,
+        [key]: pref
+      };
+    }
+    return out;
+  }, state.user.preferences);
+
+  return {
+    ...user,
+    preferences
+  };
 }
 
 export const useUser = () => useContext(UserContext);

@@ -78,3 +78,24 @@
   line-height: 24px;
   user-select: none;
 }
+
+.form-notification {
+  padding: 5px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  margin: 10px auto 0 auto;
+
+  p {
+    margin: 0;
+  }
+}
+
+.form-error {
+  @extend .form-notification;
+  color: white;
+  border: 1px solid darken($color-bg-error, 10%);
+  background-color: $color-bg-error;
+}

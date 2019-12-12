@@ -29,3 +29,9 @@ export const FormInput = ({ id, name, label, ...props }) => {
     />
   );
 };
+
+export const FormError = ({ children }) => (
+  <div className={styles['form-error']}>
+    <span>{children}</span>
+  </div>
+);

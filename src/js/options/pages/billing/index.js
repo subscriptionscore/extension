@@ -1,7 +1,8 @@
+import { FormError, FormInput } from '../../../components/form';
 import React, { useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
-import { FormInput } from '../../../components/form';
+import { graphqlRequest } from '../../../utils/request';
 import styles from './billing.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
@@ -15,10 +16,14 @@ const BillingPage = () => {
 };
 
 function LicenceKey() {
-  const [{ licenceKey, email }, dispatch] = useUser();
-  const [newLicenceKey, setNewLicenceKey] = useState('');
+  const [{ user, loading, error }, dispatch] = useUser();
+  const { licenceKey, email } = user;
 
+  const [value, setValue] = useState('');
   const content = useMemo(() => {
+    if (loading) {
+      return <p>Loading user...</p>;
+    }
     if (licenceKey) {
       return (
         <div>
@@ -32,8 +37,9 @@ function LicenceKey() {
       );
     }
 
-    const onSave = () => {
-      dispatch({ type: 'set-licence-key', data: newLicenceKey });
+    const onSave = async () => {
+      console.log('on save license key...', value);
+      dispatch({ type: 'set-licence-key', data: value });
     };
     return (
       <form
@@ -47,16 +53,17 @@ function LicenceKey() {
         <div className={styles['input-container']}>
           <FormInput
             name="licenceKey"
-            value={newLicenceKey}
-            onChange={e => setNewLicenceKey(e.currentTarget.value)}
+            value={value}
+            onChange={e => setValue(e.currentTarget.value)}
           />
-          <Button type="submit" as="button" disabled={!newLicenceKey}>
+          <Button type="submit" as="button" disabled={!value}>
             Save
           </Button>
         </div>
+        {error ? <FormError>{error}</FormError> : null}
       </form>
     );
-  }, [dispatch, email, licenceKey, newLicenceKey]);
+  }, [dispatch, email, error, licenceKey, loading, value]);
 
   return content;
 }

@@ -16,8 +16,8 @@ const AppContainer = () => {
 };
 
 const App = () => {
-  const [{ preferences }] = useUser();
-  const theme = preferences.darkMode ? 'dark' : 'light';
+  const [{ user }] = useUser();
+  const theme = user.preferences.darkMode ? 'dark' : 'light';
 
   return (
     <div className="app-theme-wrapper" data-color-theme={theme}>
