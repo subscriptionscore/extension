@@ -58,11 +58,12 @@ const UnsubDifficulty = ({ unsubscribeDifficulty }) => {
 };
 
 const UnsubRate = ({ unsubscribeRate }) => {
+  let percentageLabel;
   let percentage = unsubscribeRate * 100;
   if (percentage < 1) {
-    percentage = '<1';
+    percentageLabel = '<1';
   } else {
-    percentage = Math.floor(percentage);
+    percentageLabel = Math.floor(percentage);
   }
   let rank;
   if (percentage < 10) {
@@ -75,7 +76,7 @@ const UnsubRate = ({ unsubscribeRate }) => {
   return (
     <>
       <span data-rating={rank} className={styles.value}>
-        {percentage}%
+        {percentageLabel}%
       </span>
       <span className={styles.desc}>of people unsubscribe</span>
     </>
@@ -87,7 +88,7 @@ const Frequency = ({ frequencyPerWeek }) => {
   let frequencyDesc;
   let frequencyRank;
   if (frequencyPerWeek < 0.25) {
-    frequencyValue = '<1';
+    frequencyValue = '0-1';
     frequencyDesc = 'email per month';
     frequencyRank = 'low';
   } else if (frequencyPerWeek < 1) {

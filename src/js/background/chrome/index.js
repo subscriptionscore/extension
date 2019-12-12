@@ -16,14 +16,16 @@ chrome.tabs.onActivated.addListener(() => {
 // fetch a new rank for the current url
 async function onPageChange(url) {
   chrome.browserAction.setBadgeText({ text: '' });
-  if (!url.startsWith('https://')) {
+  if (!/http(s)?:\/\//.test(url)) {
     chrome.browserAction.disable();
   } else {
     chrome.browserAction.enable();
     const domainScore = await getDomainScore(url);
     if (domainScore) {
       const { rank } = domainScore;
-      chrome.browserAction.setBadgeText({ text: rank });
+      if (rank) {
+        chrome.browserAction.setBadgeText({ text: rank });
+      }
     }
   }
   chrome.browserAction.setBadgeBackgroundColor({

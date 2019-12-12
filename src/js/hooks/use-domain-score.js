@@ -23,7 +23,7 @@ query Search($domain: String!) {
 
 export default url => {
   const { hostname: domain } = new URL(url);
-  if (!url.startsWith('https://')) {
+  if (!/http(s)?:\/\//.test(url)) {
     return { loading: false, error: null, value: {}, domain };
   }
   const options = useMemo(
