@@ -1,4 +1,4 @@
-import { listPreferences, setPreferences } from '../utils/preferences';
+import { getPreferences, setPreferences } from '../utils/preferences';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 function useStorage(query) {
@@ -10,7 +10,7 @@ function useStorage(query) {
 
   useEffect(() => {
     setState({ loading: true });
-    listPreferences()
+    getPreferences()
       .then(response => {
         setState({ loading: false, value: response });
       })

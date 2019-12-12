@@ -1,4 +1,4 @@
-export function listPreferences() {
+export function getPreferences() {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(['preferences'], result => {
       const prefs = result['preferences'];
@@ -12,7 +12,7 @@ export function listPreferences() {
 }
 
 export async function getPreference(pref) {
-  const prefs = await listPreferences();
+  const prefs = await getPreferences();
   if (!prefs) return null;
   return prefs[pref];
 }
