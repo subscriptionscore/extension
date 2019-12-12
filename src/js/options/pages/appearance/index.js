@@ -17,9 +17,9 @@ const AppearancePage = () => {
 export default AppearancePage;
 
 function Colors() {
-  const [{ settings }, dispatch] = useUser();
+  const [{ preferences }, dispatch] = useUser();
 
-  const { colorSet, darkMode } = settings;
+  const { colorSet, darkMode } = preferences;
 
   const onChangeDarkMode = useCallback(() => {
     dispatch({ type: 'save-setting', data: { darkMode: !darkMode } });
