@@ -83,8 +83,16 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     if (state.loaded) {
       console.log('saving user prefs', state.user.preferences);
+      const { licenceKey, preferences } = state.user;
+      updateUser(licenceKey, preferences)
+        .then(prefs => {
+          console.log('[user]: saved prefs on server', prefs);
+        })
+        .catch(err => {
+          console.error('failed to save prefs on server.. what do?', err);
+        });
     }
-  }, [state.loaded, state.user.preferences]);
+  }, [state.loaded, state.user, state.user.preferences]);
 
   const value = useMemo(() => [state, dispatch], [state, dispatch]);
 
@@ -171,7 +179,7 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-const gql = `
+const getGql = `
 query User($licenceKey: ID!) {
   getUserByLicenceKey(licenceKey: $licenceKey) {
     email
@@ -186,21 +194,42 @@ query User($licenceKey: ID!) {
 
 async function getUser(licenceKey) {
   const options = { variables: { licenceKey } };
-  const { getUserByLicenceKey } = await graphqlRequest(gql, options);
+  const { getUserByLicenceKey } = await graphqlRequest(getGql, options);
   return getUserByLicenceKey;
 }
 
-function mapUser(user, state) {
-  const preferences = Object.keys(user.preferences).reduce((out, key) => {
-    const pref = user.preferences[key];
-    if (pref !== null) {
-      return {
-        ...out,
-        [key]: pref
-      };
+const updateGql = `
+mutation User($licenceKey: ID!, $preferences: Preferences!) {
+  updateUserPreferences(licenceKey: $licenceKey, preferences: $preferences) {
+    preferences {
+      darkMode
+      colorSet
     }
-    return out;
-  }, state.user.preferences);
+  }
+}
+`;
+async function updateUser(licenceKey, preferences) {
+  const options = { variables: { licenceKey, preferences } };
+  const { updateUserPreferences } = await graphqlRequest(updateGql, options);
+  return updateUserPreferences;
+}
+
+function mapUser(user, state) {
+  let preferences;
+  if (!user.preferences) {
+    preferences = state.user.preferences;
+  } else {
+    preferences = Object.keys(user.preferences).reduce((out, key) => {
+      const pref = user.preferences[key];
+      if (pref !== null) {
+        return {
+          ...out,
+          [key]: pref
+        };
+      }
+      return out;
+    }, state.user.preferences);
+  }
 
   return {
     ...user,
