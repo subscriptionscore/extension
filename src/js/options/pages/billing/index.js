@@ -15,20 +15,25 @@ const BillingPage = () => {
 };
 
 function LicenceKey() {
-  const [{ licenceKey }, dispatch] = useUser();
-  const [val, setVal] = useState('');
+  const [{ licenceKey, email }, dispatch] = useUser();
+  const [newLicenceKey, setNewLicenceKey] = useState('');
 
   const content = useMemo(() => {
     if (licenceKey) {
       return (
-        <p>
-          Licence key: <span className={styles.key}>{licenceKey}</span>
-        </p>
+        <div>
+          <p>
+            Licence key: <span className={styles.key}>{licenceKey}</span>
+          </p>
+          <p>
+            Email address: <span className={styles.key}>{email}</span>
+          </p>
+        </div>
       );
     }
 
     const onSave = () => {
-      dispatch({ type: 'set-licence-key', data: val });
+      dispatch({ type: 'set-licence-key', data: newLicenceKey });
     };
     return (
       <form
@@ -42,16 +47,16 @@ function LicenceKey() {
         <div className={styles['input-container']}>
           <FormInput
             name="licenceKey"
-            value={val}
-            onChange={e => setVal(e.currentTarget.value)}
+            value={newLicenceKey}
+            onChange={e => setNewLicenceKey(e.currentTarget.value)}
           />
-          <Button type="submit" as="button" disabled={!val}>
+          <Button type="submit" as="button" disabled={!newLicenceKey}>
             Save
           </Button>
         </div>
       </form>
     );
-  }, [dispatch, licenceKey, val]);
+  }, [dispatch, email, licenceKey, newLicenceKey]);
 
   return content;
 }
