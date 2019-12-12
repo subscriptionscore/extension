@@ -9,39 +9,39 @@ const BillingPage = () => {
   return (
     <>
       <h1>Billing</h1>
-      <LicenseKey />
+      <LicenceKey />
     </>
   );
 };
 
-function LicenseKey() {
-  const [{ licenseKey }, dispatch] = useUser();
+function LicenceKey() {
+  const [{ licenceKey }, dispatch] = useUser();
   const [val, setVal] = useState('');
 
   const content = useMemo(() => {
-    if (licenseKey) {
+    if (licenceKey) {
       return (
         <p>
-          License key: <span className={styles.key}>{licenseKey}</span>
+          Licence key: <span className={styles.key}>{licenceKey}</span>
         </p>
       );
     }
 
     const onSave = () => {
-      dispatch({ type: 'set-license-key', data: val });
+      dispatch({ type: 'set-licence-key', data: val });
     };
     return (
       <form
-        id="license-key-form"
+        id="licence-key-form"
         onSubmit={e => {
           e.preventDefault();
           return onSave();
         }}
       >
-        <p>Enter license key...</p>
+        <p>Enter licence key...</p>
         <div className={styles['input-container']}>
           <FormInput
-            name="licenseKey"
+            name="licenceKey"
             value={val}
             onChange={e => setVal(e.currentTarget.value)}
           />
@@ -51,7 +51,7 @@ function LicenseKey() {
         </div>
       </form>
     );
-  }, [dispatch, licenseKey, val]);
+  }, [dispatch, licenceKey, val]);
 
   return content;
 }
