@@ -27,31 +27,40 @@ const initialState = {
 
 export const UserProvider = ({ children }) => {
   const [
-    { value: initialPreferences, loading: prefsLoading },
+    { value: storage = {}, loading: storageLoading },
     setStorage
   ] = useStorage();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // initialise the preferences
+  // initialise the user from storage
   useEffect(() => {
-    if (!prefsLoading && !state.initialised) {
+    if (!storageLoading && !state.initialised) {
+      const { preferences, licenceKey } = storage;
       let data = initialState;
-      if (initialPreferences) {
+
+      if (licenceKey) {
+        // restore the existing user
+        data = {
+          ...data,
+          licenceKey
+        };
+      }
+      if (preferences) {
+        // restore the preferences if there are any
         data = {
           ...data,
           user: {
-            preferences: initialPreferences
+            preferences
           }
         };
       }
-      console.log('prefs loaded not yet init');
       dispatch({
         type: 'init',
         data
       });
     }
-  }, [initialPreferences, prefsLoading, state]);
+  }, [storageLoading, state, storage]);
 
   // load the user on licence key entered
   useEffect(() => {
@@ -63,9 +72,12 @@ export const UserProvider = ({ children }) => {
   // set the chrome storage on preferences changed
   useEffect(() => {
     if (state.initialised) {
-      setStorage(state.user.preferences);
+      setStorage({
+        preferences: state.user.preferences,
+        licenceKey: state.user.licenceKey
+      });
     }
-  }, [setStorage, state.initialised, state.user.preferences]);
+  }, [setStorage, state.initialised, state.user]);
 
   // save the user on preferences changed
   useEffect(() => {
@@ -85,7 +97,7 @@ export const UserProvider = ({ children }) => {
           throw new Error('invalid licence key');
         }
         const mappedUser = mapUser(user, state);
-        console.log('loading user', mappedUser);
+        console.log('[user]: loading user', mappedUser);
         dispatch({ type: 'load', data: mappedUser });
       } catch (err) {
         console.error(err);
