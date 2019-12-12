@@ -52,6 +52,7 @@
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "psl": "^1.6.0",
-    "sass-loader": "^8.0.0"
+    "sass-loader": "^8.0.0",
+    "uuid": "^3.3.3"
   }
 }
