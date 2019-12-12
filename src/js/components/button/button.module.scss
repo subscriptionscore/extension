@@ -34,14 +34,8 @@
   }
 
   &:disabled {
-    background: rgba(0, 0, 0, 0.5);
     opacity: 0.5;
-    color: rgba(0, 0, 0, 0.8);
+    pointer-events: none;
     cursor: no-drop;
-
-    &:hover,
-    &:focus {
-      background: rgba(0, 0, 0, 0.5);
-    }
   }
 }
