@@ -1,5 +1,7 @@
 {
   "name": "Subscription Score",
+  "version": "0.1",
+  "version_name": "0.1 beta",
   "options_page": "options.html",
   "background": {
     "page": "background.html"
@@ -11,7 +13,14 @@
   "icons": {
     "128": "assets/icon.png"
   },
-  "permissions": ["tabs", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.bundle.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["tabs", "storage", "activeTab"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

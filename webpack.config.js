@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-
+const Dotenv = require('dotenv-webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -30,6 +30,10 @@ const fileExtensions = [
 const options = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
+    content: [
+      'babel-polyfill',
+      path.join(__dirname, 'src', 'js', 'content', 'index.js')
+    ],
     popup: [
       'babel-polyfill',
       path.join(__dirname, 'src', 'js', 'popup', 'index.js')
@@ -114,6 +118,7 @@ const options = {
     ...(isDevelopment ? [] : prodPlugins),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new Dotenv(),
     new CopyWebpackPlugin([
       {
         from: 'src/manifest.json',

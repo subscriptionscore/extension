@@ -27,7 +27,7 @@ export async function getDomainScore(url) {
     }
   };
   const d = await graphqlRequest(gql, options);
-  const rank = d.searchDomain ? d.searchDomain : null;
+  const rank = d.searchDomain ? d.searchDomain.rank : null;
   put(domain, rank);
   return d.searchDomain;
 }

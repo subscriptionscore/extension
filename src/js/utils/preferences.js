@@ -1,11 +1,8 @@
 export function getPreferences() {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     chrome.storage.sync.get(['preferences'], result => {
       const prefs = result['preferences'];
       console.log('[storage]: got preferences', prefs);
-      if (!prefs) {
-        return reject();
-      }
       return resolve(prefs);
     });
   });

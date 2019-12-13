@@ -13,7 +13,8 @@ export default function DomainScore({ url }) {
     if (loading) {
       return <div className={styles.loading}>Loading...</div>;
     }
-    const { searchDomain } = value;
+
+    const { searchDomain } = value ? value : {};
     if (!searchDomain || error) {
       return (
         <>
@@ -24,8 +25,10 @@ export default function DomainScore({ url }) {
             </h2>
           </div>
           <div className={styles.content}>
-            We don't have enough data to score this website's subscription
-            emails yet.
+            <div className={styles.empty}>
+              We don't have enough data to score this website's subscription
+              emails yet.
+            </div>
           </div>
         </>
       );
