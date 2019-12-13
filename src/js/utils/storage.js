@@ -1,11 +1,8 @@
 export function getStoredData() {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     chrome.storage.sync.get(['subscriptionscore'], result => {
       const data = result['subscriptionscore'];
       console.log('[storage]: got subscriptionscore', data);
-      if (!data) {
-        return reject();
-      }
       return resolve(data);
     });
   });

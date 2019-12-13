@@ -1,40 +1,37 @@
-import { getLicenceKey } from './preferences';
+import { getLicenceKey } from './storage';
 import { GRAPHQL_URL, VERSION } from '../constants.js';
-let licenceKey = getLicenceKey('licenceKey');
+let licenceKey = getLicenceKey();
 
 const HEADERS = {
   'x-app-version': VERSION,
   'Content-Type': 'application/json; charset=utf-8'
 };
 
-chrome.storage.onChanged.addListener(({ preferences }) => {
-  if (preferences && preferences.licenceKey) {
-    licenceKey = preferences.licenceKey;
+chrome.storage.onChanged.addListener(prefs => {
+  if (prefs.licenceKey) {
+    licenceKey = prefs.licenceKey;
   }
 });
 
 async function doRequest(url, params = {}) {
-  try {
-    const key = await licenceKey;
-    const method = params.method || 'GET';
-    let headers = HEADERS;
-    if (key) {
-      headers = {
-        ...headers,
-        Authorization: `Bearer ${key}`
-      };
-    }
-    const opts = {
-      method,
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers,
-      ...params
+  const key = await licenceKey;
+  const method = params.method || 'GET';
+  let headers = HEADERS;
+  if (key) {
+    headers = {
+      ...headers,
+      Authorization: `Bearer ${key}`
     };
-    return fetch(url, opts);
-  } catch (err) {
-    console.error(err);
   }
+  const opts = {
+    method,
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers,
+    ...params
+  };
+  const request = new Request(url, opts);
+  return fetch(request);
 }
 
 export async function graphqlRequest(gql, options = {}) {
@@ -56,6 +53,8 @@ export async function graphqlRequest(gql, options = {}) {
     method: 'POST'
   });
   const json = await response.json();
-  debugger;
+  if (json.errors) {
+    throw json.errors[0].message;
+  }
   return json.data;
 }

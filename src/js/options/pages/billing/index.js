@@ -2,7 +2,6 @@ import { FormError, FormInput } from '../../../components/form';
 import React, { useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
-import { graphqlRequest } from '../../../utils/request';
 import styles from './billing.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
@@ -50,7 +49,7 @@ function LicenceKey() {
         }}
       >
         <p>Enter licence key...</p>
-        <div className={styles['input-container']}>
+        <div className={styles.inputContainer}>
           <FormInput
             name="licenceKey"
             value={value}

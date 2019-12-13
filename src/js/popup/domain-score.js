@@ -12,10 +12,24 @@ export default function DomainScore({ url }) {
   const content = useMemo(() => {
     if (loading) {
       return <div className={styles.loading}>Loading...</div>;
+    } else if (error) {
+      return (
+        <>
+          <div className={styles.avgScore}>
+            <h2>
+              <Rank compact rank={'unknown'} />
+              <span className={styles.title}>{domain}</span>
+            </h2>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.empty}>{getErrorMessage(error)}</div>
+          </div>
+        </>
+      );
     }
 
     const { searchDomain } = value ? value : {};
-    if (!searchDomain || error) {
+    if (!searchDomain || !searchDomain.score) {
       return (
         <>
           <div className={styles.avgScore}>
@@ -63,4 +77,17 @@ export default function DomainScore({ url }) {
   }, [domain, error, loading, value]);
 
   return <div className={styles.domainScore}>{content}</div>;
+}
+
+function getErrorMessage(error) {
+  if (error === 'Not Authorised!') {
+    return (
+      <span>
+        The provided Licence Key is not valid or has been used on too many
+        devices.
+      </span>
+    );
+  } else if (error === 'No key!') {
+    return <span>No licence key provided.</span>;
+  }
 }
