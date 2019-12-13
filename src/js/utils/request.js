@@ -1,6 +1,6 @@
-import { getPreference } from './preferences';
+import { getLicenceKey } from './preferences';
 import { GRAPHQL_URL, VERSION } from '../constants.js';
-let licenceKey = getPreference('licenceKey');
+let licenceKey = getLicenceKey('licenceKey');
 
 const HEADERS = {
   'x-app-version': VERSION,

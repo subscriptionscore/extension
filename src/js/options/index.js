@@ -7,8 +7,6 @@ import Layout from './pages/layout';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// import { ThemeProvider, useTheme } from '../providers/theme-provider';
-
 const AppContainer = () => {
   return (
     <UserProvider>
@@ -18,8 +16,8 @@ const AppContainer = () => {
 };
 
 const App = () => {
-  const [{ settings }] = useUser();
-  const theme = settings.darkMode ? 'dark' : 'light';
+  const [{ user }] = useUser();
+  const theme = user.preferences.darkMode ? 'dark' : 'light';
 
   return (
     <div className="app-theme-wrapper" data-color-theme={theme}>

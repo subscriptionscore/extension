@@ -1,7 +1,8 @@
+import { FormError, FormInput } from '../../../components/form';
 import React, { useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
-import { FormInput } from '../../../components/form';
+import { graphqlRequest } from '../../../utils/request';
 import styles from './billing.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
@@ -9,49 +10,60 @@ const BillingPage = () => {
   return (
     <>
       <h1>Billing</h1>
-      <LicenseKey />
+      <LicenceKey />
     </>
   );
 };
 
-function LicenseKey() {
-  const [{ licenseKey }, dispatch] = useUser();
-  const [val, setVal] = useState('');
+function LicenceKey() {
+  const [{ user, loading, error }, dispatch] = useUser();
+  const { licenceKey, email } = user;
 
+  const [value, setValue] = useState('');
   const content = useMemo(() => {
-    if (licenseKey) {
+    if (loading) {
+      return <p>Loading user...</p>;
+    }
+    if (licenceKey) {
       return (
-        <p>
-          License key: <span className={styles.key}>{licenseKey}</span>
-        </p>
+        <div>
+          <p>
+            Licence key: <span className={styles.key}>{licenceKey}</span>
+          </p>
+          <p>
+            Email address: <span className={styles.key}>{email}</span>
+          </p>
+        </div>
       );
     }
 
-    const onSave = () => {
-      dispatch({ type: 'set-license-key', data: val });
+    const onSave = async () => {
+      console.log('on save license key...', value);
+      dispatch({ type: 'set-licence-key', data: value });
     };
     return (
       <form
-        id="license-key-form"
+        id="licence-key-form"
         onSubmit={e => {
           e.preventDefault();
           return onSave();
         }}
       >
-        <p>Enter license key...</p>
+        <p>Enter licence key...</p>
         <div className={styles['input-container']}>
           <FormInput
-            name="licenseKey"
-            value={val}
-            onChange={e => setVal(e.currentTarget.value)}
+            name="licenceKey"
+            value={value}
+            onChange={e => setValue(e.currentTarget.value)}
           />
-          <Button type="submit" as="button" disabled={!val}>
+          <Button type="submit" as="button" disabled={!value}>
             Save
           </Button>
         </div>
+        {error ? <FormError>{error}</FormError> : null}
       </form>
     );
-  }, [dispatch, licenseKey, val]);
+  }, [dispatch, email, error, licenceKey, loading, value]);
 
   return content;
 }

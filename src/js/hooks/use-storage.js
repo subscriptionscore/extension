@@ -1,4 +1,4 @@
-import { getPreferences, setPreferences } from '../utils/preferences';
+import { getStoredData, setStoredData } from '../utils/storage';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 function useStorage(query) {
@@ -10,7 +10,7 @@ function useStorage(query) {
 
   useEffect(() => {
     setState({ loading: true });
-    getPreferences()
+    getStoredData()
       .then(response => {
         setState({ loading: false, value: response });
       })
@@ -20,8 +20,8 @@ function useStorage(query) {
   }, [query]);
 
   const set = useCallback(async data => {
-    const newPrefs = await setPreferences(data);
-    setState({ value: newPrefs });
+    const newData = await setStoredData(data);
+    setState({ value: newData });
   }, []);
 
   const value = useMemo(() => [state, set], [state, set]);
