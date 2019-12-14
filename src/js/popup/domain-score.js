@@ -89,5 +89,13 @@ function getErrorMessage(error) {
     );
   } else if (error === 'No key!') {
     return <span>No licence key provided.</span>;
+  } else if (error.message === 'Failed to fetch') {
+    return (
+      <span>
+        Couldn't connect to Subscription Score servers, please try again later.
+      </span>
+    );
   }
+  console.log(error);
+  return <span>Something went wrong :(</span>;
 }
