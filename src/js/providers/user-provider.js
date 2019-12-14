@@ -82,14 +82,13 @@ export const UserProvider = ({ children }) => {
   // save the user on preferences changed
   useEffect(() => {
     if (state.loaded) {
-      console.log('saving user prefs', state.user.preferences);
       const { licenceKey, preferences } = state.user;
       updateUser(licenceKey, preferences)
         .then(prefs => {
-          console.log('[user]: saved prefs on server', prefs);
+          console.log('[user]: saved prefs', prefs);
         })
         .catch(err => {
-          console.error('failed to save prefs on server.. what do?', err);
+          console.error('failed to save prefs.. what do?', err);
         });
     }
   }, [state.loaded, state.user, state.user.preferences]);
@@ -100,19 +99,23 @@ export const UserProvider = ({ children }) => {
     async licenceKey => {
       try {
         dispatch({ type: 'reset' });
+        dispatch({ type: 'loading', data: true });
         const user = await getUser(licenceKey);
         if (!user) {
-          throw new Error('invalid licence key');
+          throw new Error('invalid-key');
         }
         const mappedUser = mapUser(user, state);
-        console.log('[user]: loading user', mappedUser);
         dispatch({ type: 'load', data: mappedUser });
       } catch (err) {
+        console.error('failed to submit licence key...');
         console.error(err);
+        const message = getError(err);
         dispatch({
           type: 'error',
-          data: `That licence key is invalid, please try again or contact support.`
+          data: message
         });
+      } finally {
+        dispatch({ type: 'loading', data: false });
       }
     },
     [state]
@@ -120,6 +123,19 @@ export const UserProvider = ({ children }) => {
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
+
+function getError(err) {
+  const defaultMsg = `Something went wrong saving your licence key, please try again or contact support.`;
+  if (err && err.message) {
+    switch (err.message) {
+      case 'invalid-key':
+        return `That licence key is invalid, please try again or contact support.`;
+      default:
+        return defaultMsg;
+    }
+  }
+  return defaultMsg;
+}
 
 const reducer = (state = initialState, action) => {
   const { data, type } = action;
@@ -145,8 +161,13 @@ const reducer = (state = initialState, action) => {
     case 'error': {
       return {
         ...state,
-        loading: false,
         error: action.data
+      };
+    }
+    case 'loading': {
+      return {
+        ...state,
+        loading: action.data
       };
     }
     case 'reset': {

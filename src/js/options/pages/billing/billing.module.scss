@@ -4,10 +4,13 @@
   margin-bottom: 40px;
 }
 
+.form {
+  max-width: 400px;
+}
+
 .input-container {
   display: flex;
   align-items: center;
-  max-width: 400px;
 
   input {
     flex: 1;

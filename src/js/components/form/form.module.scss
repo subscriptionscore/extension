@@ -25,6 +25,12 @@
       border-color: theme('inputBorderFocus');
     }
   }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: no-drop;
+  }
 }
 
 .checkbox {
@@ -81,7 +87,6 @@
 
 .form-notification {
   padding: 5px;
-  font-weight: bold;
   border-radius: 5px;
   font-size: 14px;
   line-height: 18px;
