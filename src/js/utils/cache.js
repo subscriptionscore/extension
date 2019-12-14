@@ -28,10 +28,10 @@ if (indexedDB) {
       console.log('[cache]: error', ev);
     };
     // Create an objectStore for this database
-    db.createObjectStore(DB_NAME, {
+    const objectStore = db.createObjectStore(DB_NAME, {
       keyPath: 'domain'
     });
-    db.createIndex('timestamp', { keyPath: 'timestamp' });
+    objectStore.createIndex('timestamp', 'timestamp', { unique: false });
   };
 }
 

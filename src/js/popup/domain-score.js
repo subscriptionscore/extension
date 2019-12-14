@@ -12,9 +12,7 @@ export default function DomainScore({ url }) {
   const content = useMemo(() => {
     if (loading) {
       return <div className={styles.loading}>Loading...</div>;
-    }
-    const { searchDomain } = value;
-    if (!searchDomain || error) {
+    } else if (error) {
       return (
         <>
           <div className={styles.avgScore}>
@@ -24,8 +22,27 @@ export default function DomainScore({ url }) {
             </h2>
           </div>
           <div className={styles.content}>
-            We don't have enough data to score this website's subscription
-            emails yet.
+            <div className={styles.empty}>{getErrorMessage(error)}</div>
+          </div>
+        </>
+      );
+    }
+
+    const { searchDomain } = value ? value : {};
+    if (!searchDomain || !searchDomain.score) {
+      return (
+        <>
+          <div className={styles.avgScore}>
+            <h2>
+              <Rank compact rank={'unknown'} />
+              <span className={styles.title}>{domain}</span>
+            </h2>
+          </div>
+          <div className={styles.content}>
+            <div className={styles.empty}>
+              We don't have enough data to score this website's subscription
+              emails yet.
+            </div>
           </div>
         </>
       );
@@ -60,4 +77,25 @@ export default function DomainScore({ url }) {
   }, [domain, error, loading, value]);
 
   return <div className={styles.domainScore}>{content}</div>;
+}
+
+function getErrorMessage(error) {
+  if (error === 'Not Authorised!') {
+    return (
+      <span>
+        The provided Licence Key is not valid or has been used on too many
+        devices.
+      </span>
+    );
+  } else if (error === 'No key!') {
+    return <span>No licence key provided.</span>;
+  } else if (error.message === 'Failed to fetch') {
+    return (
+      <span>
+        Couldn't connect to Subscription Score servers, please try again later.
+      </span>
+    );
+  }
+  console.log(error);
+  return <span>Something went wrong :(</span>;
 }

@@ -51,7 +51,7 @@ function LicenceKey() {
         }}
       >
         <p>Enter licence key...</p>
-        <div className={styles['input-container']}>
+        <div className={styles.inputContainer}>
           <FormInput
             name="licenceKey"
             value={value}

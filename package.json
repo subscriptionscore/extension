@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "dotenv-webpack": "^1.7.0",
     "email-addresses": "^3.1.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",

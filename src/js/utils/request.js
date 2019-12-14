@@ -1,31 +1,33 @@
-import scoreCache from './cache';
-const GRAPHQL_URL = 'http://localhost:2346/graphql';
+import { getLicenceKey } from './storage';
+import { GRAPHQL_URL, VERSION } from '../constants.js';
+let licenceKey = getLicenceKey();
 
-const cacheAvailable = 'caches' in self;
+const HEADERS = {
+  'x-app-version': VERSION,
+  'Content-Type': 'application/json; charset=utf-8'
+};
 
-// const scoreCache = (async () => {
-//   if (cacheAvailable) {
-//     const c = await caches.open('subscriptionscores');
-//     return {
-//       get: req => c.match(req),
-//       put: (req, res) => c.put(req, res)
-//     };
-//   }
-//   return {
-//     get: () => null,
-//     put: () => null
-//   };
-// })();
+chrome.storage.onChanged.addListener(prefs => {
+  if (prefs.licenceKey) {
+    licenceKey = prefs.licenceKey;
+  }
+});
 
 async function doRequest(url, params = {}) {
+  const key = await licenceKey;
   const method = params.method || 'GET';
+  let headers = HEADERS;
+  if (key) {
+    headers = {
+      ...headers,
+      Authorization: `Bearer ${key}`
+    };
+  }
   const opts = {
     method,
     cache: 'no-cache',
     credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8'
-    },
+    headers,
     ...params
   };
   const request = new Request(url, opts);
@@ -33,7 +35,7 @@ async function doRequest(url, params = {}) {
 }
 
 export async function graphqlRequest(gql, options = {}) {
-  const { variables, useCache } = options;
+  const { variables } = options;
   let data = {
     query: gql
   };
@@ -43,17 +45,16 @@ export async function graphqlRequest(gql, options = {}) {
       variables
     };
   }
-  const response = await doRequest(
-    GRAPHQL_URL,
-    {
-      body: JSON.stringify({
-        query: gql,
-        ...data
-      }),
-      method: 'POST'
-    },
-    { useCache }
-  );
+  const response = await doRequest(GRAPHQL_URL, {
+    body: JSON.stringify({
+      query: gql,
+      ...data
+    }),
+    method: 'POST'
+  });
   const json = await response.json();
+  if (json.errors) {
+    throw json.errors[0].message;
+  }
   return json.data;
 }
