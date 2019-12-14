@@ -15,7 +15,7 @@ const BillingPage = () => {
 };
 
 function LicenceKey() {
-  const [{ user, loading, initialised, loaded, error }, dispatch] = useUser();
+  const [{ user, loading, initialised, error }, dispatch] = useUser();
   const { licenceKey, email } = user;
 
   const [value, setValue] = useState('');

@@ -37,6 +37,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     if (!storageLoading && !state.initialised) {
       const { preferences, licenceKey } = storage;
+      console.log('initialising from storage...', storage);
       let data = initialState;
 
       if (licenceKey) {
@@ -72,10 +73,15 @@ export const UserProvider = ({ children }) => {
   // set the chrome storage on preferences changed
   useEffect(() => {
     if (state.initialised) {
-      setStorage({
-        preferences: state.user.preferences,
-        licenceKey: state.user.licenceKey
-      });
+      // save the user preferences
+      if (state.user.licenceKey) {
+        setStorage({
+          preferences: state.user.preferences,
+          licenceKey: state.user.licenceKey
+        });
+      } else {
+        setStorage({ preferences: state.user.preferences });
+      }
     }
   }, [setStorage, state.initialised, state.user]);
 
@@ -83,13 +89,9 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     if (state.loaded) {
       const { licenceKey, preferences } = state.user;
-      updateUser(licenceKey, preferences)
-        .then(prefs => {
-          console.log('[user]: saved prefs', prefs);
-        })
-        .catch(err => {
-          console.error('failed to save prefs.. what do?', err);
-        });
+      updateUser(licenceKey, preferences).catch(err => {
+        console.error('failed to save prefs.. what do?', err);
+      });
     }
   }, [state.loaded, state.user, state.user.preferences]);
 
@@ -107,9 +109,7 @@ export const UserProvider = ({ children }) => {
         const mappedUser = mapUser(user, state);
         dispatch({ type: 'load', data: mappedUser });
       } catch (err) {
-        console.error('failed to submit licence key...');
-        console.error(err);
-        const message = getError(err);
+        const message = getError(err, state);
         dispatch({
           type: 'error',
           data: message
@@ -124,16 +124,18 @@ export const UserProvider = ({ children }) => {
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
-function getError(err) {
-  const defaultMsg = `Something went wrong saving your licence key, please try again or contact support.`;
-  if (err && err.message) {
-    switch (err.message) {
-      case 'invalid-key':
-        return `That licence key is invalid, please try again or contact support.`;
-      default:
-        return defaultMsg;
-    }
+function getError(err, state) {
+  const defaultMsg = `Something went wrong, please try again or contact support.`;
+
+  // we have fetched the licence key but the user is null
+  if (err && err.message && err.message === 'invalid-key') {
+    return `That licence key is invalid, please try again or contact support.`;
   }
+  // there is a licence key to restore but the user has failed to load
+  if (state.licenceKey && !state.loaded) {
+    return `Something went wrong loading your data, please try again or contact support.`;
+  }
+
   return defaultMsg;
 }
 
@@ -229,6 +231,8 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
   }
 }
 `;
+
+// update the user preferences using the licence key as the ID
 async function updateUser(licenceKey, preferences) {
   const options = { variables: { licenceKey, preferences } };
   const { updateUserPreferences } = await graphqlRequest(updateGql, options);
