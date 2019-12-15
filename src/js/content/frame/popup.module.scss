@@ -1,4 +1,5 @@
 @import '../../../styles/common/themes.scss';
+@import '../../../styles/common/colors.scss';
 
 .container {
   padding: 20px 20px 4px 2px;
@@ -7,7 +8,7 @@
 .popup {
   border-radius: 3px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
-
+  font-size: 14px;
   @include themify() {
     color: theme('textColor');
     background-color: theme('backgroundColor');
@@ -18,6 +19,34 @@
   display: flex;
   align-items: center;
   min-height: 36px;
+  padding: 0 15px;
   justify-content: flex-start;
-  color: #757575;
+  border-bottom: 1px solid $border-color;
+}
+
+.popup-actions {
+  padding: 10px 15px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 140px auto;
+  gap: 10px;
+}
+
+.popup-options {
+  padding: 10px 15px;
+  border-top: 1px solid $border-color;
+  display: flex;
+  justify-content: flex-end;
+
+  > a {
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    @include themify() {
+      color: rgba(theme('textColor'), 0.5);
+      &:hover {
+        color: rgba(theme('textColor'), 0.75);
+      }
+    }
+  }
 }

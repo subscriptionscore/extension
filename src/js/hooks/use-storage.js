@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 function useStorage() {
   const [state, setState] = useState({
     loading: true,
-    value: null,
+    value: {},
     error: null
   });
 

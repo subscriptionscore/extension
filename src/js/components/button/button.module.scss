@@ -40,6 +40,12 @@
   }
 }
 
+.muted {
+  @include themify() {
+    background-color: transparent;
+  }
+}
+
 .loading {
   pointer-events: none;
 
