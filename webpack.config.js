@@ -45,6 +45,10 @@ const options = {
     background: [
       'babel-polyfill',
       path.join(__dirname, 'src', 'js', 'background', 'chrome', 'index.js')
+    ],
+    frame: [
+      'babel-polyfill',
+      path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
     ]
   },
   output: {
@@ -152,6 +156,11 @@ const options = {
       template: path.join(__dirname, 'src', 'background.html'),
       filename: 'background.html',
       chunks: ['background']
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src', 'frame.html'),
+      filename: 'frame.html',
+      chunks: ['frame']
     }),
     new WriteFilePlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),

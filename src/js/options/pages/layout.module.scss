@@ -60,4 +60,15 @@
 .content {
   flex: 1;
   margin-left: 50px;
+  max-width: 800px;
+  font-size: 16px;
+  a {
+    text-decoration: none;
+    font-family: Roboto;
+    color: $button-background--light;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

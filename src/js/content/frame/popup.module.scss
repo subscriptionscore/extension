@@ -1,0 +1,23 @@
+@import '../../../styles/common/themes.scss';
+
+.container {
+  padding: 20px 20px 4px 2px;
+}
+
+.popup {
+  border-radius: 3px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
+
+  @include themify() {
+    color: theme('textColor');
+    background-color: theme('backgroundColor');
+  }
+}
+
+.popup-head {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  justify-content: flex-start;
+  color: #757575;
+}

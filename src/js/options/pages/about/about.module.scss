@@ -1,0 +1,22 @@
+.image {
+  float: right;
+  border-radius: 50%;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  width: 220px;
+  height: 220px;
+  margin: 0 30px;
+  @media (max-width: 900px) {
+    margin: 0;
+  }
+}
+
+.block {
+  display: flex;
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+.left {
+  float: left;
+}

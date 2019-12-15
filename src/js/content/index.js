@@ -3,6 +3,7 @@ import { injectModal } from './modal';
 const emailWhitelist = ['james.ivings@gmail.com'];
 const blockFor = ['F', 'D', 'E', 'C'];
 
+console.log('[subscriptionscore]: running content script');
 const domainData = {
   rank: 'C'
 };

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import useCurrentUrl from '../hooks/use-current-url';
-import DomainScore from './domain-score';
+import DomainScore from '../components/domain-score';
 import styles from './popup.module.scss';
 import Footer from './footer/index';
 import './reset.scss';

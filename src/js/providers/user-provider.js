@@ -10,7 +10,7 @@ import React, {
 import { graphqlRequest } from '../utils/request';
 import useStorage from '../hooks/use-storage';
 
-const UserContext = createContext(null);
+const UserContext = createContext({});
 
 const initialState = {
   user: {
@@ -237,4 +237,8 @@ function mapUser(user, state) {
   };
 }
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const c = useContext(UserContext);
+
+  return c;
+};

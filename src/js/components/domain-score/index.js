@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
-import Rank from '../components/rank';
+import Rank from '../rank';
 
-import './reset.scss';
 import styles from './domain-score.module.scss';
-import Score from '../components/score';
-import useDomainScore from '../hooks/use-domain-score';
+import Score from '../score';
+import useDomainScore from '../../hooks/use-domain-score';
 
 export default function DomainScore({ url }) {
   const { value, loading, error, domain } = useDomainScore(url);

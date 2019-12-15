@@ -41,26 +41,32 @@ function LicenceKey() {
       dispatch({ type: 'set-licence-key', data: value });
     };
     return (
-      <form
-        id="licence-key-form"
-        onSubmit={e => {
-          e.preventDefault();
-          return onSave();
-        }}
-      >
-        <p>Enter licence key...</p>
-        <div className={styles.inputContainer}>
-          <FormInput
-            name="licenceKey"
-            value={value}
-            onChange={e => setValue(e.currentTarget.value)}
-          />
-          <Button type="submit" as="button" disabled={!value}>
-            Save
-          </Button>
-        </div>
-        {error ? <FormError>{error}</FormError> : null}
-      </form>
+      <>
+        <form
+          id="licence-key-form"
+          onSubmit={e => {
+            e.preventDefault();
+            return onSave();
+          }}
+        >
+          <p>Enter licence key...</p>
+          <div className={styles.inputContainer}>
+            <FormInput
+              name="licenceKey"
+              value={value}
+              onChange={e => setValue(e.currentTarget.value)}
+            />
+            <Button type="submit" as="button" disabled={!value}>
+              Save
+            </Button>
+          </div>
+          {error ? <FormError>{error}</FormError> : null}
+        </form>
+        <p>
+          Need a licence key? Purchase one{' '}
+          <a href="https://subscriptionscore.com">on our website</a>.
+        </p>
+      </>
     );
   }, [dispatch, email, error, licenceKey, loading, value]);
 

@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import Appearance from './appearance';
 import Billing from './billing';
 import Preferences from './preferences';
+import About from './about';
 import cx from '../../utils/classnames';
 import styles from './layout.module.scss';
 
@@ -18,6 +19,10 @@ const NAV_ITEMS = [
   {
     label: 'Preferences',
     value: 'preferences'
+  },
+  {
+    label: 'About',
+    value: 'about'
   }
 ];
 
@@ -33,6 +38,9 @@ const Layout = () => {
     }
     if (page === 'preferences') {
       return <Preferences />;
+    }
+    if (page === 'about') {
+      return <About />;
     }
   }, [page]);
 
