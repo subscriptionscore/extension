@@ -10,7 +10,9 @@ $themes: (
     inputBorder: rgba(0, 0, 0, 0.1),
     inputBorderFocus: #1d1e26,
     buttonBackground: $button-background--light,
-    buttonBackgroundHover: darken($button-background--light, 5%)
+    buttonBackgroundHover: darken($button-background--light, 5%),
+    buttonBackgroundPulseFrom: $button-pulse-from--light,
+    buttonBackgroundPulseTo: $button-pulse-to--light
   ),
   dark: (
     backgroundColor: $background--dark,
@@ -21,7 +23,9 @@ $themes: (
     inputBorder: rgba(0, 0, 0, 0.1),
     inputBorderFocus: #e7e7e7,
     buttonBackground: $button-background--dark,
-    buttonBackgroundHover: darken($button-background--dark, 5%)
+    buttonBackgroundHover: darken($button-background--dark, 5%),
+    buttonBackgroundPulseFrom: $button-pulse-from--dark,
+    buttonBackgroundPulseTo: $button-pulse-to--dark
   )
 );
 

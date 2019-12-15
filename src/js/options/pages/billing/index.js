@@ -15,14 +15,16 @@ const BillingPage = () => {
 };
 
 function LicenceKey() {
-  const [{ user, loading, error }, dispatch] = useUser();
+  const [{ user, loading, initialised, error }, dispatch] = useUser();
   const { licenceKey, email } = user;
 
   const [value, setValue] = useState('');
   const content = useMemo(() => {
-    if (loading) {
-      return <p>Loading user...</p>;
+    // settings havent been fetched from storage yet
+    if (!initialised) {
+      return <p>Loading...</p>;
     }
+
     if (licenceKey) {
       return (
         <div>
@@ -37,13 +39,13 @@ function LicenceKey() {
     }
 
     const onSave = async () => {
-      console.log('on save license key...', value);
       dispatch({ type: 'set-licence-key', data: value });
     };
     return (
       <>
         <form
           id="licence-key-form"
+          className={styles.form}
           onSubmit={e => {
             e.preventDefault();
             return onSave();
@@ -54,9 +56,15 @@ function LicenceKey() {
             <FormInput
               name="licenceKey"
               value={value}
+              disabled={loading}
               onChange={e => setValue(e.currentTarget.value)}
             />
-            <Button type="submit" as="button" disabled={!value}>
+            <Button
+              type="submit"
+              as="button"
+              disabled={!value || loading}
+              loading={loading}
+            >
               Save
             </Button>
           </div>
@@ -68,7 +76,7 @@ function LicenceKey() {
         </p>
       </>
     );
-  }, [dispatch, email, error, licenceKey, loading, value]);
+  }, [dispatch, email, error, initialised, licenceKey, loading, value]);
 
   return content;
 }

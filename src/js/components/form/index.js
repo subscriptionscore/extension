@@ -17,12 +17,12 @@ export const FormCheckbox = ({ id, name, label, ...props }) => {
   );
 };
 
-export const FormInput = ({ id, name, label, ...props }) => {
+export const FormInput = ({ id, name, type = 'text', ...props }) => {
   return (
     <input
       {...props}
       id={id}
-      type="text"
+      type={type}
       name={name}
       className={styles.input}
       spellCheck="false"

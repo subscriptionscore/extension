@@ -12,6 +12,13 @@ chrome.tabs.onActivated.addListener(() => {
   });
 });
 
+chrome.runtime.onInstalled.addListener(details => {
+  if (details.reason !== 'update') {
+    // first install, launch the settings page
+    chrome.runtime.openOptionsPage();
+  }
+});
+
 // call when the page changes and we need to
 // fetch a new rank for the current url
 async function onPageChange(url) {
