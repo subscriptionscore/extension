@@ -46,20 +46,6 @@ function onSubmitForm(e, $form, $emailInput) {
   }
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender) {
-  console.log(
-    sender.tab
-      ? 'from a content script:' + sender.tab.url
-      : 'from the extension'
-  );
-  if (request.popupResponse === 'continue') {
-    haltedForm.addAttribute('data-approved', 'true');
-    haltedForm.submit();
-  } else if (request.popupResponse === 'cancel') {
-    haltedForm.addAttribute('data-approved', 'false');
-  }
-});
-
 // runs at document idle as per manifest.json
 (() => {
   attachToEmailForms();

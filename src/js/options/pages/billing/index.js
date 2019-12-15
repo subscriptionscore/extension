@@ -1,4 +1,4 @@
-import { FormError, FormInput } from '../../../components/form';
+import { FormInput, InputGroup } from '../../../components/form';
 import React, { useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
@@ -15,7 +15,7 @@ const BillingPage = () => {
 };
 
 function LicenceKey() {
-  const [{ user, loading, initialised, error }, dispatch] = useUser();
+  const [{ user, loading, initialised }, dispatch] = useUser();
   const { licenceKey, email } = user;
 
   const [value, setValue] = useState('');
@@ -52,7 +52,7 @@ function LicenceKey() {
           }}
         >
           <p>Enter licence key...</p>
-          <div className={styles.inputContainer}>
+          <InputGroup>
             <FormInput
               name="licenceKey"
               value={value}
@@ -67,8 +67,7 @@ function LicenceKey() {
             >
               Save
             </Button>
-          </div>
-          {error ? <FormError>{error}</FormError> : null}
+          </InputGroup>
         </form>
         <p>
           Need a licence key? Purchase one{' '}
@@ -76,7 +75,7 @@ function LicenceKey() {
         </p>
       </>
     );
-  }, [dispatch, email, error, initialised, licenceKey, loading, value]);
+  }, [dispatch, email, initialised, licenceKey, loading, value]);
 
   return content;
 }

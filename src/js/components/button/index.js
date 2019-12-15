@@ -8,12 +8,14 @@ const Button = ({
   as = 'a',
   loading = false,
   muted = false,
+  smaller,
   ...btnProps
 }) => {
   const classes = cx({
     [styles.btn]: true,
     [styles.loading]: loading,
-    [styles.muted]: muted
+    [styles.muted]: muted,
+    [styles.smaller]: smaller
   });
   if (as === 'a') {
     return (

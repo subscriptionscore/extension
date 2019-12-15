@@ -16,7 +16,9 @@ const initialState = {
   user: {
     preferences: {
       darkMode: false,
-      colorSet: 'normal'
+      colorSet: 'normal',
+      alertOnSubmit: true,
+      alertIgnoreList: []
     }
   },
   licenceKey: '',
@@ -25,7 +27,100 @@ const initialState = {
   loaded: false
 };
 
-export const UserProvider = ({ children }) => {
+const reducer = (state = initialState, action) => {
+  const { data, type } = action;
+
+  switch (type) {
+    case 'init': {
+      return {
+        ...state,
+        ...data,
+        initialised: true
+      };
+    }
+    case 'load': {
+      const user = data;
+      return {
+        ...state,
+        user,
+        loading: false,
+        error: false,
+        loaded: true
+      };
+    }
+    case 'set-error': {
+      return {
+        ...state,
+        error: action.data
+      };
+    }
+    case 'set-loading': {
+      return {
+        ...state,
+        loading: action.data
+      };
+    }
+    case 'reset': {
+      return {
+        ...state,
+        loading: false,
+        error: false
+      };
+    }
+    case 'save-preference': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          preferences: {
+            ...state.user.preferences,
+            ...action.data
+          }
+        }
+      };
+    }
+    case 'add-ignore-alert': {
+      const existingList = state.user.preferences.alertIgnoreList;
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          preferences: {
+            ...state.user.preferences,
+            alertIgnoreList: [
+              ...existingList.filter(e => e !== action.data),
+              action.data
+            ]
+          }
+        }
+      };
+    }
+    case 'remove-ignore-alert': {
+      const email = action.data;
+      const existingList = state.user.preferences.alertIgnoreList;
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          preferences: {
+            ...state.user.preferences,
+            alertIgnoreList: existingList.filter(d => d !== email)
+          }
+        }
+      };
+    }
+    case 'set-licence-key': {
+      return {
+        ...state,
+        licenceKey: action.data
+      };
+    }
+    default:
+      return state;
+  }
+};
+
+const UserProvider = ({ children }) => {
   const [
     { value: storage = {}, loading: storageLoading },
     setStorage
@@ -88,10 +183,8 @@ export const UserProvider = ({ children }) => {
   // save the user on preferences changed
   useEffect(() => {
     if (state.loaded) {
-      const { licenceKey, preferences } = state.user;
-      updateUser(licenceKey, preferences).catch(err => {
-        console.error('failed to save prefs.. what do?', err);
-      });
+      console.log('[user]: user changed', state.user);
+      onUserChange(state.user);
     }
   }, [state.loaded, state.user, state.user.preferences]);
 
@@ -101,7 +194,7 @@ export const UserProvider = ({ children }) => {
     async licenceKey => {
       try {
         dispatch({ type: 'reset' });
-        dispatch({ type: 'loading', data: true });
+        dispatch({ type: 'set-loading', data: true });
         const user = await getUser(licenceKey);
         if (!user) {
           throw new Error('invalid-key');
@@ -111,15 +204,30 @@ export const UserProvider = ({ children }) => {
       } catch (err) {
         const message = getError(err, state);
         dispatch({
-          type: 'error',
+          type: 'set-error',
           data: message
         });
       } finally {
-        dispatch({ type: 'loading', data: false });
+        dispatch({ type: 'set-loading', data: false });
       }
     },
     [state]
   );
+
+  async function onUserChange(user) {
+    try {
+      dispatch({ type: 'set-loading', data: true });
+      const { licenceKey, preferences } = user;
+      await updateUserPreferences(licenceKey, preferences);
+    } catch (err) {
+      dispatch({
+        type: 'set-error',
+        data: `Failed to save user, please try again or contact support`
+      });
+    } finally {
+      dispatch({ type: 'set-loading', data: false });
+    }
+  }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
@@ -138,69 +246,6 @@ function getError(err, state) {
 
   return defaultMsg;
 }
-
-const reducer = (state = initialState, action) => {
-  const { data, type } = action;
-
-  switch (type) {
-    case 'init': {
-      return {
-        ...state,
-        ...data,
-        initialised: true
-      };
-    }
-    case 'load': {
-      const user = data;
-      return {
-        ...state,
-        user,
-        loading: false,
-        error: false,
-        loaded: true
-      };
-    }
-    case 'error': {
-      return {
-        ...state,
-        error: action.data
-      };
-    }
-    case 'loading': {
-      return {
-        ...state,
-        loading: action.data
-      };
-    }
-    case 'reset': {
-      return {
-        ...state,
-        loading: false,
-        error: false
-      };
-    }
-    case 'save-setting': {
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          preferences: {
-            ...state.user.preferences,
-            ...action.data
-          }
-        }
-      };
-    }
-    case 'set-licence-key': {
-      return {
-        ...state,
-        licenceKey: action.data
-      };
-    }
-    default:
-      return state;
-  }
-};
 
 const getGql = `
 query User($licenceKey: ID!) {
@@ -227,19 +272,23 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
     preferences {
       darkMode
       colorSet
+      ignoredEmailAddresses
+      ignoreSites
     }
   }
 }
 `;
 
 // update the user preferences using the licence key as the ID
-async function updateUser(licenceKey, preferences) {
+async function updateUserPreferences(licenceKey, preferences) {
+  console.log('[user]: saving user preferences', preferences);
   const options = { variables: { licenceKey, preferences } };
   const { updateUserPreferences } = await graphqlRequest(updateGql, options);
   return updateUserPreferences;
 }
 
 function mapUser(user, state) {
+  console.log('map user', user, state);
   let preferences;
   if (!user.preferences) {
     preferences = state.user.preferences;
@@ -262,8 +311,6 @@ function mapUser(user, state) {
   };
 }
 
-export const useUser = () => {
-  const c = useContext(UserContext);
+export default UserProvider;
 
-  return c;
-};
+export const useUser = () => useContext(UserContext);
