@@ -22,30 +22,33 @@ function Colors() {
   const { colorSet, darkMode } = user.preferences;
 
   const onChangeDarkMode = useCallback(() => {
-    dispatch({ type: 'save-setting', data: { darkMode: !darkMode } });
+    dispatch({ type: 'save-preference', data: { darkMode: !darkMode } });
   }, [darkMode, dispatch]);
 
   return (
     <form>
-      <div className={styles.section}>
+      <div className={styles.pageSection}>
         <h2>Colors</h2>
         <Radio
           type={'normal'}
           checked={colorSet === 'normal'}
           onChange={() =>
-            dispatch({ type: 'save-setting', data: { colorSet: 'normal' } })
+            dispatch({ type: 'save-preference', data: { colorSet: 'normal' } })
           }
         />
         <Radio
           type={'colorblind'}
           checked={colorSet === 'colorblind'}
           onChange={() =>
-            dispatch({ type: 'save-setting', data: { colorSet: 'colorblind' } })
+            dispatch({
+              type: 'save-preference',
+              data: { colorSet: 'colorblind' }
+            })
           }
         />
       </div>
 
-      <div className={styles.section}>
+      <div className={styles.pageSection}>
         <div className={styles['dark-mode']}>
           <FormCheckbox
             name="darkMode"

@@ -7,11 +7,13 @@ const Button = ({
   onClick,
   as = 'a',
   loading = false,
+  smaller,
   ...btnProps
 }) => {
   const classes = cx({
     [styles.btn]: true,
-    [styles.loading]: loading
+    [styles.loading]: loading,
+    [styles.smaller]: smaller
   });
   if (as === 'a') {
     return (

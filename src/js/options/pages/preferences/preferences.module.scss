@@ -1,0 +1,23 @@
+@import '../../../../styles/common/colors.scss';
+@import '../layout.module.scss';
+
+.page-section {
+  @extend .section;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $color-highlight;
+  padding: 10px 5px;
+  margin-bottom: 10px;
+}
+
+.email {
+}

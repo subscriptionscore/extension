@@ -31,7 +31,10 @@ export const FormInput = ({ id, name, type = 'text', ...props }) => {
 };
 
 export const FormError = ({ children }) => (
-  <div className={styles['form-error']}>
+  <div className={styles.formError}>
     <span>{children}</span>
   </div>
+);
+export const InputGroup = ({ children }) => (
+  <div className={styles.inputGroup}>{children}</div>
 );

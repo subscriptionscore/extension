@@ -104,3 +104,22 @@
   border: 1px solid darken($color-bg-error, 10%);
   background-color: $color-bg-error;
 }
+
+.input-group {
+  display: flex;
+  align-items: center;
+
+  input {
+    flex: 1;
+    margin-right: 10px;
+    font-family: monospace;
+  }
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+
+    input {
+      margin: 10px 0 0 0;
+    }
+  }
+}

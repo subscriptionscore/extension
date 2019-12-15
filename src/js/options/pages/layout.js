@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 
 import Appearance from './appearance';
 import Billing from './billing';
+import { FormError } from '../../components/form';
 import Preferences from './preferences';
 import cx from '../../utils/classnames';
 import styles from './layout.module.scss';

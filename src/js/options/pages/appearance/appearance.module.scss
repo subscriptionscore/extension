@@ -1,7 +1,8 @@
 @import '../../../../styles/common/colors.scss';
+@import '../layout.module.scss';
 
-.section {
-  margin-bottom: 40px;
+.page-section {
+  @extend .section;
 }
 
 .ranks {

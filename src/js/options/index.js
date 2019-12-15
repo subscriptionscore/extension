@@ -1,8 +1,9 @@
 import '../../styles/global/layout.scss';
 import './app.scss';
 
-import { UserProvider, useUser } from '../providers/user-provider';
+import UserProvider, { useUser } from '../providers/user-provider';
 
+import AlertProvider from '../providers/alert-provider';
 import Layout from './pages/layout';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -22,7 +23,9 @@ const App = () => {
   return (
     <div className="app-theme-wrapper" data-color-theme={theme}>
       <div className="app-container">
-        <Layout />
+        <AlertProvider>
+          <Layout />
+        </AlertProvider>
       </div>
     </div>
   );
