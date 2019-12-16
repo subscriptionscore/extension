@@ -286,6 +286,9 @@ query User($licenceKey: ID!) {
     preferences {
       darkMode
       colorSet
+      alertOnSubmit
+      ignoredEmailAddresses
+      ignoredSites
     }
   }
 }
