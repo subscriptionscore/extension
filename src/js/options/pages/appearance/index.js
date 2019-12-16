@@ -4,6 +4,7 @@ import { FormCheckbox } from '../../../components/form';
 import Rank from '../../../components/rank';
 import styles from './appearance.module.scss';
 import { useUser } from '../../../providers/user-provider';
+import { Radio } from '../../../components/radio';
 
 const AppearancePage = () => {
   return (
@@ -30,14 +31,18 @@ function Colors() {
       <div className={styles.pageSection}>
         <h2>Colors</h2>
         <Radio
-          type={'normal'}
+          name="colors-radio"
           checked={colorSet === 'normal'}
           onChange={() =>
             dispatch({ type: 'save-preference', data: { colorSet: 'normal' } })
           }
-        />
+        >
+          <div className={styles.ranks}>
+            <Ranks colorblind={false} />
+          </div>
+        </Radio>
         <Radio
-          type={'colorblind'}
+          name="colors-radio"
           checked={colorSet === 'colorblind'}
           onChange={() =>
             dispatch({
@@ -45,7 +50,11 @@ function Colors() {
               data: { colorSet: 'colorblind' }
             })
           }
-        />
+        >
+          <div className={styles.ranks}>
+            <Ranks colorblind={true} />
+          </div>
+        </Radio>
       </div>
 
       <div className={styles.pageSection}>
@@ -59,24 +68,6 @@ function Colors() {
         </div>
       </div>
     </form>
-  );
-}
-
-function Radio({ type = 'normal', checked, onChange }) {
-  return (
-    <label>
-      <input
-        type="radio"
-        name="colors-radio"
-        className={styles.radio}
-        spellCheck="false"
-        checked={checked}
-        onChange={onChange}
-      />
-      <div className={styles.ranks}>
-        <Ranks colorblind={type === 'colorblind'} />
-      </div>
-    </label>
   );
 }
 

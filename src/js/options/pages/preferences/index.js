@@ -5,7 +5,9 @@ import React, { useCallback, useState } from 'react';
 import Button from '../../../components/button';
 import styles from './preferences.module.scss';
 import { useUser } from '../../../providers/user-provider';
+import Radio from '../../../components/radio';
 
+const ranks = ['A+', 'A', 'B', 'C', 'D', 'E', 'F'];
 const PreferencesPage = () => {
   return (
     <>
@@ -20,6 +22,7 @@ function Prefs() {
 
   const {
     alertOnSubmit,
+    blockedRank = 'C',
     ignoredEmailAddresses = [],
     ignoredSites = []
   } = user.preferences;
@@ -42,48 +45,63 @@ function Prefs() {
             label="Alert when submitting forms with email address fields"
           />
         </div>
+
+        <div className={styles.pageSection}>
+          <h2>Alert slider</h2>
+          <p>Only be alerted if the score is below this rank:</p>
+          {ranks.map(rank => {
+            <Radio
+              name="blockedRank"
+              checked={blockedRank === rank}
+              onChange={({ currentTarget }) => {
+                if (currentTarget.checked) {
+                  dispatch({
+                    type: 'save-preference',
+                    data: { blockedRank: rank }
+                  });
+                }
+              }}
+            />;
+          })}
+        </div>
+        <div className={styles.pageSection}>
+          <h2>Alert Ignore List</h2>
+          <p>
+            Don't be alerted when submitting forms using these email addresses:
+          </p>
+          <IgnoreForm
+            type="email"
+            name="ignoredEmailAddresses"
+            onSubmit={email =>
+              dispatch({ type: 'add-ignored-email-address', data: email })
+            }
+          />
+          <IgnoredList
+            type="Email addresses"
+            items={ignoredEmailAddresses}
+            onRemove={value =>
+              dispatch({ type: 'remove-ignored-email-address', data: value })
+            }
+          />
+        </div>
+        <div className={styles.pageSection}>
+          <h2>Site Ignore List</h2>
+          <p>Don't be alerted when submitting forms on these websites:</p>
+          <IgnoreForm
+            name="ignoredSites"
+            onSubmit={email =>
+              dispatch({ type: 'add-ignored-site', data: email })
+            }
+          />
+          <IgnoredList
+            type="Websites"
+            items={ignoredSites}
+            onRemove={value =>
+              dispatch({ type: 'remove-ignored-site', data: value })
+            }
+          />
+        </div>
       </form>
-      <div className={styles.pageSection}>
-        <h2>Alert slider</h2>
-        <p>Only be alerted if the score is below this rank:</p>
-      </div>
-      <div className={styles.pageSection}>
-        <h2>Alert Ignore List</h2>
-        <p>
-          Don't be alerted when submitting forms using these email addresses:
-        </p>
-        <IgnoreForm
-          type="email"
-          name="ignoredEmailAddresses"
-          onSubmit={email =>
-            dispatch({ type: 'add-ignored-email-address', data: email })
-          }
-        />
-        <IgnoredList
-          type="Email addresses"
-          items={ignoredEmailAddresses}
-          onRemove={value =>
-            dispatch({ type: 'remove-ignored-email-address', data: value })
-          }
-        />
-      </div>
-      <div className={styles.pageSection}>
-        <h2>Site Ignore List</h2>
-        <p>Don't be alerted when submitting forms on these websites:</p>
-        <IgnoreForm
-          name="ignoredSites"
-          onSubmit={email =>
-            dispatch({ type: 'add-ignored-site', data: email })
-          }
-        />
-        <IgnoredList
-          type="Websites"
-          items={ignoredSites}
-          onRemove={value =>
-            dispatch({ type: 'remove-ignored-site', data: value })
-          }
-        />
-      </div>
     </>
   );
 }

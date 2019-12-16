@@ -305,7 +305,7 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
       colorSet
       alertOnSubmit
       ignoredEmailAddresses
-      ignoreSites
+      ignoredSites
     }
   }
 }

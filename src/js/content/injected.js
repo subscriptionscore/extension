@@ -70,6 +70,6 @@ function onSubmitForm(e, $form, $emailInput) {
 }
 (async () => {
   ignoredEmailAddresses = await getPreference('ignoredEmailAddresses');
-  blockedRank = await getPreference('blockedRanks');
+  blockedRank = await getPreference('blockedRank');
   attachToEmailForms();
 })();

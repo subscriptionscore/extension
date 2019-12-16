@@ -41,14 +41,6 @@
   margin-right: 10px;
 }
 
-.radio {
-  display: none;
-
-  &:checked ~ .ranks:after {
-    visibility: visible;
-  }
-}
-
 .dark-mode {
   display: flex;
 
