@@ -23,6 +23,7 @@ export function injectModal(onApproved, onCancelled) {
     } else if (event.data.popupResponse === 'cancel') {
       onCancelled();
     }
+    document.body.removeChild($frame);
   };
   window.addEventListener('message', onMessage, { capture: true, once: true });
   document.body.appendChild($frame);

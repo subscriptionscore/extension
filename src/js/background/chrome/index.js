@@ -1,4 +1,13 @@
-import { getDomainScore } from '../scores';
+import {
+  getDomainScore,
+  addSignupAllowedRequest,
+  addSignupBlockedRequest
+} from '../scores';
+
+let currentPage = {
+  rank: null,
+  domain: null
+};
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   const { url } = tab;
@@ -19,6 +28,18 @@ chrome.runtime.onInstalled.addListener(details => {
   }
 });
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action == 'signup-allowed') {
+    addSignupAllowedRequest(request.domain);
+  }
+  if (request.action == 'signup-blocked') {
+    addSignupBlockedRequest(request.domain);
+  }
+  if (request.action === 'get-current-rank') {
+    sendResponse(currentPage);
+  }
+});
+
 // call when the page changes and we need to
 // fetch a new rank for the current url
 async function onPageChange(url) {
@@ -29,7 +50,11 @@ async function onPageChange(url) {
     chrome.browserAction.enable();
     const domainScore = await getDomainScore(url);
     if (domainScore) {
-      const { rank } = domainScore;
+      const { rank, domain } = domainScore;
+      currentPage = {
+        domain,
+        rank
+      };
       if (rank) {
         chrome.browserAction.setBadgeText({ text: rank });
       }
