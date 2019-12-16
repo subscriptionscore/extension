@@ -288,7 +288,7 @@ query User($licenceKey: ID!) {
       colorSet
       alertOnSubmit
       ignoredEmailAddresses
-      ignoreSites
+      ignoredSites
     }
   }
 }
@@ -308,7 +308,7 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
       colorSet
       alertOnSubmit
       ignoredEmailAddresses
-      ignoreSites
+      ignoredSites
     }
   }
 }
