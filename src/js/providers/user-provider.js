@@ -18,7 +18,8 @@ const initialState = {
       darkMode: false,
       colorSet: 'normal',
       alertOnSubmit: true,
-      alertIgnoreList: []
+      ignoredEmailAddresses: [],
+      ignoredSites: []
     }
   },
   licenceKey: '',
@@ -79,15 +80,15 @@ const reducer = (state = initialState, action) => {
         }
       };
     }
-    case 'add-ignore-alert': {
-      const existingList = state.user.preferences.alertIgnoreList;
+    case 'add-ignored-email-address': {
+      const existingList = state.user.preferences.ignoredEmailAddresses;
       return {
         ...state,
         user: {
           ...state.user,
           preferences: {
             ...state.user.preferences,
-            alertIgnoreList: [
+            ignoredEmailAddresses: [
               ...existingList.filter(e => e !== action.data),
               action.data
             ]
@@ -95,16 +96,46 @@ const reducer = (state = initialState, action) => {
         }
       };
     }
-    case 'remove-ignore-alert': {
+    case 'remove-ignored-email-address': {
       const email = action.data;
-      const existingList = state.user.preferences.alertIgnoreList;
+      const existingList = state.user.preferences.ignoredEmailAddresses;
       return {
         ...state,
         user: {
           ...state.user,
           preferences: {
             ...state.user.preferences,
-            alertIgnoreList: existingList.filter(d => d !== email)
+            ignoredEmailAddresses: existingList.filter(d => d !== email)
+          }
+        }
+      };
+    }
+    case 'add-ignored-site': {
+      const existingList = state.user.preferences.ignoredSites;
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          preferences: {
+            ...state.user.preferences,
+            ignoredSites: [
+              ...existingList.filter(e => e !== action.data),
+              action.data
+            ]
+          }
+        }
+      };
+    }
+    case 'remove-ignored-site': {
+      const email = action.data;
+      const existingList = state.user.preferences.ignoredSites;
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          preferences: {
+            ...state.user.preferences,
+            ignoredSites: existingList.filter(d => d !== email)
           }
         }
       };
@@ -272,6 +303,7 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
     preferences {
       darkMode
       colorSet
+      alertOnSubmit
       ignoredEmailAddresses
       ignoreSites
     }
@@ -288,7 +320,6 @@ async function updateUserPreferences(licenceKey, preferences) {
 }
 
 function mapUser(user, state) {
-  console.log('map user', user, state);
   let preferences;
   if (!user.preferences) {
     preferences = state.user.preferences;

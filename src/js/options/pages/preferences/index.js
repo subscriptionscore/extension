@@ -18,7 +18,11 @@ const PreferencesPage = () => {
 function Prefs() {
   const [{ user }, dispatch] = useUser();
 
-  const { alertOnSubmit } = user.preferences;
+  const {
+    alertOnSubmit,
+    ignoredEmailAddresses = [],
+    ignoredSites = []
+  } = user.preferences;
 
   const onChange = useCallback(
     (key, value) => {
@@ -44,40 +48,67 @@ function Prefs() {
         <p>Only be alerted if the score is below this rank:</p>
       </div>
       <div className={styles.pageSection}>
-        <IgnoreForm />
-        <IgnoreList />
+        <h2>Alert Ignore List</h2>
+        <p>
+          Don't be alerted when submitting forms using these email addresses:
+        </p>
+        <IgnoreForm
+          type="email"
+          name="ignoredEmailAddresses"
+          onSubmit={email =>
+            dispatch({ type: 'add-ignored-email-address', data: email })
+          }
+        />
+        <IgnoredList
+          type="Email addresses"
+          items={ignoredEmailAddresses}
+          onRemove={value =>
+            dispatch({ type: 'remove-ignored-email-address', data: value })
+          }
+        />
+      </div>
+      <div className={styles.pageSection}>
+        <h2>Site Ignore List</h2>
+        <p>Don't be alerted when submitting forms on these websites:</p>
+        <IgnoreForm
+          name="ignoredSites"
+          onSubmit={email =>
+            dispatch({ type: 'add-ignored-site', data: email })
+          }
+        />
+        <IgnoredList
+          type="Websites"
+          items={ignoredSites}
+          onRemove={value =>
+            dispatch({ type: 'remove-ignored-site', data: value })
+          }
+        />
       </div>
     </>
   );
 }
 
-function IgnoreForm() {
-  const [{ loading }, dispatch] = useUser();
+function IgnoreForm({ name, type = 'text', onSubmit }) {
+  const [{ loading }] = useUser();
   const [value, setValue] = useState('');
 
-  const onAddEmail = useCallback(
-    email => {
-      dispatch({ type: 'add-ignore-alert', data: email });
-      setValue('');
-    },
-    [dispatch]
-  );
+  const submit = useCallback(() => {
+    onSubmit(value);
+    setValue('');
+  }, [onSubmit, value]);
 
   return (
     <form
-      id="licence-key-form"
       className={styles.form}
       onSubmit={e => {
         e.preventDefault();
-        return onAddEmail(value);
+        return submit();
       }}
     >
-      <h2>Alert Ignore List</h2>
-      <p>Don't alert when entering these email addresses into forms</p>
       <InputGroup>
         <FormInput
-          name="alertIgnoreList"
-          type="email"
+          name={name}
+          type={type}
           value={value}
           disabled={loading}
           onChange={e => setValue(e.currentTarget.value)}
@@ -95,32 +126,32 @@ function IgnoreForm() {
   );
 }
 
-const IgnoreList = React.memo(function IgnoreList() {
-  const [{ user, loading }, dispatch] = useUser();
-  const { alertIgnoreList } = user.preferences;
+const IgnoredList = React.memo(function IgnoredList({ type, items, onRemove }) {
+  const [removing, setRemoving] = useState(false);
 
-  const onRemoveEmail = useCallback(
+  const remove = useCallback(
     email => {
-      dispatch({ type: 'remove-ignore-alert', data: email });
+      setRemoving(true);
+      onRemove(email);
+      setRemoving(false);
     },
-    [dispatch]
+    [onRemove]
   );
 
-  if (!alertIgnoreList.length) {
+  if (!items.length) {
     return (
-      <p>Email addresses you don't want to be alerted for will show up here</p>
+      <p className={styles.listEmpty}>
+        {type} you don't want to be alerted for will show up here
+      </p>
     );
   }
+
   return (
     <ul className={styles.list}>
-      {alertIgnoreList.map(email => (
+      {items.map(email => (
         <li key={email} className={styles.listItem}>
           <span className={styles.email}>{email}</span>
-          <Button
-            smaller
-            onClick={() => onRemoveEmail(email)}
-            disabled={loading}
-          >
+          <Button smaller onClick={() => remove(email)} disabled={removing}>
             x
           </Button>
         </li>
