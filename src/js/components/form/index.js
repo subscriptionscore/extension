@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from '../../utils/classnames';
 import styles from './form.module.scss';
 
 export const FormCheckbox = ({ id, name, label, ...props }) => {
@@ -17,14 +18,24 @@ export const FormCheckbox = ({ id, name, label, ...props }) => {
   );
 };
 
-export const FormInput = ({ id, name, type = 'text', ...props }) => {
+export const FormInput = ({
+  id,
+  name,
+  className = '',
+  type = 'text',
+  ...props
+}) => {
+  const classes = cx({
+    [className]: true,
+    [styles.input]: true
+  });
   return (
     <input
       {...props}
       id={id}
       type={type}
       name={name}
-      className={styles.input}
+      className={classes}
       spellCheck="false"
     />
   );

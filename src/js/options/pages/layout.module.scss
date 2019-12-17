@@ -1,5 +1,5 @@
 @import '../../../styles/common/colors.scss';
-@import '../../../styles/common/themes.scss';
+@import '../../../styles/mixins/themes.scss';
 
 .container {
   // height: 100%;
@@ -22,16 +22,15 @@
   width: 200px;
   list-style: none;
   font-size: 16px;
-  font-weight: bold;
 }
 
-.item {
+.nav-item {
   cursor: pointer;
   transition: background-color 150ms ease-in-out;
   margin: 0;
 
   &:hover {
-    .link {
+    .nav-link {
       @include themify() {
         background-color: theme('navActiveBackground');
       }
@@ -39,7 +38,7 @@
   }
 }
 
-.link {
+.nav-link {
   @include themify() {
     color: theme('navColor');
   }
@@ -50,12 +49,11 @@
   margin-bottom: 5px;
   border-left: 3px solid transparent;
 
-  &.active {
+  &.nav-active {
     @include themify() {
       background-color: theme('navActiveBackground');
+      border-color: theme('highlightColor');
     }
-
-    border-color: $color-highlight;
   }
 }
 
@@ -64,15 +62,6 @@
   margin-left: 50px;
   max-width: 800px;
   font-size: 16px;
-  a {
-    text-decoration: none;
-    font-family: Roboto;
-    color: $button-background--light;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 
 .section {

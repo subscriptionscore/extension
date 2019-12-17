@@ -1,0 +1,15 @@
+@import '../../../styles/common/colors.scss';
+@import '../../../styles/mixins/themes.scss';
+
+.text-link {
+  text-decoration: none;
+  font-family: Roboto;
+
+  @include themify() {
+    color: theme('linkColor');
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

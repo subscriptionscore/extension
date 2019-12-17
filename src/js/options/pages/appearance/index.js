@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 
 import { FormCheckbox } from '../../../components/form';
+import Radio from '../../../components/radio';
 import Rank from '../../../components/rank';
 import styles from './appearance.module.scss';
 import { useUser } from '../../../providers/user-provider';
-import Radio from '../../../components/radio';
 
 const AppearancePage = () => {
   return (
@@ -69,7 +69,7 @@ function Colors() {
             name="darkMode"
             checked={darkMode}
             onChange={onChangeDarkMode}
-            label={<h2>Dark mode</h2>}
+            label="Dark mode"
           />
         </div>
       </div>

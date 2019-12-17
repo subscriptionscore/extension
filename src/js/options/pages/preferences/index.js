@@ -126,7 +126,7 @@ function AlertContent({
         </div>
       </div>
       <div className={styles.pageSection}>
-        <h2>Ignore Emails</h2>
+        <h2>Ignore emails</h2>
         <div className={styles.helpText}>
           <p>
             We wont show you alerts if you are signing up with these email
@@ -149,7 +149,7 @@ function AlertContent({
         />
       </div>
       <div className={styles.pageSection}>
-        <h2>Ignore Websites</h2>
+        <h2>Ignore websites</h2>
         <div className={styles.helpText}>
           <p>We wont show you alerts for form submissions on these websites.</p>
         </div>

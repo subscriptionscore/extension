@@ -5,7 +5,7 @@
 }
 
 .form {
-  max-width: 400px;
+  max-width: 500px; // wide enough for licence key in monospace
 }
 
 .key {
@@ -15,7 +15,11 @@
   border-radius: 4px;
   display: inline-block;
   margin-right: 5px;
-  font-family: 'Courier New', Courier, monospace;
   font-weight: 600;
   font-size: 14px;
+}
+
+.key,
+.licenceInput {
+  font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
 }

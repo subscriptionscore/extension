@@ -1,31 +1,35 @@
-@import './colors.scss';
+@import '../common/colors.scss';
 
 $themes: (
   light: (
     backgroundColor: $background--light,
     textColor: $text--light,
+    highlightColor: $color-highlight,
     navColor: $nav-text--light,
     navActiveBackground: $nav-active-background--light,
     inputBackground: $input-background--light,
-    inputBorder: rgba(0, 0, 0, 0.1),
-    inputBorderFocus: #1d1e26,
+    inputBorder: $input-border-color,
+    inputBorderFocus: $input-border-focus--light,
     buttonBackground: $button-background--light,
     buttonBackgroundHover: darken($button-background--light, 5%),
     buttonBackgroundPulseFrom: $button-pulse-from--light,
-    buttonBackgroundPulseTo: $button-pulse-to--light
+    buttonBackgroundPulseTo: $button-pulse-to--light,
+    linkColor: $link-color--light
   ),
   dark: (
     backgroundColor: $background--dark,
     textColor: $text--dark,
+    highlightColor: $color-highlight--dark,
     navColor: $nav-text--dark,
     navActiveBackground: $nav-active-background--dark,
     inputBackground: $input-background--dark,
-    inputBorder: rgba(0, 0, 0, 0.1),
-    inputBorderFocus: #e7e7e7,
+    inputBorder: $input-border-color,
+    inputBorderFocus: $input-border-focus--dark,
     buttonBackground: $button-background--dark,
     buttonBackgroundHover: darken($button-background--dark, 5%),
     buttonBackgroundPulseFrom: $button-pulse-from--dark,
-    buttonBackgroundPulseTo: $button-pulse-to--dark
+    buttonBackgroundPulseTo: $button-pulse-to--dark,
+    linkColor: $link-color--dark
   )
 );
 

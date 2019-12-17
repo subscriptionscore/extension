@@ -1,5 +1,5 @@
 @import '../../../styles/common/colors.scss';
-@import '../../../styles/common/themes.scss';
+@import '../../../styles/mixins/themes.scss';
 
 .input {
   border-radius: 5px;
@@ -10,13 +10,11 @@
   font-size: 16px;
   box-sizing: border-box;
   outline: 0;
-  border: 2px solid transparent;
   -webkit-appearance: none;
-  max-width: 400px;
 
   @include themify() {
     background-color: theme('inputBackground');
-    border-color: theme('inputBorder');
+    border: 2px solid theme('inputBorder');
     color: theme('textColor');
   }
 
@@ -44,18 +42,21 @@
     left: 0;
     top: 4px;
     border: 1px solid $color-highlight;
+
+    @include themify() {
+      border-color: theme('highlightColor');
+    }
+
     background-color: white;
     border-radius: 3px;
     transition: border-color 200ms ease-in-out;
   }
 
-  &:hover + .checkbox-label:before {
-    border-color: lighten($color-highlight, 15%);
-  }
-
   + .checkbox-label:after {
     content: '';
-    color: $color-highlight;
+    @include themify() {
+      color: theme('highlightColor');
+    }
     border: 3px solid;
     width: 7px;
     height: 15px;
@@ -112,7 +113,6 @@
   input {
     flex: 1;
     margin-right: 10px;
-    font-family: monospace;
   }
 
   @media (max-width: 400px) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextLink } from '../../../components/text';
 import styles from './about.module.scss';
 
 const teamImage =
@@ -36,10 +37,10 @@ const AboutPage = () => {
           <li>a way to avoid subscribing to bad mailing lists</li>
         </ul>
         <p>
-          <a href="https://leavemealone.app">Leave Me Alone</a> was born to help
-          solve the first two problems. While{' '}
-          <a href="subscriptionscore.com">Subscription Score</a> addresses the
-          third.
+          <TextLink href="https://leavemealone.app">Leave Me Alone</TextLink>{' '}
+          was born to help solve the first two problems. While{' '}
+          <TextLink href="subscriptionscore.com">Subscription Score</TextLink>{' '}
+          addresses the third.
         </p>
       </div>
 
