@@ -6,10 +6,10 @@ const teamImage =
 
 const AboutPage = () => {
   return (
-    <>
+    <div className={styles.about}>
       <h1>About</h1>
-      <h2>Our mission.</h2>
-      <div>
+      <div className={styles.pageSection}>
+        <h2>Our mission.</h2>
         <p>
           Helping people <strong>keep</strong> control of their inbox.
         </p>
@@ -43,30 +43,33 @@ const AboutPage = () => {
         </p>
       </div>
 
-      <h2>Who are we?</h2>
-      <div className={styles.block}>
-        <div className={styles.left}>
-          <p>
-            Hey! 👋 We're Danielle and James, a couple of independent
-            developers.
-          </p>
-          <p>
-            We work on products that help people because it's rewarding and we
-            love it, which we think is a good reason to do just about anything!
-          </p>
-          <p>
-            We're building Leave Me Alone & Subscription Score on our own
-            without funding or outside support. We're real people looking to
-            help you, and others like you. ❤️
-          </p>
+      <div className={styles.pageSection}>
+        <h2>Who are we?</h2>
+        <div className={styles.block}>
+          <div className={styles.left}>
+            <p>
+              Hey! 👋 We're Danielle and James, a couple of independent
+              developers.
+            </p>
+            <p>
+              We work on products that help people because it's rewarding and we
+              love it, which we think is a good reason to do just about
+              anything!
+            </p>
+            <p>
+              We're building Leave Me Alone & Subscription Score on our own
+              without funding or outside support. We're real people looking to
+              help you, and others like you. ❤️
+            </p>
+          </div>
+          <img
+            className={styles.image}
+            title="Image of Danielle and James"
+            src={teamImage}
+          />
         </div>
-        <img
-          className={styles.image}
-          title="Image of Danielle and James"
-          src={teamImage}
-        />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,3 +1,5 @@
+@import '../layout.module.scss';
+
 .image {
   float: right;
   border-radius: 50%;
@@ -19,4 +21,14 @@
 
 .left {
   float: left;
+}
+
+.page-section {
+  @extend .section;
+}
+
+.about {
+  h2 {
+    margin: 0 0 1em 0;
+  }
 }

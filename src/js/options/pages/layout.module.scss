@@ -14,6 +14,7 @@
   h2 {
     font-size: 18px;
     line-height: 22px;
+    margin: 0;
   }
 }
 
@@ -76,4 +77,19 @@
 
 .section {
   margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+
+  &:before {
+    content: '';
+    border-radius: 5px;
+    position: absolute;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    top: -15px;
+    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+  }
 }

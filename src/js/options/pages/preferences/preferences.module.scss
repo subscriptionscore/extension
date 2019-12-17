@@ -3,21 +3,6 @@
 
 .page-section {
   @extend .section;
-  position: relative;
-  z-index: 1;
-
-  &:before {
-    content: '';
-    border-radius: 5px;
-    position: absolute;
-    left: -15px;
-    right: -15px;
-    bottom: -15px;
-    top: -15px;
-    z-index: 0;
-    background-color: rgba(0, 0, 0, 0.15);
-    pointer-events: none;
-  }
 }
 
 .list {
@@ -50,5 +35,12 @@
   }
   img {
     width: 100%;
+  }
+}
+
+.rank-radio {
+  label {
+    display: flex;
+    flex-direction: column;
   }
 }

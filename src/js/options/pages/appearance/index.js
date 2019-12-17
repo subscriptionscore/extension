@@ -30,7 +30,9 @@ function Colors() {
     <form>
       <div className={styles.pageSection}>
         <h2>Colors</h2>
+
         <Radio
+          className={styles.colors}
           name="colors-radio"
           checked={colorSet === 'normal'}
           onChange={() =>
@@ -40,8 +42,11 @@ function Colors() {
           <div className={styles.ranks}>
             <Ranks colorblind={false} />
           </div>
+          <span className={styles.desc}>Chromatic Palette</span>
         </Radio>
+
         <Radio
+          className={styles.colors}
           name="colors-radio"
           checked={colorSet === 'colorblind'}
           onChange={() =>
@@ -54,6 +59,7 @@ function Colors() {
           <div className={styles.ranks}>
             <Ranks colorblind={true} />
           </div>
+          <span className={styles.desc}>Colorblind-friendly Palette</span>
         </Radio>
       </div>
 

@@ -1,7 +1,57 @@
-.radio {
-  // display: none;
+@import '../../../styles/common/colors.scss';
 
-  // &:checked ~ .ranks:after {
-  //   visibility: visible;
-  // }
+.radio {
+  > input {
+    display: none;
+
+    &:checked + .label:after {
+      visibility: visible;
+    }
+  }
+}
+
+.label {
+  position: relative;
+  padding: 0.65em 0 0.65em 30px;
+  display: inline-block;
+  cursor: pointer;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+  }
+
+  &:before {
+    width: 16px;
+    height: 16px;
+    border: 1px solid $color-highlight;
+    background: white;
+    left: 0;
+  }
+  &:after {
+    width: 8px;
+    height: 8px;
+    background-color: $color-highlight;
+    left: 4px;
+    visibility: hidden;
+  }
+
+  .vertical & {
+    padding: 30px 5px 0 5px;
+
+    &:before,
+    &:after {
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      border-radius: 50%;
+    }
+    &:after {
+      top: 4px;
+    }
+  }
 }

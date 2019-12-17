@@ -6,6 +6,7 @@ import Button from '../../../components/button';
 import styles from './preferences.module.scss';
 import { useUser } from '../../../providers/user-provider';
 import Radio from '../../../components/radio';
+import Rank from '../../../components/rank';
 
 const popupUrl =
   'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
@@ -27,7 +28,8 @@ function Prefs() {
     alertOnSubmit,
     blockedRank = 'C',
     ignoredEmailAddresses = [],
-    ignoredSites = []
+    ignoredSites = [],
+    colorSet = 'normal'
   } = user.preferences;
 
   const onChange = useCallback(
@@ -67,6 +69,7 @@ function Prefs() {
         blockedRank={blockedRank}
         ignoredEmailAddresses={ignoredEmailAddresses}
         ignoredSites={ignoredSites}
+        colorblind={colorSet === 'colorblind'}
         dispatch={dispatch}
       />
     </>
@@ -78,6 +81,7 @@ function AlertContent({
   blockedRank,
   ignoredEmailAddresses,
   ignoredSites,
+  colorblind,
   dispatch
 }) {
   if (!show) {
@@ -90,22 +94,36 @@ function AlertContent({
         <div className={styles.helpText}>
           <p>We will only show an alert if the rank is below this value.</p>
         </div>
-        {ranks.map(rank => {
-          <Radio
-            name="blockedRank"
-            checked={blockedRank === rank}
-            onChange={({ currentTarget }) => {
-              if (currentTarget.checked) {
-                dispatch({
-                  type: 'save-preference',
-                  data: { blockedRank: rank }
-                });
-              }
-            }}
-          >
-            {rank}
-          </Radio>;
-        })}
+        {ranks.map(rank => (
+          <span key={rank}>
+            <Radio
+              vertical={true}
+              name="blockedRank"
+              className={styles.rankRadio}
+              checked={blockedRank === rank}
+              onChange={({ currentTarget }) => {
+                if (currentTarget.checked) {
+                  dispatch({
+                    type: 'save-preference',
+                    data: { blockedRank: rank }
+                  });
+                }
+              }}
+            >
+              <Rank rank={rank} colorblind={colorblind} />
+            </Radio>
+          </span>
+        ))}
+        <div className={styles.helpText}>
+          <p>
+            An alert will show for sites ranked{' '}
+            <strong>
+              {blockedRank}
+              <span>{blockedRank === 'F' ? null : ' or below'}</span>
+            </strong>
+            .
+          </p>
+        </div>
       </div>
       <div className={styles.pageSection}>
         <h2>Ignore Emails</h2>

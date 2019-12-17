@@ -1,18 +1,30 @@
 import React from 'react';
 import styles from './radio.module.scss';
+import classnames from '../../utils/classnames';
 
-const Radio = ({ checked, name, children, onChange }) => {
+const Radio = ({
+  checked,
+  vertical,
+  className = '',
+  name,
+  children,
+  onChange
+}) => {
+  const classes = classnames({
+    [styles.radio]: true,
+    [styles.vertical]: vertical,
+    [className]: !!className
+  });
   return (
-    <label>
+    <label className={classes}>
       <input
         type="radio"
         name={name}
-        className={styles.radio}
         spellCheck="false"
         checked={checked}
         onChange={onChange}
       />
-      {children}
+      <span className={styles.label}>{children}</span>
     </label>
   );
 };

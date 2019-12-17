@@ -1,12 +1,11 @@
 import React, { useMemo, useState } from 'react';
+import styles from './layout.module.scss';
 
 import Appearance from './appearance';
 import Billing from './billing';
-import { FormError } from '../../components/form';
 import Preferences from './preferences';
 import About from './about';
 import cx from '../../utils/classnames';
-import styles from './layout.module.scss';
 
 const NAV_ITEMS = [
   {
