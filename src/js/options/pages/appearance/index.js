@@ -4,7 +4,7 @@ import { FormCheckbox } from '../../../components/form';
 import Rank from '../../../components/rank';
 import styles from './appearance.module.scss';
 import { useUser } from '../../../providers/user-provider';
-import { Radio } from '../../../components/radio';
+import Radio from '../../../components/radio';
 
 const AppearancePage = () => {
   return (

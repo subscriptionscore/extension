@@ -1,8 +1,6 @@
 @import '../../styles/common/themes.scss';
 
-.app-theme-wrapper,
-.app-container {
-  height: 100%;
+.app-theme-wrapper {
 }
 
 .app-container {
@@ -10,4 +8,13 @@
     color: theme('textColor');
     background-color: theme('backgroundColor');
   }
+}
+
+.app-theme-wrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.app-container {
+  min-height: 100%;
 }

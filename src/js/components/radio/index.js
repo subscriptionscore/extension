@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './radio.module.scss';
 
-export default function Radio({ checked, name, children, onChange }) {
+const Radio = ({ checked, name, children, onChange }) => {
   return (
     <label>
       <input
@@ -15,4 +15,6 @@ export default function Radio({ checked, name, children, onChange }) {
       {children}
     </label>
   );
-}
+};
+
+export default Radio;

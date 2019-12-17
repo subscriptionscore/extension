@@ -7,6 +7,9 @@ import styles from './preferences.module.scss';
 import { useUser } from '../../../providers/user-provider';
 import Radio from '../../../components/radio';
 
+const popupUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
+
 const ranks = ['A+', 'A', 'B', 'C', 'D', 'E', 'F'];
 const PreferencesPage = () => {
   return (
@@ -42,66 +45,110 @@ function Prefs() {
             name="alertOnSubmit"
             checked={alertOnSubmit}
             onChange={() => onChange('alertOnSubmit', !alertOnSubmit)}
-            label="Alert when submitting forms with email address fields"
+            label="Show alerts when submitting forms"
           />
-        </div>
-
-        <div className={styles.pageSection}>
-          <h2>Alert slider</h2>
-          <p>Only be alerted if the score is below this rank:</p>
-          {ranks.map(rank => {
-            <Radio
-              name="blockedRank"
-              checked={blockedRank === rank}
-              onChange={({ currentTarget }) => {
-                if (currentTarget.checked) {
-                  dispatch({
-                    type: 'save-preference',
-                    data: { blockedRank: rank }
-                  });
-                }
-              }}
-            />;
-          })}
-        </div>
-        <div className={styles.pageSection}>
-          <h2>Alert Ignore List</h2>
-          <p>
-            Don't be alerted when submitting forms using these email addresses:
-          </p>
-          <IgnoreForm
-            type="email"
-            name="ignoredEmailAddresses"
-            onSubmit={email =>
-              dispatch({ type: 'add-ignored-email-address', data: email })
-            }
-          />
-          <IgnoredList
-            type="Email addresses"
-            items={ignoredEmailAddresses}
-            onRemove={value =>
-              dispatch({ type: 'remove-ignored-email-address', data: value })
-            }
-          />
-        </div>
-        <div className={styles.pageSection}>
-          <h2>Site Ignore List</h2>
-          <p>Don't be alerted when submitting forms on these websites:</p>
-          <IgnoreForm
-            name="ignoredSites"
-            onSubmit={email =>
-              dispatch({ type: 'add-ignored-site', data: email })
-            }
-          />
-          <IgnoredList
-            type="Websites"
-            items={ignoredSites}
-            onRemove={value =>
-              dispatch({ type: 'remove-ignored-site', data: value })
-            }
-          />
+          {alertOnSubmit ? null : (
+            <div className={styles.helpText}>
+              <p>
+                We can show you an alert if you are subscribing to a mailing
+                list that we think is particulaly bad.
+              </p>
+              <p>
+                When you submit a form that you have entered your email address
+                into then we will show you a popup like this;
+              </p>
+              <img src={popupUrl} alt="Example popup" />
+            </div>
+          )}
         </div>
       </form>
+      <AlertContent
+        show={alertOnSubmit}
+        blockedRank={blockedRank}
+        ignoredEmailAddresses={ignoredEmailAddresses}
+        ignoredSites={ignoredSites}
+        dispatch={dispatch}
+      />
+    </>
+  );
+}
+
+function AlertContent({
+  show,
+  blockedRank,
+  ignoredEmailAddresses,
+  ignoredSites,
+  dispatch
+}) {
+  if (!show) {
+    return null;
+  }
+  return (
+    <>
+      <div className={styles.pageSection}>
+        <h2>Alert threshold</h2>
+        <div className={styles.helpText}>
+          <p>We will only show an alert if the rank is below this value.</p>
+        </div>
+        {ranks.map(rank => {
+          <Radio
+            name="blockedRank"
+            checked={blockedRank === rank}
+            onChange={({ currentTarget }) => {
+              if (currentTarget.checked) {
+                dispatch({
+                  type: 'save-preference',
+                  data: { blockedRank: rank }
+                });
+              }
+            }}
+          >
+            {rank}
+          </Radio>;
+        })}
+      </div>
+      <div className={styles.pageSection}>
+        <h2>Ignore Emails</h2>
+        <div className={styles.helpText}>
+          <p>
+            We wont show you alerts if you are signing up with these email
+            addresses.
+          </p>
+        </div>
+        <IgnoreForm
+          type="email"
+          name="ignoredEmailAddresses"
+          onSubmit={email =>
+            dispatch({ type: 'add-ignored-email-address', data: email })
+          }
+        />
+        <IgnoredList
+          type="Email addresses"
+          items={ignoredEmailAddresses}
+          onRemove={value =>
+            dispatch({ type: 'remove-ignored-email-address', data: value })
+          }
+        />
+      </div>
+      <div className={styles.pageSection}>
+        <h2>Ignore Websites</h2>
+        <div className={styles.helpText}>
+          <p>We wont show you alerts for form submissions on these websites.</p>
+        </div>
+        <IgnoreForm
+          name="ignoredSites"
+          onSubmit={email =>
+            dispatch({ type: 'add-ignored-site', data: email })
+          }
+        />
+        <IgnoredList
+          type="Websites"
+          items={ignoredSites}
+          onRemove={value =>
+            dispatch({ type: 'remove-ignored-site', data: value })
+          }
+        />
+      </div>
     </>
   );
 }
@@ -117,7 +164,6 @@ function IgnoreForm({ name, type = 'text', onSubmit }) {
 
   return (
     <form
-      className={styles.form}
       onSubmit={e => {
         e.preventDefault();
         return submit();
@@ -159,7 +205,7 @@ const IgnoredList = React.memo(function IgnoredList({ type, items, onRemove }) {
   if (!items.length) {
     return (
       <p className={styles.listEmpty}>
-        {type} you don't want to be alerted for will show up here
+        {/* {type} you don't want to be alerted for will show up here */}
       </p>
     );
   }

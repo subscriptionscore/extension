@@ -3,6 +3,21 @@
 
 .page-section {
   @extend .section;
+  position: relative;
+  z-index: 1;
+
+  &:before {
+    content: '';
+    border-radius: 5px;
+    position: absolute;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    top: -15px;
+    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+  }
 }
 
 .list {
@@ -25,4 +40,15 @@
 .list-empty {
   font-style: italic;
   opacity: 0.8;
+}
+
+.help-text {
+  // padding-left: 24px;
+  padding-top: 20px;
+  p {
+    opacity: 0.75;
+  }
+  img {
+    width: 100%;
+  }
 }
