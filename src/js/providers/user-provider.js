@@ -26,7 +26,9 @@ const initialState = {
   licenceKey: '',
   loading: false,
   initialised: false,
-  loaded: false
+  loaded: false,
+  error: null,
+  success: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -54,6 +56,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         error: action.data
+      };
+    }
+    case 'set-success': {
+      return {
+        ...state,
+        success: action.data
       };
     }
     case 'set-loading': {
