@@ -1,4 +1,5 @@
 @import '../../../styles/common/colors.scss';
+@import '../../../styles/mixins/themes.scss';
 
 .radio {
   > input {
@@ -28,14 +29,18 @@
   &:before {
     width: 16px;
     height: 16px;
-    border: 1px solid $color-highlight;
+    @include themify() {
+      border: 1px solid theme('highlightColor');
+    }
     background: white;
     left: 0;
   }
   &:after {
     width: 8px;
     height: 8px;
-    background-color: $color-highlight;
+    @include themify() {
+      background-color: theme('highlightColor');
+    }
     left: 4px;
     visibility: hidden;
   }

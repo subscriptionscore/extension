@@ -19,7 +19,8 @@ const initialState = {
       colorSet: 'normal',
       alertOnSubmit: true,
       ignoredEmailAddresses: [],
-      ignoredSites: []
+      ignoredSites: [],
+      blockedRank: ''
     }
   },
   licenceKey: '',
@@ -289,6 +290,7 @@ query User($licenceKey: ID!) {
       alertOnSubmit
       ignoredEmailAddresses
       ignoredSites
+      blockedRank
     }
   }
 }
@@ -309,6 +311,7 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
       alertOnSubmit
       ignoredEmailAddresses
       ignoredSites
+      blockedRank
     }
   }
 }
