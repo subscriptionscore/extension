@@ -172,7 +172,6 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (!storageLoading && !state.initialised) {
       const { preferences, licenceKey } = storage;
-      console.log('initialising from storage...', storage);
       let data = initialState;
 
       if (licenceKey) {
@@ -223,7 +222,6 @@ const UserProvider = ({ children }) => {
   // save the user on preferences changed
   useEffect(() => {
     if (state.loaded) {
-      console.log('[user]: user changed', state.user);
       onUserChange(state.user);
     }
   }, [state.loaded, state.user, state.user.preferences]);
@@ -327,7 +325,6 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
 
 // update the user preferences using the licence key as the ID
 async function updateUserPreferences(licenceKey, preferences) {
-  console.log('[user]: saving user preferences', preferences);
   const options = { variables: { licenceKey, preferences } };
   const { updateUserPreferences } = await graphqlRequest(updateGql, options);
   return updateUserPreferences;

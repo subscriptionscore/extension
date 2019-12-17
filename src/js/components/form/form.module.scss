@@ -4,9 +4,9 @@
 $input-font-size: 18px;
 $input-line-height: 26px;
 
-.inputWrapper {
+.input-wrapper {
   display: flex;
-  flex-direction: column-reverse;
+  flex: 1;
 }
 .input {
   border-radius: 5px;
@@ -43,6 +43,8 @@ $input-line-height: 26px;
   font-size: 16px;
   opacity: 0.8;
   padding-left: 5px;
+  display: block;
+  margin-bottom: 5px;
 }
 
 .textarea {
@@ -81,12 +83,8 @@ $input-line-height: 26px;
 }
 
 .checkbox {
+  opacity: 0;
   position: absolute;
-  top: 4px;
-  left: 1px;
-  outline: 0;
-  width: 1px;
-  height: 1px;
 
   + .checkbox-label:before {
     content: '';

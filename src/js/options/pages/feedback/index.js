@@ -90,6 +90,9 @@ const Form = ({ domain }) => {
             }
             disabled={loading}
           />
+          <span className={styles.help}>
+            Just domain part - e.g. linkedin.com or facebook.com
+          </span>
         </div>
 
         <div className={styles.formGroup}>
@@ -193,6 +196,21 @@ const Form = ({ domain }) => {
     </form>
   );
 };
+
+const submitFeedbackGql = `
+mutation Feedback($licenceKey: ID!, $preferences: Preferences!) {
+  updateUserPreferences(licenceKey: $licenceKey, preferences: $preferences) {
+    preferences {
+      darkMode
+      colorSet
+      alertOnSubmit
+      ignoredEmailAddresses
+      ignoredSites
+      blockedRank
+    }
+  }
+}
+`;
 
 function submitFeedback() {
   return new Promise(resolve =>

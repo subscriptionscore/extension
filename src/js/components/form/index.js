@@ -31,7 +31,12 @@ export const FormInput = ({
     [styles.input]: true
   });
   return (
-    <label className={styles.inputWrapper}>
+    <>
+      {label ? (
+        <label htmlFor={name} className={styles.inputLabel}>
+          {label}
+        </label>
+      ) : null}
       <input
         {...props}
         id={id}
@@ -40,14 +45,18 @@ export const FormInput = ({
         className={classes}
         spellCheck="false"
       />
-      {label ? <span className={styles.inputLabel}>{label}</span> : null}
-    </label>
+    </>
   );
 };
 
 export const FormTextarea = ({ id, name, label, rows = '2', ...props }) => {
   return (
-    <label className={styles.inputWrapper}>
+    <>
+      {label ? (
+        <label htmlFor={name} className={styles.inputLabel}>
+          {label}
+        </label>
+      ) : null}
       <textarea
         {...props}
         id={id}
@@ -56,8 +65,7 @@ export const FormTextarea = ({ id, name, label, rows = '2', ...props }) => {
         className={styles.textarea}
         spellCheck="false"
       />
-      {label ? <span className={styles.inputLabel}>{label}</span> : null}
-    </label>
+    </>
   );
 };
 

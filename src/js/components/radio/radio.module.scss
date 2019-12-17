@@ -5,12 +5,8 @@
   position: relative;
 
   > input {
+    opacity: 0;
     position: absolute;
-    top: 4px;
-    left: 1px;
-    outline: 0;
-    width: 1px;
-    height: 1px;
 
     &:checked + .label:after {
       visibility: visible;
