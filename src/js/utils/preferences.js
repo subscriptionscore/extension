@@ -9,6 +9,7 @@ mutation User($preferences: Preferences!) {
       alertOnSubmit
       ignoredEmailAddresses
       ignoredSites
+      blockedRank
     }
   }
 }

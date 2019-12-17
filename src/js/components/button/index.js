@@ -9,9 +9,11 @@ const Button = ({
   loading = false,
   muted = false,
   smaller,
+  className = '',
   ...btnProps
 }) => {
   const classes = cx({
+    [className]: true,
     [styles.btn]: true,
     [styles.loading]: loading,
     [styles.muted]: muted,

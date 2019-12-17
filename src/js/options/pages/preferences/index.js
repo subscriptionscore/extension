@@ -3,10 +3,10 @@ import { FormCheckbox, FormInput, InputGroup } from '../../../components/form';
 import React, { useCallback, useState } from 'react';
 
 import Button from '../../../components/button';
-import styles from './preferences.module.scss';
-import { useUser } from '../../../providers/user-provider';
 import Radio from '../../../components/radio';
 import Rank from '../../../components/rank';
+import styles from './preferences.module.scss';
+import { useUser } from '../../../providers/user-provider';
 
 const popupUrl =
   'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
@@ -172,7 +172,6 @@ function AlertContent({
 }
 
 function IgnoreForm({ name, type = 'text', onSubmit }) {
-  const [{ loading }] = useUser();
   const [value, setValue] = useState('');
 
   const submit = useCallback(() => {
@@ -192,15 +191,9 @@ function IgnoreForm({ name, type = 'text', onSubmit }) {
           name={name}
           type={type}
           value={value}
-          disabled={loading}
           onChange={e => setValue(e.currentTarget.value)}
         />
-        <Button
-          type="submit"
-          as="button"
-          disabled={!value || loading}
-          loading={loading}
-        >
+        <Button type="submit" as="button" disabled={!value}>
           Add
         </Button>
       </InputGroup>

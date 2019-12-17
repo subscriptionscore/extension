@@ -652,3 +652,32 @@ p {
   font-weight: 500;
   line-height: 26px;
 }
+
+::-webkit-input-placeholder {
+  color: #bfbfbf;
+  font-size: 18px;
+  font-weight: 300;
+  text-transform: none;
+  opacity: 1;
+}
+:-moz-placeholder {
+  color: #bfbfbf;
+  font-size: 18px;
+  font-weight: 300;
+  text-transform: none;
+  opacity: 1;
+}
+::-moz-placeholder {
+  color: #bfbfbf;
+  font-size: 18px;
+  font-weight: 300;
+  text-transform: none;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: #bfbfbf;
+  font-size: 18px;
+  font-weight: 300;
+  text-transform: none;
+  opacity: 1;
+}

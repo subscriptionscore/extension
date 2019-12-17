@@ -1,4 +1,4 @@
-import React, { createContext, useMemo } from 'react';
+import React, { createContext, useCallback, useMemo } from 'react';
 
 import Alert from '../components/alerts';
 import { useUser } from './user-provider';
@@ -6,12 +6,34 @@ import { useUser } from './user-provider';
 export const AlertContext = createContext(null);
 
 const AlertProvider = ({ children }) => {
-  const [{ error }] = useUser();
+  const [{ success, error }, dispatch] = useUser();
+
+  const onDismiss = useCallback(() => {
+    if (success) {
+      dispatch({ type: 'set-success', data: null });
+    }
+    if (error) {
+      dispatch({ type: 'set-error', data: null });
+    }
+  }, [dispatch, error, success]);
 
   const content = useMemo(() => {
-    if (!error) return null;
-    return <Alert error>{error}</Alert>;
-  }, [error]);
+    if (error) {
+      return (
+        <Alert onDismiss={onDismiss} error>
+          {error}
+        </Alert>
+      );
+    }
+    if (success) {
+      return (
+        <Alert onDismiss={onDismiss} success>
+          {success}
+        </Alert>
+      );
+    }
+    return null;
+  }, [error, success, onDismiss]);
 
   return (
     <AlertContext.Provider>

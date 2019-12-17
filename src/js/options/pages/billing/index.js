@@ -16,7 +16,7 @@ const BillingPage = () => {
 };
 
 function LicenceKey() {
-  const [{ user, loading, initialised }, dispatch] = useUser();
+  const [{ user, initialised }, dispatch] = useUser();
   const { licenceKey, email } = user;
 
   const [value, setValue] = useState('');
@@ -57,16 +57,10 @@ function LicenceKey() {
             <FormInput
               name="licenceKey"
               value={value}
-              disabled={loading}
               onChange={e => setValue(e.currentTarget.value)}
               className={styles.licenceInput}
             />
-            <Button
-              type="submit"
-              as="button"
-              disabled={!value || loading}
-              loading={loading}
-            >
+            <Button type="submit" as="button" disabled={!value}>
               Save
             </Button>
           </InputGroup>
@@ -80,7 +74,7 @@ function LicenceKey() {
         </p>
       </>
     );
-  }, [dispatch, email, initialised, licenceKey, loading, value]);
+  }, [dispatch, email, initialised, licenceKey, value]);
 
   return content;
 }

@@ -20,13 +20,16 @@ const initialState = {
       colorSet: 'normal',
       alertOnSubmit: true,
       ignoredEmailAddresses: [],
-      ignoredSites: []
+      ignoredSites: [],
+      blockedRank: ''
     }
   },
   licenceKey: '',
   loading: false,
   initialised: false,
-  loaded: false
+  loaded: false,
+  error: null,
+  success: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -54,6 +57,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         error: action.data
+      };
+    }
+    case 'set-success': {
+      return {
+        ...state,
+        success: action.data
       };
     }
     case 'set-loading': {
@@ -164,7 +173,6 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (!storageLoading && !state.initialised) {
       const { preferences, licenceKey } = storage;
-      console.log('initialising from storage...', storage);
       let data = initialState;
 
       if (licenceKey) {
@@ -215,7 +223,6 @@ const UserProvider = ({ children }) => {
   // save the user on preferences changed
   useEffect(() => {
     if (state.loaded) {
-      console.log('[user]: user changed', state.user);
       onUserChange(state.user);
     }
   }, [state.loaded, state.user, state.user.preferences]);
@@ -290,6 +297,7 @@ query User($licenceKey: ID!) {
       alertOnSubmit
       ignoredEmailAddresses
       ignoredSites
+      blockedRank
     }
   }
 }

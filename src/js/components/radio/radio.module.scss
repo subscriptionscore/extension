@@ -1,11 +1,23 @@
 @import '../../../styles/common/colors.scss';
+@import '../../../styles/mixins/themes.scss';
 
 .radio {
+  position: relative;
+
   > input {
-    display: none;
+    opacity: 0;
+    position: absolute;
 
     &:checked + .label:after {
       visibility: visible;
+    }
+    &:focus + .label {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    &:focus + .label:before {
+      @include themify() {
+        border-color: theme('inputBorderFocus');
+      }
     }
   }
 }
@@ -28,14 +40,18 @@
   &:before {
     width: 16px;
     height: 16px;
-    border: 1px solid $color-highlight;
+    @include themify() {
+      border: 1px solid theme('highlightColor');
+    }
     background: white;
     left: 0;
   }
   &:after {
     width: 8px;
     height: 8px;
-    background-color: $color-highlight;
+    @include themify() {
+      background-color: theme('highlightColor');
+    }
     left: 4px;
     visibility: hidden;
   }
