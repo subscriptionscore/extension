@@ -1,13 +1,21 @@
 @import '../../../styles/common/colors.scss';
 @import '../../../styles/mixins/themes.scss';
 
+$input-font-size: 18px;
+$input-line-height: 26px;
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column-reverse;
+}
 .input {
   border-radius: 5px;
   height: 42px;
   padding: 0 5px;
   margin-bottom: 0;
   width: 100%;
-  font-size: 18px;
+  font-size: $input-font-size;
+  line-height: $input-line-height;
   box-sizing: border-box;
   outline: 0;
   -webkit-appearance: none;
@@ -31,8 +39,54 @@
   }
 }
 
+.input-label {
+  font-size: 16px;
+  opacity: 0.8;
+  padding-left: 5px;
+}
+
+.textarea {
+  border-radius: 5px;
+  margin-bottom: 0;
+  width: 100%;
+  font-size: $input-font-size;
+  line-height: $input-line-height;
+  box-sizing: border-box;
+  outline: 0;
+  padding: 5px;
+  resize: vertical;
+  min-height: 100px;
+
+  @include themify() {
+    background-color: theme('inputBackground');
+    border: 2px solid theme('inputBorder');
+    color: theme('textColor');
+  }
+
+  &:focus {
+    @include themify() {
+      border-color: theme('inputBorderFocus');
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: no-drop;
+  }
+}
+
+.checkbox-wrapper {
+  position: relative;
+}
+
 .checkbox {
-  display: none;
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  outline: 0;
+  width: 1px;
+  height: 1px;
 
   + .checkbox-label:before {
     content: '';
@@ -74,6 +128,14 @@
   &:checked + .checkbox-label:after {
     opacity: 1;
   }
+  &:focus + .checkbox-label {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  &:focus + .checkbox-label:before {
+    @include themify() {
+      border-color: theme('inputBorderFocus');
+    }
+  }
 }
 
 .checkbox-label {
@@ -104,6 +166,13 @@
   color: white;
   border: 1px solid darken($color-bg-error, 10%);
   background-color: $color-bg-error;
+}
+
+.form-success {
+  @extend .form-notification;
+  color: white;
+  border: 1px solid darken($color-bg-success, 10%);
+  background-color: $color-bg-success;
 }
 
 .input-group {

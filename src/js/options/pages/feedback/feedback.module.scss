@@ -1,0 +1,13 @@
+@import '../layout.module.scss';
+
+.page-section {
+  @extend .section;
+}
+
+.form-group {
+  margin-bottom: 40px;
+}
+
+.radio {
+  margin-right: 20px;
+}

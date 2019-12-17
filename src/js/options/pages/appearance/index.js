@@ -27,7 +27,13 @@ function Colors() {
   }, [darkMode, dispatch]);
 
   return (
-    <form>
+    <form
+      id="colors-form"
+      onSubmit={e => {
+        e.preventDefault();
+        return false;
+      }}
+    >
       <div className={styles.pageSection}>
         <h2>Colors</h2>
 
@@ -64,14 +70,12 @@ function Colors() {
       </div>
 
       <div className={styles.pageSection}>
-        <div className={styles['dark-mode']}>
-          <FormCheckbox
-            name="darkMode"
-            checked={darkMode}
-            onChange={onChangeDarkMode}
-            label="Dark mode"
-          />
-        </div>
+        <FormCheckbox
+          name="darkMode"
+          checked={darkMode}
+          onChange={onChangeDarkMode}
+          label="Dark mode"
+        />
       </div>
     </form>
   );

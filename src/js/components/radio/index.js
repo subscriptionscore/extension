@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from './radio.module.scss';
 import classnames from '../../utils/classnames';
+import styles from './radio.module.scss';
 
 const Radio = ({
   checked,

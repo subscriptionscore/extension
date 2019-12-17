@@ -1,11 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import styles from './layout.module.scss';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import About from './about';
 import Appearance from './appearance';
 import Billing from './billing';
+import Feedback from './feedback';
 import Preferences from './preferences';
 import cx from '../../utils/classnames';
+import styles from './layout.module.scss';
 
 const NAV_ITEMS = [
   {
@@ -23,11 +24,35 @@ const NAV_ITEMS = [
   {
     label: 'About',
     value: 'about'
+  },
+  {
+    label: 'Feedback',
+    value: 'feedback'
   }
 ];
 
 const Layout = () => {
   const [page, setPage] = useState(NAV_ITEMS[0].value);
+  const [params, setParams] = useState({});
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const page = urlParams.get('page');
+    const domain = urlParams.get('domain');
+
+    if (page && NAV_ITEMS.find(n => n.value === page)) {
+      setPage(page);
+    }
+    if (domain) {
+      setParams({ domain });
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('page changed', page);
+    window.history.replaceState({}, '', `?page=${page}`);
+  }, [page]);
 
   const content = useMemo(() => {
     if (page === 'billing') {
@@ -39,10 +64,13 @@ const Layout = () => {
     if (page === 'preferences') {
       return <Preferences />;
     }
+    if (page === 'feedback') {
+      return <Feedback params={params} />;
+    }
     if (page === 'about') {
       return <About />;
     }
-  }, [page]);
+  }, [page, params]);
 
   return (
     <div className={styles.container}>
