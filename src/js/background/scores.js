@@ -36,7 +36,7 @@ export async function getDomainScore(url) {
 }
 
 const gqlBlocked = `
-mutation SignupRequest($domain: String!, $allowed: Boolean) {
+mutation SignupRequest($domain: String!, $allowed: Boolean!) {
   addSignupRequest(domain: $domain, allowed: $allowed) {    
     success
   }

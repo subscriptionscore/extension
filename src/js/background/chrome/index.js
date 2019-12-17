@@ -33,10 +33,10 @@ chrome.runtime.onInstalled.addListener(details => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('[subscriptionscore]: message', request);
   if (request.action == 'signup-allowed') {
-    return addSignupAllowedRequest(request.domain);
+    return addSignupAllowedRequest(currentPage.domain);
   }
   if (request.action == 'signup-blocked') {
-    return addSignupBlockedRequest(request.domain);
+    return addSignupBlockedRequest(currentPage.domain);
   }
   if (request.action === 'get-current-rank') {
     return sendResponse(currentPage);
