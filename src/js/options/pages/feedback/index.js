@@ -1,10 +1,9 @@
 import {
   FormCheckbox,
   FormInput,
-  FormSuccess,
   FormTextarea
 } from '../../../components/form';
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useMemo, useReducer } from 'react';
 import reducer, { initialState } from './reducer';
 
 import Button from '../../../components/button';
@@ -58,7 +57,30 @@ const Form = ({ domain }) => {
       dispatch({ type: 'set-loading', data: true });
       dispatch({ type: 'set-error', data: false });
 
-      await submitFeedback(feedback);
+      const {
+        domain,
+        isOwner,
+        ownerEmail,
+        isScoreInaccurate,
+        scoreInaccurateReason,
+        otherDetails
+      } = data;
+      let data = {
+        otherDetails
+      };
+      if (isOwner) {
+        data = {
+          ...data,
+          ownerEmail
+        };
+      }
+      if (isScoreInaccurate) {
+        data = {
+          ...data,
+          scoreInaccurateReason
+        };
+      }
+      await submitFeedback(domain, data);
 
       dispatch({ type: 'set-submitted', data: true });
       dispatch({ type: 'reset' });
@@ -68,6 +90,29 @@ const Form = ({ domain }) => {
       dispatch({ type: 'set-loading', data: false });
     }
   };
+
+  // domain
+  // isOwner: false,
+  // ownerEmail: '',
+  // isScoreInaccurate: false,
+  // scoreInaccurateReason: '',
+  // otherDetails: ''
+  const isValid = useMemo(() => {
+    const {
+      domain,
+      isOwner,
+      ownerEmail,
+      isScoreInaccurate,
+      scoreInaccurateReason,
+      otherDetails
+    } = feedback;
+
+    const ownerDets = isOwner && !!ownerEmail;
+    const inaccurateDets = isScoreInaccurate && !!scoreInaccurateReason;
+
+    const isValid = !!domain && (ownerDets || inaccurateDets || !!otherDetails);
+    return isValid;
+  }, [feedback]);
 
   return (
     <form
@@ -142,15 +187,17 @@ const Form = ({ domain }) => {
         </div>
         {feedback.isScoreInaccurate ? (
           <div className={styles.formGroup}>
-            <p>What is inaccurate about the score?</p>
+            <p>What is inaccurate about the score? (required)</p>
             <Radio
               className={styles.radio}
               name="score-inaccurate-reason"
+              value="low"
               checked={feedback.scoreInaccurateReason === 'low'}
               onChange={() =>
                 dispatch({ type: 'set-score-inaccurate-reason', data: 'low' })
               }
               disabled={loading}
+              required
             >
               <span>Too low</span>
             </Radio>
@@ -158,11 +205,13 @@ const Form = ({ domain }) => {
             <Radio
               className={styles.radio}
               name="score-inaccurate-reason"
+              value="high"
               checked={feedback.scoreInaccurateReason === 'high'}
               onChange={() =>
                 dispatch({ type: 'set-score-inaccurate-reason', data: 'high' })
               }
               disabled={loading}
+              required
             >
               <span>Too high</span>
             </Radio>
@@ -187,7 +236,7 @@ const Form = ({ domain }) => {
         <Button
           type="submit"
           as="button"
-          disabled={!feedback.domain || loading}
+          disabled={!isValid || loading}
           loading={loading}
         >
           Submit feedback
@@ -198,27 +247,22 @@ const Form = ({ domain }) => {
 };
 
 const submitFeedbackGql = `
-mutation Feedback($licenceKey: ID!, $preferences: Preferences!) {
-  updateUserPreferences(licenceKey: $licenceKey, preferences: $preferences) {
-    preferences {
-      darkMode
-      colorSet
-      alertOnSubmit
-      ignoredEmailAddresses
-      ignoredSites
-      blockedRank
-    }
+mutation Feedback($domain: Domain!, $feedback: Feedback!) {
+  addFeedback(domain: $domain, feedback: $feedback) {
+    success
   }
 }
 `;
 
-function submitFeedback() {
-  return new Promise(resolve =>
-    setTimeout(() => {
-      return resolve();
-    }, 2000)
-  );
-  // return graphqlRequest(query, options);
+async function submitFeedback(domain, data) {
+  const options = {
+    variables: {
+      domain,
+      feedback: data
+    }
+  };
+  const { addFeedback } = await graphqlRequest(submitFeedbackGql, options);
+  return addFeedback;
 }
 
 export default FeedbackPage;

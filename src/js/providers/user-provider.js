@@ -255,8 +255,8 @@ const UserProvider = ({ children }) => {
   async function onUserChange(user) {
     try {
       dispatch({ type: 'set-loading', data: true });
-      const { licenceKey, preferences } = user;
-      await updateUserPreferences(licenceKey, preferences);
+      const { preferences } = user;
+      await updateUserPreferences(preferences);
     } catch (err) {
       dispatch({
         type: 'set-error',
@@ -309,8 +309,8 @@ async function getUser(licenceKey) {
 }
 
 const updateGql = `
-mutation User($licenceKey: ID!, $preferences: Preferences!) {
-  updateUserPreferences(licenceKey: $licenceKey, preferences: $preferences) {
+mutation User($preferences: Preferences!) {
+  updateUserPreferences(preferences: $preferences) {
     preferences {
       darkMode
       colorSet
@@ -324,8 +324,8 @@ mutation User($licenceKey: ID!, $preferences: Preferences!) {
 `;
 
 // update the user preferences using the licence key as the ID
-async function updateUserPreferences(licenceKey, preferences) {
-  const options = { variables: { licenceKey, preferences } };
+async function updateUserPreferences(preferences) {
+  const options = { variables: { preferences } };
   const { updateUserPreferences } = await graphqlRequest(updateGql, options);
   return updateUserPreferences;
 }

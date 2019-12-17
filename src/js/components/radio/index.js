@@ -8,7 +8,8 @@ const Radio = ({
   className = '',
   name,
   children,
-  onChange
+  onChange,
+  ...props
 }) => {
   const classes = classnames({
     [styles.radio]: true,
@@ -23,6 +24,7 @@ const Radio = ({
         spellCheck="false"
         checked={checked}
         onChange={onChange}
+        {...props}
       />
       <span className={styles.label}>{children}</span>
     </label>

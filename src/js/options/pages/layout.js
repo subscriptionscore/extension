@@ -50,7 +50,6 @@ const Layout = () => {
   }, []);
 
   useEffect(() => {
-    console.log('page changed', page);
     window.history.replaceState({}, '', `?page=${page}`);
   }, [page]);
 
