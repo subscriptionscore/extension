@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
 
+import About from './about';
 import Appearance from './appearance';
 import Billing from './billing';
-import { FormError } from '../../components/form';
 import Preferences from './preferences';
-import About from './about';
 import cx from '../../utils/classnames';
 import styles from './layout.module.scss';
 
@@ -50,11 +49,11 @@ const Layout = () => {
       <ul className={styles.nav}>
         {NAV_ITEMS.map(item => {
           const classes = cx({
-            [styles.link]: true,
-            [styles.active]: page === item.value
+            [styles.navLink]: true,
+            [styles.navActive]: page === item.value
           });
           return (
-            <li key={item.value} className={styles.item}>
+            <li key={item.value} className={styles.navItem}>
               <a className={classes} onClick={() => setPage(item.value)}>
                 {item.label}
               </a>

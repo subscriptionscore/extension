@@ -2,6 +2,7 @@ import { FormInput, InputGroup } from '../../../components/form';
 import React, { useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
+import { TextLink } from '../../../components/text';
 import styles from './billing.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
@@ -58,6 +59,7 @@ function LicenceKey() {
               value={value}
               disabled={loading}
               onChange={e => setValue(e.currentTarget.value)}
+              className={styles.licenceInput}
             />
             <Button
               type="submit"
@@ -71,7 +73,10 @@ function LicenceKey() {
         </form>
         <p>
           Need a licence key? Purchase one{' '}
-          <a href="https://subscriptionscore.com">on our website</a>.
+          <TextLink href="https://subscriptionscore.com">
+            on our website
+          </TextLink>
+          .
         </p>
       </>
     );
