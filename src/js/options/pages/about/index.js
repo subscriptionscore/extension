@@ -12,7 +12,7 @@ const AboutPage = () => {
       <div className={styles.pageSection}>
         <h2>Our mission.</h2>
         <p>
-          Helping people <strong>keep</strong> control of their inbox.
+          Helping people to <strong>keep</strong> control of their inbox.
         </p>
         <p>
           We're are passionate about helping reduce the impact of unwanted

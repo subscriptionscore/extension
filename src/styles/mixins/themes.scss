@@ -14,7 +14,8 @@ $themes: (
     buttonBackgroundHover: darken($button-background--light, 5%),
     buttonBackgroundPulseFrom: $button-pulse-from--light,
     buttonBackgroundPulseTo: $button-pulse-to--light,
-    linkColor: $link-color--light
+    linkColor: $link-color--light,
+    contentBackground: $content-background--light
   ),
   dark: (
     backgroundColor: $background--dark,
@@ -29,7 +30,8 @@ $themes: (
     buttonBackgroundHover: darken($button-background--dark, 5%),
     buttonBackgroundPulseFrom: $button-pulse-from--dark,
     buttonBackgroundPulseTo: $button-pulse-to--dark,
-    linkColor: $link-color--dark
+    linkColor: $link-color--dark,
+    contentBackground: $content-background--dark
   )
 );
 

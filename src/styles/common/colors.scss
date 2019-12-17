@@ -20,6 +20,7 @@ $button-background--light: $color-highlight;
 $button-pulse-from--light: lighten($color-highlight, 30%);
 $button-pulse-to--light: lighten($color-highlight, 10%);
 $link-color--light: $color-highlight;
+$content-background--light: rgba(0, 0, 0, 0.035);
 
 // dark
 $background--dark: #323639;
@@ -33,3 +34,4 @@ $button-background--dark: $button-background--light;
 $button-pulse-from--dark: $button-pulse-from--light;
 $button-pulse-to--dark: $button-pulse-to--light;
 $link-color--dark: $color-highlight--dark;
+$content-background--dark: rgba(0, 0, 0, 0.15);
