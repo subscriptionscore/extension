@@ -20,8 +20,11 @@
 
 .nav {
   width: 200px;
-  list-style: none;
   font-size: 18px;
+  ul {
+    margin: 0;
+    list-style: none;
+  }
 }
 
 .nav-item {
@@ -84,4 +87,27 @@
 
     pointer-events: none;
   }
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  @include themify() {
+    color: theme('navColor');
+  }
+  font-size: 12px;
+  margin: 2em 0 0 0;
+  padding: 0 0 0 10px;
+}
+
+.logo {
+  max-width: 40px;
+  margin: 0;
+}
+
+.version {
+  margin-top: 0.25em;
+  font-weight: 600px;
 }

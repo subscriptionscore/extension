@@ -25,6 +25,20 @@ export function getItems() {
   });
 }
 
+export async function pushPreference(pref, value) {
+  const preferences = await getItem('preferences');
+  const arr = preferences[pref];
+  const newArr = [...arr, value];
+  const newPrefs = {
+    preferences: {
+      ...preferences,
+      [pref]: newArr
+    }
+  };
+  console.log('[subscriptionscore]: updating prefs', newPrefs);
+  return setItem(newPrefs);
+}
+
 export async function getPreference(pref) {
   const preferences = await getItem('preferences');
   if (!preferences) return null;

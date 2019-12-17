@@ -37,8 +37,9 @@
   border-top: 1px solid $border-color;
   display: flex;
   justify-content: flex-end;
+  list-style: none;
 
-  > a {
+  a {
     display: inline-block;
     margin-left: 10px;
     cursor: pointer;
@@ -48,5 +49,9 @@
         color: rgba(theme('textColor'), 0.75);
       }
     }
+  }
+
+  li:first-child a {
+    margin-left: 0;
   }
 }

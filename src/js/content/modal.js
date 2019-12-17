@@ -10,7 +10,12 @@ const styles = {
   height: '400px'
 };
 
-export function injectModal(onApproved, onCancelled) {
+export function injectModal({
+  onApproved,
+  onCancelled,
+  addIgnoreEmail,
+  addIgnoreSite
+}) {
   const $frame = document.createElement('iframe');
   $frame.src = path;
   Object.keys(styles).forEach(s => {
@@ -22,7 +27,12 @@ export function injectModal(onApproved, onCancelled) {
       onApproved();
     } else if (event.data.popupResponse === 'cancel') {
       onCancelled();
+    } else if (event.data.popupResponse === 'add-ignore-email') {
+      addIgnoreEmail();
+    } else if (event.data.popupResponse === 'add-ignore-site') {
+      addIgnoreSite(event.data.domain);
     }
+
     document.body.removeChild($frame);
   };
   window.addEventListener('message', onMessage, { capture: true, once: true });

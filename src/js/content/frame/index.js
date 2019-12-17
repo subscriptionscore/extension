@@ -7,11 +7,21 @@ import DomainScore from '../../components/domain-score';
 import useCurrentUrl from '../../hooks/use-current-url';
 import useStorage from '../../hooks/use-storage';
 import Button from '../../components/button';
+import { Message, Settings } from '../../components/icons';
+import useBackground from '../../hooks/use-background';
+import useNewTab from '../../hooks/use-new-tab';
 
 const origin = chrome.runtime.getURL('/frame.html');
 
 const Popup = () => {
   const { loading: urlLoading, url } = useCurrentUrl();
+  const { value } = useBackground('get-current-rank');
+  const domain = value ? value.domain : '';
+  const openSettingsPage = useNewTab('/options.html?page=settings');
+  const openFeedbackPage = useNewTab(
+    `/options.html?page=feedback&domain=${domain}`
+  );
+
   const [{ value: storage = {}, loading: storageLoading }] = useStorage();
 
   const onContinue = useCallback(() => {
@@ -22,8 +32,15 @@ const Popup = () => {
     console.log('[subscriptionscore]: sending message cancel from ', origin);
     window.parent.postMessage({ popupResponse: 'cancel' }, '*');
   }, []);
-  const onIgnoreEmail = useCallback(() => {}, []);
-  const onIgnoreSite = useCallback(() => {}, []);
+  const onIgnoreEmail = useCallback(() => {
+    window.parent.postMessage({ popupResponse: 'add-ignore-email' }, '*');
+  }, []);
+  const onIgnoreSite = useCallback(() => {
+    window.parent.postMessage(
+      { popupResponse: 'add-ignore-site', domain },
+      '*'
+    );
+  }, [domain]);
 
   const content = useMemo(() => {
     if (urlLoading || storageLoading) {
@@ -46,10 +63,26 @@ const Popup = () => {
             </Button>
             <Button onClick={onContinue}>Continue anyway →</Button>
           </div>
-          <div className={styles.popupOptions}>
-            <a onClick={onIgnoreEmail}>Ignore this email address</a>
-            <a onClick={onIgnoreSite}>Ignore this site</a>
-          </div>
+          {/* <div className={}> */}
+          <ul className={styles.popupOptions}>
+            <li>
+              <a onClick={onIgnoreEmail}>Ignore this email address</a>
+            </li>
+            <li>
+              <a onClick={onIgnoreSite}>Ignore this site</a>
+            </li>
+            <li style={{ marginLeft: 'auto' }}>
+              <a title="Suggest a correction" onClick={openFeedbackPage}>
+                <Message />
+              </a>
+            </li>
+            <li>
+              <a title="Settings" onClick={openSettingsPage}>
+                <Settings />
+              </a>
+            </li>
+          </ul>
+          {/* </div> */}
         </div>
       </div>
     );
@@ -61,7 +94,9 @@ const Popup = () => {
     onCancel,
     onContinue,
     onIgnoreEmail,
-    onIgnoreSite
+    onIgnoreSite,
+    openFeedbackPage,
+    openSettingsPage
   ]);
 
   return content;

@@ -1,7 +1,9 @@
 import {
   getDomainScore,
   addSignupAllowedRequest,
-  addSignupBlockedRequest
+  addSignupBlockedRequest,
+  addIgnoreEmail,
+  addIgnoreSite
 } from '../scores';
 
 let currentPage = {
@@ -29,20 +31,30 @@ chrome.runtime.onInstalled.addListener(details => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('[subscriptionscore]: message', request);
   if (request.action == 'signup-allowed') {
-    addSignupAllowedRequest(request.domain);
+    return addSignupAllowedRequest(request.domain);
   }
   if (request.action == 'signup-blocked') {
-    addSignupBlockedRequest(request.domain);
+    return addSignupBlockedRequest(request.domain);
   }
   if (request.action === 'get-current-rank') {
-    sendResponse(currentPage);
+    return sendResponse(currentPage);
+  }
+  if (request.action === 'ignore-email') {
+    const email = request.data;
+    return addIgnoreEmail(email);
+  }
+  if (request.action === 'ignore-site') {
+    const domain = request.data;
+    return addIgnoreSite(domain);
   }
 });
 
 // call when the page changes and we need to
 // fetch a new rank for the current url
 async function onPageChange(url) {
+  console.log('[subscriptionscore]: page change', url);
   chrome.browserAction.setBadgeText({ text: '' });
   if (!/http(s)?:\/\//.test(url)) {
     chrome.browserAction.disable();
