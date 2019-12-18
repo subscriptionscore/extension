@@ -9,7 +9,7 @@ const HEADERS = {
 
 chrome.storage.onChanged.addListener(prefs => {
   if (prefs.licenceKey) {
-    licenceKey = prefs.licenceKey;
+    licenceKey = prefs.licenceKey.newValue;
   }
 });
 
