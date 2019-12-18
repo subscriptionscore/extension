@@ -3,7 +3,7 @@ import {
   FormInput,
   FormTextarea
 } from '../../../components/form';
-import React, { useEffect, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import reducer, { initialState } from './reducer';
 
 import Button from '../../../components/button';
@@ -61,22 +61,67 @@ const Form = ({ domain }) => {
     }
   }, [submitted, error, userDispatch]);
 
-  const onSave = async () => {
-    console.log('submit feeback', feedback);
+  const onSave = useCallback(async feedbackData => {
     try {
       dispatch({ type: 'set-loading', data: true });
       dispatch({ type: 'set-error', data: false });
 
-      await submitFeedback(feedback);
+      const {
+        domain,
+        isOwner,
+        ownerEmail,
+        isScoreInaccurate,
+        scoreInaccurateReason,
+        otherDetails
+      } = feedbackData;
 
-      dispatch({ type: 'set-submitted', data: true });
-      dispatch({ type: 'reset' });
+      let data = {
+        otherDetails
+      };
+      if (isOwner) {
+        data = {
+          ...data,
+          ownerEmail
+        };
+      }
+      if (isScoreInaccurate) {
+        data = {
+          ...data,
+          scoreInaccurateReason
+        };
+      }
+
+      await submitFeedback(domain, data);
+      await new Promise(resolve => {
+        return setTimeout(() => {
+          dispatch({ type: 'set-submitted', data: true });
+          dispatch({ type: 'reset' });
+          resolve();
+        }, 2000);
+      });
     } catch (err) {
       dispatch({ type: 'set-error', data: err });
     } finally {
       dispatch({ type: 'set-loading', data: false });
     }
-  };
+  }, []);
+
+  const isValid = useMemo(() => {
+    const {
+      domain,
+      isOwner,
+      ownerEmail,
+      isScoreInaccurate,
+      scoreInaccurateReason,
+      otherDetails
+    } = feedback;
+
+    const ownerDets = isOwner && !!ownerEmail;
+    const inaccurateDets = isScoreInaccurate && !!scoreInaccurateReason;
+
+    const isValid = !!domain && (ownerDets || inaccurateDets || !!otherDetails);
+    return isValid;
+  }, [feedback]);
 
   return (
     <form
@@ -84,7 +129,7 @@ const Form = ({ domain }) => {
       className={styles.form}
       onSubmit={e => {
         e.preventDefault();
-        return onSave();
+        return onSave(feedback);
       }}
     >
       <div className={styles.pageSection}>
@@ -151,15 +196,17 @@ const Form = ({ domain }) => {
         </div>
         {feedback.isScoreInaccurate ? (
           <div className={styles.formGroup}>
-            <p>What is inaccurate about the score?</p>
+            <p>What is inaccurate about the score? (required)</p>
             <Radio
               className={styles.radio}
               name="score-inaccurate-reason"
+              value="low"
               checked={feedback.scoreInaccurateReason === 'low'}
               onChange={() =>
                 dispatch({ type: 'set-score-inaccurate-reason', data: 'low' })
               }
               disabled={loading}
+              required
             >
               <span>Too low</span>
             </Radio>
@@ -167,11 +214,13 @@ const Form = ({ domain }) => {
             <Radio
               className={styles.radio}
               name="score-inaccurate-reason"
+              value="high"
               checked={feedback.scoreInaccurateReason === 'high'}
               onChange={() =>
                 dispatch({ type: 'set-score-inaccurate-reason', data: 'high' })
               }
               disabled={loading}
+              required
             >
               <span>Too high</span>
             </Radio>
@@ -196,7 +245,7 @@ const Form = ({ domain }) => {
         <Button
           type="submit"
           as="button"
-          disabled={!feedback.domain || loading}
+          disabled={!isValid || loading}
           loading={loading}
         >
           Submit feedback
@@ -207,27 +256,22 @@ const Form = ({ domain }) => {
 };
 
 const submitFeedbackGql = `
-mutation Feedback($licenceKey: ID!, $preferences: Preferences!) {
-  updateUserPreferences(licenceKey: $licenceKey, preferences: $preferences) {
-    preferences {
-      darkMode
-      colorSet
-      alertOnSubmit
-      ignoredEmailAddresses
-      ignoredSites
-      blockedRank
-    }
+mutation Feedback($domain: String!, $feedback: Feedback!) {
+  addFeedback(domain: $domain, feedback: $feedback) {
+    success
   }
 }
 `;
 
-function submitFeedback() {
-  return new Promise(resolve =>
-    setTimeout(() => {
-      return resolve();
-    }, 2000)
-  );
-  // return graphqlRequest(query, options);
+async function submitFeedback(domain, data) {
+  const options = {
+    variables: {
+      domain,
+      feedback: data
+    }
+  };
+  const { addFeedback } = await graphqlRequest(submitFeedbackGql, options);
+  return addFeedback;
 }
 
 export default FeedbackPage;

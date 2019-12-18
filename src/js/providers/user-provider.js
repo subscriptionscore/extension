@@ -8,8 +8,8 @@ import React, {
 } from 'react';
 
 import { graphqlRequest } from '../utils/request';
-import useStorage from '../hooks/use-storage';
 import { updateUserPreferences } from '../utils/preferences';
+import useStorage from '../hooks/use-storage';
 
 const UserContext = createContext({});
 

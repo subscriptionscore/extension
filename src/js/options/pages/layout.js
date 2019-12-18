@@ -5,11 +5,9 @@ import Appearance from './appearance';
 import Billing from './billing';
 import Feedback from './feedback';
 import Preferences from './preferences';
-import cx from '../../utils/classnames';
-
-import logo from '../../../../assets/logo.png';
 import { VERSION_NAME } from '../../constants';
-
+import cx from '../../utils/classnames';
+import logo from '../../../../assets/logo.png';
 import styles from './layout.module.scss';
 
 const NAV_ITEMS = [
@@ -36,6 +34,39 @@ const NAV_ITEMS = [
 ];
 
 const Layout = () => {
+  const [showWelcome, setShowWelcome] = useState(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const welcome = !!urlParams.get('welcome');
+    setShowWelcome(welcome);
+  }, []);
+
+  const content = useMemo(() => {
+    if (showWelcome === true) {
+      return <Welcome />;
+    }
+    if (showWelcome === false) {
+      return <Options />;
+    }
+    return null;
+  }, [showWelcome]);
+
+  return content;
+};
+
+const Welcome = () => {
+  return (
+    <div>
+      <h1>Welcome!</h1>
+      <p>Thank you for installing Subscription Score!</p>
+      <p>Some information about how it works...</p>
+      <Billing />
+    </div>
+  );
+};
+
+const Options = () => {
   const [page, setPage] = useState(NAV_ITEMS[0].value);
   const [params, setParams] = useState({});
 
@@ -54,7 +85,6 @@ const Layout = () => {
   }, []);
 
   useEffect(() => {
-    console.log('page changed', page);
     window.history.replaceState({}, '', `?page=${page}`);
   }, [page]);
 
