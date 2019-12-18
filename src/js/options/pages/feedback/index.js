@@ -1,7 +1,6 @@
 import {
   FormCheckbox,
   FormInput,
-  FormSuccess,
   FormTextarea
 } from '../../../components/form';
 import React, { useEffect, useReducer } from 'react';
@@ -9,17 +8,27 @@ import reducer, { initialState } from './reducer';
 
 import Button from '../../../components/button';
 import Radio from '../../../components/radio';
-import { graphqlRequest } from '../../../utils/request';
 import styles from './feedback.module.scss';
 import { useUser } from '../../../providers/user-provider';
+import { TextLink } from '../../../components/text';
 
 const FeedbackPage = ({ params }) => {
   return (
     <>
       <h1>Feedback</h1>
-      <p>Reckon we got something wrong? Let us know!</p>
+      <p>
+        Something wrong with a score? Please use this form to submit
+        corrections.
+      </p>
 
       <Form domain={params.domain} />
+      <p>
+        Have more general comments, bugs or other feedback? Please{' '}
+        <TextLink href="https://subscriptionscore.com/feedback">
+          use the form here
+        </TextLink>
+        .
+      </p>
     </>
   );
 };
