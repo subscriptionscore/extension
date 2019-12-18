@@ -23,17 +23,24 @@ export function injectModal({
   });
   const onMessage = event => {
     console.log('[subscriptionscore]: received message from ', event.origin);
+    let remove = false;
     if (event.data.popupResponse === 'continue') {
       onApproved();
+      remove = true;
     } else if (event.data.popupResponse === 'cancel') {
       onCancelled();
+      remove = true;
     } else if (event.data.popupResponse === 'add-ignore-email') {
       addIgnoreEmail();
+      remove = true;
     } else if (event.data.popupResponse === 'add-ignore-site') {
       addIgnoreSite(event.data.domain);
+      remove = true;
     }
 
-    document.body.removeChild($frame);
+    if (remove) {
+      document.body.removeChild($frame);
+    }
   };
   window.addEventListener('message', onMessage, { capture: true, once: true });
   document.body.appendChild($frame);

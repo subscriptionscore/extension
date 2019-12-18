@@ -60,13 +60,17 @@ export function addSignupAllowedRequest(domain) {
   });
 }
 
-export async function addIgnoreEmail(email) {
+export async function addIgnoreEmail(emails) {
+  let ignoreEmails = emails.length ? emails : [emails];
   const preferences = await getItem('preferences');
-  if (preferences.ignoredEmailAddresses.some(d => d === email)) {
+  ignoreEmails = ignoreEmails.filter(email => {
+    return !preferences.ignoredEmailAddresses.includes(email);
+  });
+  if (!ignoreEmails.length) {
     return null;
   }
-  pushPreference('ignoredEmailAddresses', email);
-  const newArr = [...preferences.ignoredEmailAddresses, email];
+  pushPreference('ignoredEmailAddresses', ignoreEmails);
+  const newArr = [...preferences.ignoredEmailAddresses, ...ignoreEmails];
   return updateUserPreferences({
     ...preferences,
     ignoredEmailAddresses: newArr

@@ -42,8 +42,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return sendResponse(currentPage);
   }
   if (request.action === 'ignore-email') {
-    const email = request.data;
-    return addIgnoreEmail(email);
+    const emails = request.data;
+    return addIgnoreEmail(emails);
   }
   if (request.action === 'ignore-site') {
     const domain = request.data;

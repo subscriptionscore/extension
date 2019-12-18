@@ -26,9 +26,10 @@ export function getItems() {
 }
 
 export async function pushPreference(pref, value) {
+  const newValues = value.length ? value : [value];
   const preferences = await getItem('preferences');
   const arr = preferences[pref];
-  const newArr = [...arr, value];
+  const newArr = [...arr, ...newValues];
   const newPrefs = {
     preferences: {
       ...preferences,

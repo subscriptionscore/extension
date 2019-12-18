@@ -19,10 +19,9 @@ async function attachToEmailForms(
     'input[type="email"],input[type="password"]'
   );
 
-  new Set($inputs).forEach($input => {
+  $inputs.forEach($input => {
     addSubmitListener(
       $input.form,
-      $input,
       ignoredEmailAddresses,
       ignoredSites,
       blockedRank
@@ -32,41 +31,42 @@ async function attachToEmailForms(
 
 function addSubmitListener(
   $form,
-  $input,
   ignoredEmailAddresses,
   ignoredSites,
   blockedRank
 ) {
   $form.addEventListener('submit', e =>
-    onSubmitForm(
-      e,
-      $form,
-      $input,
-      ignoredEmailAddresses,
-      ignoredSites,
-      blockedRank
-    )
+    onSubmitForm(e, $form, ignoredEmailAddresses, ignoredSites, blockedRank)
   );
 }
 
 function onSubmitForm(
   e,
   $form,
-  $emailInput,
   ignoredEmailAddresses,
   ignoredSites,
   blockedRank
 ) {
-  const emailAddress = $emailInput.value;
-
-  if ($form.getAttribute(FORM_DATA_ATTRIBUTE) === 'true') {
+  const previouslyApproved = $form.getAttribute(FORM_DATA_ATTRIBUTE) === 'true';
+  if (previouslyApproved) {
     return true;
   }
-  if (ignoredEmailAddresses.includes(emailAddress)) {
+  // check if any of the fields have an email
+  // address in them. If any of the email addresses
+  // are NOT in our ingored email list then
+  // block the form
+  const formData = new FormData($form);
+  let hasNonIgnoredEmail = false;
+  for (let item of formData) {
+    const [, value] = item;
+    if (value.includes('@') && !ignoredEmailAddresses.includes(value)) {
+      hasNonIgnoredEmail = true;
+    }
+  }
+  if (!hasNonIgnoredEmail) {
     return true;
   }
   haltedForm = $form;
-
   // get the domain rank from the background script
   chrome.runtime.sendMessage({ action: 'get-current-rank' }, response => {
     const { rank, domain } = response;
@@ -110,14 +110,14 @@ function onCancelled() {
 }
 
 function addIgnoreEmail() {
-  const $input = haltedForm.querySelector('input[type="email"]');
-  if ($input) {
-    const email = $input.value;
+  const emails = getEmailValues(haltedForm);
+  if (emails.length) {
     chrome.runtime.sendMessage({
       action: 'ignore-email',
-      data: email
+      data: emails
     });
   }
+  haltedForm.submit();
 }
 
 function addIgnoreSite(domain) {
@@ -125,6 +125,19 @@ function addIgnoreSite(domain) {
     action: 'ignore-site',
     data: domain
   });
+  haltedForm.submit();
+}
+
+function getEmailValues($form) {
+  const formData = new FormData($form);
+  let emails = [];
+  for (let item of formData) {
+    const [, value] = item;
+    if (value.includes('@')) {
+      emails = [...emails, value];
+    }
+  }
+  return emails;
 }
 
 (async () => {
