@@ -16,7 +16,7 @@ const FeedbackPage = ({ params }) => {
   return (
     <>
       <h1>Feedback</h1>
-      <p>Reckon we got something wrong? Let us know!</p>
+      <p>Think we got something wrong? Let us know!</p>
 
       <Form domain={params.domain} />
     </>

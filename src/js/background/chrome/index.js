@@ -1,9 +1,9 @@
 import {
-  getDomainScore,
+  addIgnoreEmail,
+  addIgnoreSite,
   addSignupAllowedRequest,
   addSignupBlockedRequest,
-  addIgnoreEmail,
-  addIgnoreSite
+  getDomainScore
 } from '../scores';
 
 let currentPage = {
@@ -26,7 +26,9 @@ chrome.tabs.onActivated.addListener(() => {
 chrome.runtime.onInstalled.addListener(details => {
   if (details.reason !== 'update') {
     // first install, launch the settings page
-    chrome.runtime.openOptionsPage();
+    // chrome.runtime.openOptionsPage();
+    const url = '/options.html?welcome=true';
+    chrome.tabs.create({ url });
   }
 });
 
