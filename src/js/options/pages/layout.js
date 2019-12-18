@@ -58,11 +58,8 @@ const Options = () => {
   }, [page]);
 
   const content = useMemo(() => {
-    if (!loaded) {
-      return null;
-    }
     if (page === 'billing') {
-      const showWelcome = loaded && !licenceKey;
+      const showWelcome = !licenceKey;
       return <Billing showWelcome={showWelcome} />;
     }
     if (page === 'appearance') {
@@ -77,7 +74,7 @@ const Options = () => {
     if (page === 'about') {
       return <About />;
     }
-  }, [page, params, licenceKey, loaded]);
+  }, [page, params, licenceKey]);
 
   return (
     <div className={styles.container}>
