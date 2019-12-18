@@ -19,6 +19,7 @@ $input-line-height: 26px;
   box-sizing: border-box;
   outline: 0;
   -webkit-appearance: none;
+  font-family: 'Roboto-Light';
 
   @include themify() {
     background-color: theme('inputBackground');
@@ -58,6 +59,7 @@ $input-line-height: 26px;
   padding: 5px;
   resize: vertical;
   min-height: 100px;
+  font-family: 'Roboto-Light';
 
   @include themify() {
     background-color: theme('inputBackground');

@@ -3,7 +3,7 @@ import {
   FormInput,
   FormTextarea
 } from '../../../components/form';
-import React, { useEffect, useMemo, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import reducer, { initialState } from './reducer';
 
 import Button from '../../../components/button';
@@ -51,8 +51,7 @@ const Form = ({ domain }) => {
     }
   }, [submitted, error, userDispatch]);
 
-  const onSave = async () => {
-    console.log('submit feeback', feedback);
+  const onSave = useCallback(async feedbackData => {
     try {
       dispatch({ type: 'set-loading', data: true });
       dispatch({ type: 'set-error', data: false });
@@ -64,7 +63,8 @@ const Form = ({ domain }) => {
         isScoreInaccurate,
         scoreInaccurateReason,
         otherDetails
-      } = data;
+      } = feedbackData;
+
       let data = {
         otherDetails
       };
@@ -80,23 +80,22 @@ const Form = ({ domain }) => {
           scoreInaccurateReason
         };
       }
-      await submitFeedback(domain, data);
 
-      dispatch({ type: 'set-submitted', data: true });
-      dispatch({ type: 'reset' });
+      await submitFeedback(domain, data);
+      await new Promise(resolve => {
+        return setTimeout(() => {
+          dispatch({ type: 'set-submitted', data: true });
+          dispatch({ type: 'reset' });
+          resolve();
+        }, 2000);
+      });
     } catch (err) {
       dispatch({ type: 'set-error', data: err });
     } finally {
       dispatch({ type: 'set-loading', data: false });
     }
-  };
+  }, []);
 
-  // domain
-  // isOwner: false,
-  // ownerEmail: '',
-  // isScoreInaccurate: false,
-  // scoreInaccurateReason: '',
-  // otherDetails: ''
   const isValid = useMemo(() => {
     const {
       domain,
@@ -120,7 +119,7 @@ const Form = ({ domain }) => {
       className={styles.form}
       onSubmit={e => {
         e.preventDefault();
-        return onSave();
+        return onSave(feedback);
       }}
     >
       <div className={styles.pageSection}>
@@ -247,7 +246,7 @@ const Form = ({ domain }) => {
 };
 
 const submitFeedbackGql = `
-mutation Feedback($domain: Domain!, $feedback: Feedback!) {
+mutation Feedback($domain: String!, $feedback: Feedback!) {
   addFeedback(domain: $domain, feedback: $feedback) {
     success
   }
