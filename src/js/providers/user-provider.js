@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 
 import { graphqlRequest } from '../utils/request';
+import { updateUserPreferences } from '../utils/preferences';
 import useStorage from '../hooks/use-storage';
 
 const UserContext = createContext({});
@@ -306,28 +307,6 @@ async function getUser(licenceKey) {
   const options = { variables: { licenceKey } };
   const { getUserByLicenceKey } = await graphqlRequest(getGql, options);
   return getUserByLicenceKey;
-}
-
-const updateGql = `
-mutation User($preferences: Preferences!) {
-  updateUserPreferences(preferences: $preferences) {
-    preferences {
-      darkMode
-      colorSet
-      alertOnSubmit
-      ignoredEmailAddresses
-      ignoredSites
-      blockedRank
-    }
-  }
-}
-`;
-
-// update the user preferences using the licence key as the ID
-async function updateUserPreferences(preferences) {
-  const options = { variables: { preferences } };
-  const { updateUserPreferences } = await graphqlRequest(updateGql, options);
-  return updateUserPreferences;
 }
 
 function mapUser(user, state) {

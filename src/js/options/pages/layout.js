@@ -6,6 +6,10 @@ import Billing from './billing';
 import Feedback from './feedback';
 import Preferences from './preferences';
 import cx from '../../utils/classnames';
+
+import logo from '../../../../assets/logo.png';
+import { VERSION_NAME } from '../../constants';
+
 import styles from './layout.module.scss';
 
 const NAV_ITEMS = [
@@ -73,21 +77,30 @@ const Layout = () => {
 
   return (
     <div className={styles.container}>
-      <ul className={styles.nav}>
-        {NAV_ITEMS.map(item => {
-          const classes = cx({
-            [styles.navLink]: true,
-            [styles.navActive]: page === item.value
-          });
-          return (
-            <li key={item.value} className={styles.navItem}>
-              <a className={classes} onClick={() => setPage(item.value)}>
-                {item.label}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      <div className={styles.nav} role="nav">
+        <ul>
+          {NAV_ITEMS.map(item => {
+            const classes = cx({
+              [styles.navLink]: true,
+              [styles.navActive]: page === item.value
+            });
+            return (
+              <li key={item.value} className={styles.navItem}>
+                <a className={classes} onClick={() => setPage(item.value)}>
+                  {item.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <div className={styles.meta}>
+          <a href="https://subscriptionscore.com">
+            <img className={styles.logo} src={logo} alt="Logo" />
+          </a>
+
+          <span className={styles.version}>{VERSION_NAME}</span>
+        </div>
+      </div>
       <div className={styles.content}>{content}</div>
     </div>
   );

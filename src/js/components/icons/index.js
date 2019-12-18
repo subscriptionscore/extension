@@ -18,3 +18,20 @@ export function Settings({ width = 16, height = 16 }) {
     </svg>
   );
 }
+
+export function Message({ width = 16, height = 16 }) {
+  return (
+    <svg
+      className={styles.message}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 32 32"
+      width={width}
+      height={height}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="4"
+    >
+      <path d="M2 4 L30 4 30 22 16 22 8 29 8 22 2 22 Z" />
+    </svg>
+  );
+}

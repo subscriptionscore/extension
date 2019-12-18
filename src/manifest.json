@@ -1,7 +1,7 @@
 {
   "name": "Subscription Score",
-  "version": "0.1",
-  "version_name": "0.1 beta",
+  "version": "0.2",
+  "version_name": "v0.2.0 Beta",
   "options_page": "options.html",
   "background": {
     "page": "background.html"

@@ -34,10 +34,6 @@ const options = {
       'babel-polyfill',
       path.join(__dirname, 'src', 'js', 'content', 'index.js')
     ],
-    injected: [
-      'babel-polyfill',
-      path.join(__dirname, 'src', 'js', 'content', 'injected.js')
-    ],
     popup: [
       'babel-polyfill',
       path.join(__dirname, 'src', 'js', 'popup', 'index.js')
