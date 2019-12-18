@@ -62,16 +62,20 @@ async function onPageChange(url) {
     chrome.browserAction.disable();
   } else {
     chrome.browserAction.enable();
-    const domainScore = await getDomainScore(url);
-    if (domainScore) {
-      const { rank, domain } = domainScore;
-      currentPage = {
-        domain,
-        rank
-      };
-      if (rank) {
-        chrome.browserAction.setBadgeText({ text: rank });
+    try {
+      const domainScore = await getDomainScore(url);
+      if (domainScore) {
+        const { rank, domain } = domainScore;
+        currentPage = {
+          domain,
+          rank
+        };
+        if (rank) {
+          chrome.browserAction.setBadgeText({ text: rank });
+        }
       }
+    } catch (err) {
+      console.error(err);
     }
   }
   chrome.browserAction.setBadgeBackgroundColor({
