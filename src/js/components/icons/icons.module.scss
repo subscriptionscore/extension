@@ -1,9 +1,13 @@
+@import '../../../styles/mixins/themes.scss';
+
 .settings {
   fill: #9ca0a5;
   stroke: none;
 
   circle {
-    fill: #333639;
+    @include themify() {
+      fill: theme('backgroundColor');
+    }
   }
 }
 

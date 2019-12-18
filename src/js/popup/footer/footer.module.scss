@@ -1,7 +1,12 @@
+@import '../../../styles/mixins/themes.scss';
+
 .footer {
-  background-color: #333639;
   height: 30px;
   padding: 0 20px;
+
+  @include themify() {
+    background-color: theme('backgroundColor');
+  }
 }
 
 .options {

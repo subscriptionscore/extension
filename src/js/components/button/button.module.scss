@@ -50,6 +50,11 @@
 .muted {
   @include themify() {
     background-color: transparent;
+    color: theme('textColor');
+    &:hover,
+    &:focus {
+      background-color: rgba(theme('buttonBackgroundHover'), 0.1);
+    }
   }
 }
 

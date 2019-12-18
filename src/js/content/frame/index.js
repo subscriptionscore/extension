@@ -63,7 +63,7 @@ const Popup = () => {
             </Button>
             <Button onClick={onContinue}>Continue anyway →</Button>
           </div>
-          {/* <div className={}> */}
+
           <ul className={styles.popupOptions}>
             <li>
               <a onClick={onIgnoreEmail}>Ignore this email address</a>
@@ -82,7 +82,6 @@ const Popup = () => {
               </a>
             </li>
           </ul>
-          {/* </div> */}
         </div>
       </div>
     );

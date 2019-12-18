@@ -1,11 +1,11 @@
+@import '../../styles/mixins/themes.scss';
+
 .popup {
-  background-color: #333639;
-  border: 1px solid rgba(black, 0.5);
-  color: black;
   min-width: 320px;
 
-  @media (prefers-color-scheme: dark) {
-    background-color: #333639;
-    color: white;
+  @include themify() {
+    color: theme('textColor');
+    background-color: theme('backgroundColor');
+    border: 1px solid theme('inputBorder');
   }
 }

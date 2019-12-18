@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
+import { useUser } from '../../providers/user-provider';
 import About from './about';
 import Appearance from './appearance';
 import Billing from './billing';
@@ -33,42 +33,11 @@ const NAV_ITEMS = [
   }
 ];
 
-const Layout = () => {
-  const [showWelcome, setShowWelcome] = useState(null);
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const welcome = !!urlParams.get('welcome');
-    setShowWelcome(welcome);
-  }, []);
-
-  const content = useMemo(() => {
-    if (showWelcome === true) {
-      return <Welcome />;
-    }
-    if (showWelcome === false) {
-      return <Options />;
-    }
-    return null;
-  }, [showWelcome]);
-
-  return content;
-};
-
-const Welcome = () => {
-  return (
-    <div>
-      <h1>Welcome!</h1>
-      <p>Thank you for installing Subscription Score!</p>
-      <p>Some information about how it works...</p>
-      <Billing />
-    </div>
-  );
-};
-
 const Options = () => {
   const [page, setPage] = useState(NAV_ITEMS[0].value);
   const [params, setParams] = useState({});
+  const [{ user, loaded }] = useUser();
+  const { licenceKey } = user;
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -89,8 +58,12 @@ const Options = () => {
   }, [page]);
 
   const content = useMemo(() => {
+    if (!loaded) {
+      return null;
+    }
     if (page === 'billing') {
-      return <Billing />;
+      const showWelcome = loaded && !licenceKey;
+      return <Billing showWelcome={showWelcome} />;
     }
     if (page === 'appearance') {
       return <Appearance />;
@@ -104,19 +77,23 @@ const Options = () => {
     if (page === 'about') {
       return <About />;
     }
-  }, [page, params]);
+  }, [page, params, licenceKey, loaded]);
 
   return (
     <div className={styles.container}>
       <div className={styles.nav} role="nav">
-        <ul>
+        <ul data-welcome={!licenceKey}>
           {NAV_ITEMS.map(item => {
             const classes = cx({
               [styles.navLink]: true,
               [styles.navActive]: page === item.value
             });
             return (
-              <li key={item.value} className={styles.navItem}>
+              <li
+                key={item.value}
+                className={styles.navItem}
+                data-nav={item.value}
+              >
                 <a className={classes} onClick={() => setPage(item.value)}>
                   {item.label}
                 </a>
@@ -137,4 +114,4 @@ const Options = () => {
   );
 };
 
-export default Layout;
+export default Options;

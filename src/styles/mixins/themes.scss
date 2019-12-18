@@ -3,6 +3,7 @@
 $themes: (
   light: (
     backgroundColor: $background--light,
+    backgroundColorDropped: $background--lightish,
     textColor: $text--light,
     highlightColor: $color-highlight,
     navColor: $nav-text--light,
@@ -19,6 +20,7 @@ $themes: (
   ),
   dark: (
     backgroundColor: $background--dark,
+    backgroundColorDropped: $background--darker,
     textColor: $text--dark,
     highlightColor: $color-highlight--dark,
     navColor: $nav-text--dark,

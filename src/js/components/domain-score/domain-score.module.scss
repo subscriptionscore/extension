@@ -1,7 +1,14 @@
 @import '../../../styles/common/colors.scss';
+@import '../../../styles/mixins/themes.scss';
 
 .domain-score {
-  background-color: $background--dark;
+  @include themify() {
+    background-color: theme('backgroundColor');
+  }
+
+  @include themify() {
+    border-top: 1px solid theme('inputBorder');
+  }
 
   h2 {
     padding: 10px 15px;
@@ -12,7 +19,9 @@
 }
 
 .content {
-  background-color: $background--darker;
+  @include themify() {
+    background-color: theme('backgroundColorDropped');
+  }
   ul {
     list-style: none;
   }

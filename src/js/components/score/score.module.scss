@@ -1,9 +1,12 @@
 @import '../../../styles/common/colors.scss';
 @import '../../../styles/mixins/ranks.scss';
+@import '../../../styles/mixins/themes.scss';
 
 .score-container {
   padding: 1em 15px;
-  background-color: $background--darker;
+  @include themify() {
+    background-color: theme('backgroundColorDropped');
+  }
 }
 
 .score-content {

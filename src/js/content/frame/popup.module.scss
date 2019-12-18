@@ -12,6 +12,7 @@
   @include themify() {
     color: theme('textColor');
     background-color: theme('backgroundColor');
+    border: 1px solid theme('inputBorder');
   }
 }
 
@@ -21,6 +22,7 @@
   min-height: 36px;
   padding: 0 15px;
   justify-content: flex-start;
+
   border-bottom: 1px solid $border-color;
 }
 
@@ -30,6 +32,9 @@
   align-items: center;
   grid-template-columns: 140px auto;
   gap: 10px;
+  @include themify() {
+    border-bottom: 1px solid theme('inputBorder');
+  }
 }
 
 .popup-options {
@@ -38,11 +43,13 @@
   display: flex;
   justify-content: flex-end;
   list-style: none;
+  margin: 0;
 
   a {
     display: inline-block;
     margin-left: 10px;
     cursor: pointer;
+
     @include themify() {
       color: rgba(theme('textColor'), 0.5);
       &:hover {

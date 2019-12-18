@@ -32,6 +32,14 @@
   transition: background-color 150ms ease-in-out;
   margin: 0;
 
+  &[data-nav='appearance'],
+  &[data-nav='preferences'] {
+    [data-welcome='true'] & {
+      opacity: 0.15;
+      pointer-events: none;
+    }
+  }
+
   &:hover {
     .nav-link {
       @include themify() {

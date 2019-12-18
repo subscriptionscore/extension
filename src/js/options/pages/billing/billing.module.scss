@@ -1,4 +1,5 @@
 @import '../../../../styles/common/colors.scss';
+@import '../layout.module.scss';
 
 .section {
   margin-bottom: 40px;
@@ -22,4 +23,18 @@
 .key,
 .licenceInput {
   font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
+}
+
+.page-section {
+  @extend .section;
+}
+
+.toolbar-img {
+  width: 250px;
+  margin: 0 0 1em 35px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.55);
+}
+
+.popup-img {
+  width: 450px;
 }
