@@ -8,9 +8,10 @@ import reducer, { initialState } from './reducer';
 
 import Button from '../../../components/button';
 import Radio from '../../../components/radio';
+import { TextLink } from '../../../components/text';
+import { graphqlRequest } from '../../../utils/request';
 import styles from './feedback.module.scss';
 import { useUser } from '../../../providers/user-provider';
-import { TextLink } from '../../../components/text';
 
 const FeedbackPage = ({ params }) => {
   return (
