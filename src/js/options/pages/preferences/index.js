@@ -22,7 +22,7 @@ const PreferencesPage = () => {
 };
 
 function Prefs() {
-  const [{ user }, dispatch] = useUser();
+  const [{ user }, { setPreference }] = useUser();
 
   const {
     alertOnSubmit,
@@ -34,9 +34,9 @@ function Prefs() {
 
   const onChange = useCallback(
     (key, value) => {
-      dispatch({ type: 'save-preference', data: { [key]: value } });
+      setPreference({ [key]: value });
     },
-    [dispatch]
+    [setPreference]
   );
 
   return (

@@ -72,7 +72,7 @@ const BillingPage = ({ showWelcome }) => {
 };
 
 function LicenceKey() {
-  const [{ user, initialised }, dispatch] = useUser();
+  const [{ user, initialised }, { setLicenceKey }] = useUser();
   const { licenceKey, email } = user;
 
   const [value, setValue] = useState('');
@@ -96,7 +96,7 @@ function LicenceKey() {
     }
 
     const onSave = async () => {
-      dispatch({ type: 'set-licence-key', data: value });
+      setLicenceKey(value);
     };
     return (
       <>
@@ -130,7 +130,7 @@ function LicenceKey() {
         </p>
       </>
     );
-  }, [dispatch, email, initialised, licenceKey, value]);
+  }, [email, initialised, licenceKey, setLicenceKey, value]);
 
   return content;
 }
