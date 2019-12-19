@@ -81,4 +81,8 @@ async function onPageChange(url) {
   chrome.browserAction.setBadgeBackgroundColor({
     color: '#666666'
   });
+  chrome.tabs.executeScript({
+    file: 'content.bundle.js',
+    runAt: 'document_idle'
+  });
 }
