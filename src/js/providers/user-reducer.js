@@ -6,7 +6,7 @@ export const initialState = {
       alertOnSubmit: true,
       ignoredEmailAddresses: [],
       ignoredSites: [],
-      blockedRank: ''
+      blockedRank: 'B'
     }
   },
   licenceKey: '',
@@ -19,7 +19,6 @@ export const initialState = {
 
 export default (state = initialState, action) => {
   const { data, type } = action;
-  console.log(type);
   switch (type) {
     case 'initialize': {
       return {
