@@ -11,7 +11,7 @@ export const initialState = {
   },
   licenceKey: '',
   loading: false,
-  initialised: false,
+  initialized: false,
   loaded: false,
   error: null,
   success: null
@@ -21,11 +21,11 @@ export default (state = initialState, action) => {
   const { data, type } = action;
   console.log(type);
   switch (type) {
-    case 'init': {
+    case 'initialize': {
       return {
         ...state,
         ...data,
-        initialised: true
+        initialized: true
       };
     }
     case 'load': {

@@ -72,13 +72,13 @@ const BillingPage = ({ showWelcome }) => {
 };
 
 function LicenceKey() {
-  const [{ user, initialised }, { setLicenceKey }] = useUser();
+  const [{ user, initialized }, { setLicenceKey }] = useUser();
   const { licenceKey, email } = user;
 
   const [value, setValue] = useState('');
   const content = useMemo(() => {
     // settings havent been fetched from storage yet
-    if (!initialised) {
+    if (!initialized) {
       return <p>Loading...</p>;
     }
 
@@ -130,7 +130,7 @@ function LicenceKey() {
         </p>
       </>
     );
-  }, [email, initialised, licenceKey, setLicenceKey, value]);
+  }, [email, initialized, licenceKey, setLicenceKey, value]);
 
   return content;
 }

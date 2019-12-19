@@ -18,31 +18,31 @@ const UserContext = createContext({});
 const UserProvider = ({ children }) => {
   const [storage, setStorage] = useStorage();
   const [state, dispatch] = useReducer(userReducer, initialState);
-  const [licenceKey, setLicenceKey] = useState();
-
-  debugger;
+  const [licenceKey, setLicenceKey] = useState(null);
 
   // if the licence key changes then store it locally in
   // browser storage and fetch the user associated with
   // it from the remote db
   useEffect(() => {
-    dispatch({ type: 'reset' });
-    getUser(licenceKey)
-      .then(user => {
-        if (!user) {
-          throw new Error('invalid-key');
-        }
-        if (licenceKey !== storage.licenceKey) {
-          setStorage({ licenceKey });
-        }
-        dispatch({ type: 'load', data: user });
-      })
-      .catch(err => {
-        dispatch({
-          type: 'set-error',
-          data: err
+    if (licenceKey) {
+      dispatch({ type: 'reset' });
+      getUser(licenceKey)
+        .then(user => {
+          if (!user) {
+            throw new Error('invalid-key');
+          }
+          if (licenceKey !== storage.licenceKey) {
+            setStorage({ licenceKey });
+          }
+          dispatch({ type: 'load', data: user });
+        })
+        .catch(err => {
+          dispatch({
+            type: 'set-error',
+            data: err
+          });
         });
-      });
+    }
   }, [licenceKey, setStorage, storage.licenceKey]);
 
   // when storage loads, if there is a user in there then
@@ -51,7 +51,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     if (!storage.loading) {
       const { value } = storage;
-      if (value.preferences && !state.initialized) {
+      if (!state.initialized) {
         dispatch({ type: 'initialize', data: value });
       }
       if (value.licenceKey && value.licenceKey !== licenceKey) {
@@ -63,12 +63,26 @@ const UserProvider = ({ children }) => {
   // if the preferences change then send them to the remote db
   // and store them locally in browser storage
   useEffect(() => {
-    if (state.initialized && state.user.preferences) {
+    if (state.initialized && state.user.preferences && licenceKey) {
       updateUserPreferences(state.user.preferences);
       setStorage({ preferences: state.user.preferences });
     }
-  }, [state.initialized, state.user.preferences, setStorage]);
+  }, [state.initialized, state.user.preferences, setStorage, licenceKey]);
 
+  const changeEmailIgnoreList = useCallback((action, email) => {
+    if (action === 'add') {
+      dispatch({ type: 'add-ignored-email-address', data: email });
+    } else {
+      dispatch({ type: 'remove-ignored-email-address', data: email });
+    }
+  }, []);
+  const changeSiteIgnoreList = useCallback((action, site) => {
+    if (action === 'add') {
+      dispatch({ type: 'add-ignored-site', data: site });
+    } else {
+      dispatch({ type: 'remove-ignored-site', data: site });
+    }
+  }, []);
   const setSuccess = useCallback(data => {
     dispatch({
       type: 'set-success',
@@ -90,8 +104,26 @@ const UserProvider = ({ children }) => {
   }, []);
 
   const value = useMemo(
-    () => [state, { setLicenceKey, setSuccess, setPreference, clearFeedback }],
-    [state, setLicenceKey, setSuccess, setPreference, clearFeedback]
+    () => [
+      state,
+      {
+        setLicenceKey,
+        setSuccess,
+        setPreference,
+        clearFeedback,
+        changeEmailIgnoreList,
+        changeSiteIgnoreList
+      }
+    ],
+    [
+      state,
+      setLicenceKey,
+      setSuccess,
+      setPreference,
+      clearFeedback,
+      changeEmailIgnoreList,
+      changeSiteIgnoreList
+    ]
   );
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
