@@ -18,13 +18,13 @@ const AppearancePage = () => {
 export default AppearancePage;
 
 function Colors() {
-  const [{ user }, dispatch] = useUser();
+  const [{ user }, { setPreference }] = useUser();
 
   const { colorSet, darkMode } = user.preferences;
 
   const onChangeDarkMode = useCallback(() => {
-    dispatch({ type: 'save-preference', data: { darkMode: !darkMode } });
-  }, [darkMode, dispatch]);
+    setPreference({ darkMode: !darkMode });
+  }, [darkMode, setPreference]);
 
   return (
     <form
@@ -41,9 +41,7 @@ function Colors() {
           className={styles.colors}
           name="colors-radio"
           checked={colorSet === 'normal'}
-          onChange={() =>
-            dispatch({ type: 'save-preference', data: { colorSet: 'normal' } })
-          }
+          onChange={() => setPreference({ colorSet: 'normal' })}
         >
           <div className={styles.ranks}>
             <Ranks colorblind={false} />
@@ -55,12 +53,7 @@ function Colors() {
           className={styles.colors}
           name="colors-radio"
           checked={colorSet === 'colorblind'}
-          onChange={() =>
-            dispatch({
-              type: 'save-preference',
-              data: { colorSet: 'colorblind' }
-            })
-          }
+          onChange={() => setPreference({ colorSet: 'colorblind' })}
         >
           <div className={styles.ranks}>
             <Ranks colorblind={true} />

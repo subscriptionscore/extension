@@ -13,13 +13,6 @@
   "icons": {
     "128": "assets/icon.png"
   },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["content.bundle.js"],
-      "run_at": "document_idle"
-    }
-  ],
   "web_accessible_resources": ["frame.html", "frame.bundle.js", "frame.css"],
   "permissions": ["tabs", "storage", "activeTab"],
   "manifest_version": 2,

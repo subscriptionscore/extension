@@ -141,6 +141,10 @@ function getEmailValues($form) {
 }
 
 (async () => {
+  if (document.body.getAttribute('data-ss-running')) {
+    return;
+  }
+  document.body.setAttribute('data-ss-running', true);
   const ignoredSites = await getPreference('ignoredSites');
   const ignoredEmailAddresses = await getPreference('ignoredEmailAddresses');
   const blockedRank = await getPreference('blockedRank');

@@ -22,7 +22,10 @@ const PreferencesPage = () => {
 };
 
 function Prefs() {
-  const [{ user }, dispatch] = useUser();
+  const [
+    { user },
+    { setPreference, changeEmailIgnoreList, changeSiteIgnoreList }
+  ] = useUser();
 
   const {
     alertOnSubmit,
@@ -34,9 +37,9 @@ function Prefs() {
 
   const onChange = useCallback(
     (key, value) => {
-      dispatch({ type: 'save-preference', data: { [key]: value } });
+      setPreference({ [key]: value });
     },
-    [dispatch]
+    [setPreference]
   );
 
   return (
@@ -70,7 +73,9 @@ function Prefs() {
         ignoredEmailAddresses={ignoredEmailAddresses}
         ignoredSites={ignoredSites}
         colorblind={colorSet === 'colorblind'}
-        dispatch={dispatch}
+        setPreference={setPreference}
+        changeEmailIgnoreList={changeEmailIgnoreList}
+        changeSiteIgnoreList={changeSiteIgnoreList}
       />
     </>
   );
@@ -82,7 +87,9 @@ function AlertContent({
   ignoredEmailAddresses,
   ignoredSites,
   colorblind,
-  dispatch
+  setPreference,
+  changeEmailIgnoreList,
+  changeSiteIgnoreList
 }) {
   if (!show) {
     return null;
@@ -103,10 +110,7 @@ function AlertContent({
               checked={blockedRank === rank}
               onChange={({ currentTarget }) => {
                 if (currentTarget.checked) {
-                  dispatch({
-                    type: 'save-preference',
-                    data: { blockedRank: rank }
-                  });
+                  setPreference({ blockedRank: rank });
                 }
               }}
             >
@@ -136,16 +140,12 @@ function AlertContent({
         <IgnoreForm
           type="email"
           name="ignoredEmailAddresses"
-          onSubmit={email =>
-            dispatch({ type: 'add-ignored-email-address', data: email })
-          }
+          onSubmit={email => changeEmailIgnoreList('add', email)}
         />
         <IgnoredList
           type="Email addresses"
           items={ignoredEmailAddresses}
-          onRemove={value =>
-            dispatch({ type: 'remove-ignored-email-address', data: value })
-          }
+          onRemove={value => changeEmailIgnoreList('remove', value)}
         />
       </div>
       <div className={styles.pageSection}>
@@ -155,16 +155,12 @@ function AlertContent({
         </div>
         <IgnoreForm
           name="ignoredSites"
-          onSubmit={email =>
-            dispatch({ type: 'add-ignored-site', data: email })
-          }
+          onSubmit={site => changeSiteIgnoreList('add', site)}
         />
         <IgnoredList
           type="Websites"
           items={ignoredSites}
-          onRemove={value =>
-            dispatch({ type: 'remove-ignored-site', data: value })
-          }
+          onRemove={site => changeSiteIgnoreList('remove', site)}
         />
       </div>
     </>

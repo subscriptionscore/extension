@@ -12,8 +12,11 @@ let currentPage = {
 };
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  const { url } = tab;
-  onPageChange(url);
+  if (changeInfo && changeInfo.status === 'complete') {
+    const { url } = tab;
+    injectScript();
+    return onPageChange(url);
+  }
 });
 
 chrome.tabs.onActivated.addListener(() => {
@@ -53,6 +56,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+async function injectScript() {
+  chrome.tabs.executeScript({
+    file: 'content.bundle.js',
+    runAt: 'document_idle'
+  });
+}
 // call when the page changes and we need to
 // fetch a new rank for the current url
 async function onPageChange(url) {
