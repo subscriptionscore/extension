@@ -20,5 +20,8 @@ export async function updateUserPreferences(preferences) {
   console.log('[user]: saving user preferences', preferences);
   const options = { variables: { preferences } };
   const { updateUserPreferences } = await graphqlRequest(updateGql, options);
+  if (!updateUserPreferences) {
+    throw new Error('failed to update preferences');
+  }
   return updateUserPreferences;
 }
