@@ -6,6 +6,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ZipPlugin = require('zip-webpack-plugin');
+const manifest = require('./src/manifest.json');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -167,6 +169,10 @@ const options = {
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+    }),
+    new ZipPlugin({
+      path: '../releases',
+      filename: `subscriptionscore-${manifest.version}.zip`
     })
   ]
 };
