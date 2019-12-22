@@ -13,7 +13,12 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 const prodPlugins = [
   // clean the build folder
-  new CleanWebpackPlugin()
+  new CleanWebpackPlugin({
+    cleanOnceBeforeBuildPatterns: [
+      '**/*',
+      path.join(process.cwd(), 'releases/**/*')
+    ]
+  })
 ];
 
 const fileExtensions = [
@@ -170,10 +175,14 @@ const options = {
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
     }),
-    new ZipPlugin({
-      path: '../releases',
-      filename: `subscriptionscore-${manifest.version}.zip`
-    })
+    ...(isDevelopment
+      ? []
+      : [
+          new ZipPlugin({
+            path: '../releases',
+            filename: `subscriptionscore-${manifest.version}.zip`
+          })
+        ])
   ]
 };
 
