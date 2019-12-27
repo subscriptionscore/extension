@@ -10,6 +10,7 @@ function useGraphQl(query, options = {}) {
 
   useEffect(() => {
     setState({ loading: true });
+
     graphqlRequest(query, options)
       .then(response => {
         setState({ loading: false, value: response });

@@ -19,17 +19,10 @@ const App = () => {
   const [{ user, loading }] = useUser();
   const theme = user.preferences.darkMode ? 'dark' : 'light';
 
-  const content = useMemo(() => {
-    if (urlLoading || loading) {
-      return null;
-    }
-    return <DomainScore url={url} />;
-  }, [url, urlLoading, loading]);
-
   return (
     <div data-color-theme={theme}>
       <div className={styles.popup}>
-        {content}
+        <DomainScore url={url} isLoading={urlLoading || loading} />
         <Footer />
       </div>
     </div>

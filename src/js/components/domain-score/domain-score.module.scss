@@ -19,6 +19,7 @@
 }
 
 .content {
+  min-height: 150px;
   @include themify() {
     background-color: theme('backgroundColorDropped');
   }
@@ -34,4 +35,31 @@
 .title {
   font-size: 18px;
   margin-left: 0.5em;
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 140px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 4px solid $color-highlight;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation-name: spin;
+  animation: spin 1s linear 0ms infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -5,77 +5,81 @@ import styles from './domain-score.module.scss';
 import Score from '../score';
 import useDomainScore from '../../hooks/use-domain-score';
 
-export default function DomainScore({ url }) {
+export default function DomainScore({ url, isLoading }) {
+  const content = useMemo(() => {
+    if (isLoading) {
+      return (
+        <div className={styles.domainScore}>
+          <div className={styles.avgScore}>
+            <h2>
+              <Rank compact rank={'unknown'} />
+              <span className={styles.title}>Loading...</span>
+            </h2>
+          </div>
+          <div className={styles.content}></div>
+        </div>
+      );
+    }
+    return <Content url={url} />;
+  }, [url, isLoading]);
+
+  return content;
+}
+
+function Content({ url }) {
   const { value, loading, error, domain } = useDomainScore(url);
 
-  const content = useMemo(() => {
+  const { title, content, rank } = useMemo(() => {
     if (loading) {
-      return <div className={styles.loading}>Loading...</div>;
-    } else if (error) {
-      return (
-        <>
-          <div className={styles.avgScore}>
-            <h2>
-              <Rank compact rank={'unknown'} />
-              <span className={styles.title}>{domain}</span>
-            </h2>
-          </div>
-          <div className={styles.content}>
-            <div className={styles.empty}>{getErrorMessage(error)}</div>
-          </div>
-        </>
-      );
+      return {
+        title: 'Loading...',
+        content: (
+          <span className={styles.spinnerContainer}>
+            <span className={styles.spinner} />
+          </span>
+        ),
+        rank: 'unknown'
+      };
     }
-
+    if (error) {
+      return {
+        title: domain,
+        content: <div className={styles.empty}>{getErrorMessage(error)}</div>,
+        rank: 'unknown'
+      };
+    }
     const { searchDomain } = value ? value : {};
     if (!searchDomain || !searchDomain.score) {
-      return (
-        <>
-          <div className={styles.avgScore}>
-            <h2>
-              <Rank compact rank={'unknown'} />
-              <span className={styles.title}>{domain}</span>
-            </h2>
+      return {
+        title: domain,
+        content: (
+          <div className={styles.empty}>
+            We don't have enough data to score this website's subscription
+            emails yet.
           </div>
-          <div className={styles.content}>
-            <div className={styles.empty}>
-              We don't have enough data to score this website's subscription
-              emails yet.
-            </div>
-          </div>
-        </>
-      );
+        ),
+        rank: 'unknown'
+      };
     }
-    const {
-      rank,
-      domain: normalizedDomain,
-      scores,
-      ...scoreData
-    } = searchDomain;
-    return (
-      <>
-        <div className={styles.avgScore}>
-          <h2>
-            <Rank compact rank={rank} />
-            <span className={styles.title}>{normalizedDomain || domain}</span>
-          </h2>
-        </div>
-        <div className={styles.content}>
-          <Score emailScore={scoreData} />
-          {/* <ul>
-            {scores.map(({ rank, score, email }) => (
-              <li key={email}>
-                <span>{rank}</span>
-                <span>{email}</span>
-              </li>
-            ))}
-          </ul> */}
-        </div>
-      </>
-    );
-  }, [domain, error, loading, value]);
+    const { rank, domain: normalizedDomain, ...scoreData } = searchDomain;
+    return {
+      title: normalizedDomain || domain,
+      content: <Score emailScore={scoreData} />,
+      rank
+    };
+  }, [loading, domain, value, error]);
 
-  return <div className={styles.domainScore}>{content}</div>;
+  return (
+    <div className={styles.domainScore}>
+      <div className={styles.avgScore}>
+        <h2>
+          <Rank compact rank={rank} />
+          <span className={styles.title}>{title}</span>
+        </h2>
+      </div>
+      <div className={styles.content}>{content}</div>
+    </div>
+  );
 }
 
 function getErrorMessage(error) {
