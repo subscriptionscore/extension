@@ -39,7 +39,9 @@ const AboutPage = () => {
         <p>
           <TextLink href="https://leavemealone.app">Leave Me Alone</TextLink>{' '}
           was born to help solve the first two problems. While{' '}
-          <TextLink href="subscriptionscore.com">Subscription Score</TextLink>{' '}
+          <TextLink href="https://subscriptionscore.com">
+            Subscription Score
+          </TextLink>{' '}
           addresses the third.
         </p>
       </div>

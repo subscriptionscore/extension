@@ -7,6 +7,7 @@ import AlertProvider from '../providers/alert-provider';
 import Layout from './pages/layout';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Loading from './loading';
 
 const AppContainer = () => {
   return (
@@ -17,15 +18,12 @@ const AppContainer = () => {
 };
 
 const App = () => {
-  const [{ user }] = useUser();
+  const [{ user, loaded }] = useUser();
   const theme = user.preferences.darkMode ? 'dark' : 'light';
-
   return (
     <div className="app-theme-wrapper" data-color-theme={theme}>
       <div className="app-container">
-        <AlertProvider>
-          <Layout />
-        </AlertProvider>
+        <AlertProvider>{loaded ? <Layout /> : <Loading />}</AlertProvider>
       </div>
     </div>
   );

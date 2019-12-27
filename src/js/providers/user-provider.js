@@ -141,6 +141,8 @@ query User($licenceKey: ID!) {
       ignoredSites
       blockedRank
     }
+    features
+    emails
   }
 }
 `;

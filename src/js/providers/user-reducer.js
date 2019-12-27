@@ -1,5 +1,7 @@
 export const initialState = {
   user: {
+    features: [],
+    emails: [],
     preferences: {
       darkMode: false,
       colorSet: 'normal',

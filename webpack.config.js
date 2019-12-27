@@ -134,12 +134,19 @@ const options = {
       {
         from: 'src/manifest.json',
         transform: function(content) {
+          const manifest = JSON.parse(content.toString());
+          let name = manifest.name;
+          let version_name = manifest.version_name;
+          if (isDevelopment) {
+            name = `${name} Dev`;
+            version_name = `${version_name} - Development`;
+          }
           // generates the manifest file using the package.json informations
           return Buffer.from(
             JSON.stringify({
-              description: process.env.npm_package_description,
-              version: process.env.npm_package_version,
-              ...JSON.parse(content.toString())
+              ...manifest,
+              name,
+              version_name
             })
           );
         }

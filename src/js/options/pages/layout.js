@@ -9,6 +9,7 @@ import { VERSION_NAME } from '../../constants';
 import cx from '../../utils/classnames';
 import logo from '../../../../assets/logo.png';
 import styles from './layout.module.scss';
+import Emails from './emails';
 
 const NAV_ITEMS = [
   {
@@ -24,6 +25,11 @@ const NAV_ITEMS = [
     value: 'preferences'
   },
   {
+    label: 'Black Hole',
+    value: 'emails',
+    feature: 'emails'
+  },
+  {
     label: 'About',
     value: 'about'
   },
@@ -37,7 +43,7 @@ const Options = () => {
   const [page, setPage] = useState(NAV_ITEMS[0].value);
   const [params, setParams] = useState({});
   const [{ user, loaded }] = useUser();
-  const { licenceKey } = user;
+  const { licenceKey, features } = user;
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -74,13 +80,19 @@ const Options = () => {
     if (page === 'about') {
       return <About />;
     }
+    if (page === 'emails') {
+      return <Emails />;
+    }
   }, [page, params, licenceKey]);
 
+  const navItems = NAV_ITEMS.filter(n =>
+    n.feature ? features.includes(n.feature) : true
+  );
   return (
     <div className={styles.container}>
       <div className={styles.nav} role="nav">
         <ul data-welcome={!licenceKey}>
-          {NAV_ITEMS.map(item => {
+          {navItems.map(item => {
             const classes = cx({
               [styles.navLink]: true,
               [styles.navActive]: page === item.value
