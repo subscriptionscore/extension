@@ -20,6 +20,19 @@ const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
   const [licenceKey, setLicenceKey] = useState(null);
 
+  // wait for load of data from storage
+  useEffect(() => {
+    if (!storage.loading) {
+      const { value } = storage;
+      if (!state.initialized) {
+        dispatch({ type: 'initialize', data: value });
+      }
+      if (value.licenceKey && value.licenceKey !== licenceKey) {
+        setLicenceKey(value.licenceKey);
+      }
+    }
+  }, [licenceKey, state.initialized, storage]);
+
   // if the licence key changes then store it locally in
   // browser storage and fetch the user associated with
   // it from the remote db
@@ -47,40 +60,17 @@ const UserProvider = ({ children }) => {
     }
   }, [licenceKey, setStorage, state.initialized, storage.licenceKey]);
 
-  // when storage loads, if there is a user in there then
-  // load it into memory, otherwise fetch the user from
-  // the remote database
-  useEffect(() => {
-    if (!storage.loading) {
-      const { value } = storage;
-      if (!state.initialized) {
-        dispatch({ type: 'initialize', data: value });
-      }
-      if (value.licenceKey && value.licenceKey !== licenceKey) {
-        setLicenceKey(value.licenceKey);
-      }
-    }
-  }, [licenceKey, state.initialized, storage]);
+  const updateStores = useCallback(async () => {
+    await updateUserPreferences(state.user.preferences);
+    await setStorage({ preferences: state.user.preferences });
+  }, [setStorage, state.user.preferences]);
 
-  // if the preferences change then send them to the remote db
-  // and store them locally in browser storage
   useEffect(() => {
-    if (
-      !storage.loading &&
-      state.initialized &&
-      state.user.preferences &&
-      licenceKey
-    ) {
-      updateUserPreferences(state.user.preferences);
-      setStorage({ preferences: state.user.preferences });
+    if (state.user.dirty) {
+      dispatch({ type: 'set-synced' });
+      updateStores();
     }
-  }, [
-    storage.loading,
-    state.initialized,
-    state.user.preferences,
-    setStorage,
-    licenceKey
-  ]);
+  }, [state.user.dirty, updateStores]);
 
   const changeEmailIgnoreList = useCallback((action, email) => {
     if (action === 'add') {

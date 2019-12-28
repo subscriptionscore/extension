@@ -39,6 +39,15 @@ export default (state = initialState, action) => {
         loaded: true
       };
     }
+    case 'set-synced': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          dirty: false
+        }
+      };
+    }
     case 'set-error': {
       const message = getError(action.data, state);
       return {
@@ -72,6 +81,7 @@ export default (state = initialState, action) => {
         ...state,
         user: {
           ...state.user,
+          dirty: true,
           preferences: {
             ...state.user.preferences,
             ...action.data
@@ -85,6 +95,7 @@ export default (state = initialState, action) => {
         ...state,
         user: {
           ...state.user,
+          dirty: true,
           preferences: {
             ...state.user.preferences,
             ignoredEmailAddresses: [
@@ -101,6 +112,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: {
+          dirty: true,
           ...state.user,
           preferences: {
             ...state.user.preferences,
@@ -114,6 +126,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: {
+          dirty: true,
           ...state.user,
           preferences: {
             ...state.user.preferences,
@@ -131,6 +144,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: {
+          dirty: true,
           ...state.user,
           preferences: {
             ...state.user.preferences,
@@ -149,29 +163,6 @@ export default (state = initialState, action) => {
       return state;
   }
 };
-
-function mapUser(user, state) {
-  let preferences;
-  if (!user.preferences) {
-    preferences = state.user.preferences;
-  } else {
-    preferences = Object.keys(user.preferences).reduce((out, key) => {
-      const pref = user.preferences[key];
-      if (pref !== null) {
-        return {
-          ...out,
-          [key]: pref
-        };
-      }
-      return out;
-    }, state.user.preferences);
-  }
-
-  return {
-    ...user,
-    preferences
-  };
-}
 
 function getError(err, state) {
   const defaultMsg = `Something went wrong, please try again or contact support.`;
