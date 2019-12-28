@@ -1,3 +1,13 @@
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  chrome.runtime.sendMessage({
+    action: 'log',
+    data: `Changes to storage ${namespace}`
+  });
+  chrome.runtime.sendMessage({
+    action: 'log',
+    data: changes
+  });
+});
 export function setItem(data) {
   return new Promise(resolve => {
     chrome.storage.sync.set(data, () => {

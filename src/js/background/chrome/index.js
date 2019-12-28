@@ -14,8 +14,7 @@ let currentPage = {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo && changeInfo.status === 'complete') {
     const { url } = tab;
-    injectScript();
-    return onPageChange(url);
+    return onPageChange(url, { inject: true });
   }
 });
 
@@ -36,7 +35,6 @@ chrome.runtime.onInstalled.addListener(details => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('[subscriptionscore]: message', request);
   if (request.action == 'signup-allowed') {
     return addSignupAllowedRequest(currentPage.domain);
   }
@@ -54,6 +52,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const domain = request.data;
     return addIgnoreSite(domain);
   }
+  if (request.action === 'log') {
+    if (sender.id === chrome.runtime.id) {
+      return console.log(`[subscriptionscore]:`, request.data);
+    }
+  }
 });
 
 async function injectScript() {
@@ -64,14 +67,14 @@ async function injectScript() {
 }
 // call when the page changes and we need to
 // fetch a new rank for the current url
-async function onPageChange(url) {
-  console.log('[subscriptionscore]: page change', url);
+async function onPageChange(url, { inject = false } = {}) {
   chrome.browserAction.setBadgeText({ text: '' });
   if (!/http(s)?:\/\//.test(url)) {
     chrome.browserAction.disable();
   } else {
     chrome.browserAction.enable();
     try {
+      console.log('[subscriptionscore]: fetching score');
       const domainScore = await getDomainScore(url);
       if (domainScore) {
         const { rank, domain } = domainScore;
@@ -82,6 +85,9 @@ async function onPageChange(url) {
         if (rank) {
           chrome.browserAction.setBadgeText({ text: rank });
         }
+      }
+      if (inject) {
+        injectScript();
       }
     } catch (err) {
       console.error(err);

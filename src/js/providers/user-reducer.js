@@ -33,7 +33,7 @@ export default (state = initialState, action) => {
       const user = data;
       return {
         ...state,
-        user,
+        user: user || initialState.user,
         loading: false,
         error: false,
         loaded: true

@@ -42,8 +42,10 @@ const UserProvider = ({ children }) => {
             data: err
           });
         });
+    } else if (state.initialized) {
+      dispatch({ type: 'load' });
     }
-  }, [licenceKey, setStorage, storage.licenceKey]);
+  }, [licenceKey, setStorage, state.initialized, storage.licenceKey]);
 
   // when storage loads, if there is a user in there then
   // load it into memory, otherwise fetch the user from
@@ -63,11 +65,22 @@ const UserProvider = ({ children }) => {
   // if the preferences change then send them to the remote db
   // and store them locally in browser storage
   useEffect(() => {
-    if (state.initialized && state.user.preferences && licenceKey) {
+    if (
+      !storage.loading &&
+      state.initialized &&
+      state.user.preferences &&
+      licenceKey
+    ) {
       updateUserPreferences(state.user.preferences);
       setStorage({ preferences: state.user.preferences });
     }
-  }, [state.initialized, state.user.preferences, setStorage, licenceKey]);
+  }, [
+    storage.loading,
+    state.initialized,
+    state.user.preferences,
+    setStorage,
+    licenceKey
+  ]);
 
   const changeEmailIgnoreList = useCallback((action, email) => {
     if (action === 'add') {

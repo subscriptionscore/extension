@@ -5,19 +5,19 @@ import DomainScore from '../components/domain-score';
 import styles from './popup.module.scss';
 import Footer from './footer/index';
 import './reset.scss';
-import UserProvider, { useUser } from '../providers/user-provider';
+import useStorage from '../hooks/use-storage';
 
 const UserWrapper = () => {
-  return (
-    <UserProvider>
-      <App />
-    </UserProvider>
-  );
+  return <App />;
 };
 const App = () => {
   const { loading: urlLoading, url } = useCurrentUrl();
-  const [{ user, loading }] = useUser();
-  const theme = user.preferences.darkMode ? 'dark' : 'light';
+  const [{ value, loading }] = useStorage();
+  const theme = useMemo(() => {
+    if (value && value.preferences) {
+      return value.preferences.darkMode ? 'dark' : 'light';
+    }
+  }, [value]);
 
   return (
     <div data-color-theme={theme}>

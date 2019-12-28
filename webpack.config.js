@@ -11,6 +11,8 @@ const manifest = require('./src/manifest.json');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+console.log('API-URL', process.env.GRAPHQL_URL);
+
 const prodPlugins = [
   // clean the build folder
   new CleanWebpackPlugin({
