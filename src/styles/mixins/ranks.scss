@@ -102,7 +102,8 @@ $rating-scale: (
   }
   @if $useFont {
     &[data-rank='A+'] {
-      color: lighten(map-get($scale, 'A'), 75%);
+      color: black;
+      // color: lighten(map-get($scale, 'A'), 75%);
     }
     &[data-rank='A'] {
       color: darken(map-get($scale, 'A'), 50%);
@@ -120,7 +121,8 @@ $rating-scale: (
       color: darken(map-get($scale, 'E'), 55%);
     }
     &[data-rank='F'] {
-      color: lighten(map-get($scale, 'F'), 85%);
+      color: black;
+      // color: lighten(map-get($scale, 'F'), 85%);
     }
     &[data-rank='unknown'] {
       opacity: 0.25;
