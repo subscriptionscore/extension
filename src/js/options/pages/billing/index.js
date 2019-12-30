@@ -65,6 +65,20 @@ const BillingPage = ({ showWelcome }) => {
         <div className={styles.pageSection}>
           <LicenceKey />
         </div>
+        <div className={styles.pageSection}>
+          <p>
+            Enjoying Subscription Score? Take a look at some of our other email
+            products...{' '}
+          </p>
+          <p>
+            🙅‍♀️{' '}
+            <TextLink href="https://leavemealone.app?ref=ss_plugin">
+              Leave Me Alone App
+            </TextLink>{' '}
+            lets you see all of the subscription emails in your inbox together
+            in one place, and unsubscribe from them with a single click.
+          </p>
+        </div>
       </>
     );
   }, [showWelcome]);
