@@ -18,7 +18,7 @@ const BillingPage = ({ showWelcome }) => {
         <>
           <h1>Welcome!</h1>
           <div className={styles.pageSection}>
-            <LicenceKey />
+            <LicenceKeyForm />
           </div>
           <div className={styles.pageSection}>
             <p>Thanks for downloading Subscription Score!</p>
@@ -59,32 +59,61 @@ const BillingPage = ({ showWelcome }) => {
         </>
       );
     }
+
     return (
       <>
         <h1>Billing</h1>
-        <div className={styles.pageSection}>
-          <LicenceKey />
-        </div>
+
+        <LoggedInContent />
       </>
     );
   }, [showWelcome]);
   return content;
 };
 
-function LicenceKey() {
-  const [{ user, initialized }, { setLicenceKey }] = useUser();
-  const { licenceKey, email } = user;
+function LoggedInContent() {
+  const [{ user, initialized }] = useUser();
+  const { licenceKey, email, planId } = user;
 
-  const [value, setValue] = useState('');
   const content = useMemo(() => {
     // settings havent been fetched from storage yet
     if (!initialized) {
       return <p>Loading...</p>;
     }
 
-    if (licenceKey) {
-      return (
-        <div>
+    let planContent;
+    if (!planId) {
+      planContent = (
+        <>
+          <p>Your account has been activated for free!</p>
+          <p>
+            Please share Subscription Score to spread the word and help us grow
+            :)
+          </p>
+        </>
+      );
+    } else {
+      const planType = planId === '3' ? 'monthly' : 'yearly';
+      planContent = (
+        <>
+          <p>
+            You are subscribed to the{' '}
+            <span className={styles.key}>{planType} plan</span>
+          </p>
+          <p>
+            Please{' '}
+            <TextLink href="mailto:hello@subscriptionscore.com">
+              contact us
+            </TextLink>{' '}
+            to make changes to or cancel your plan.
+          </p>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <div className={styles.pageSection}>
           <p>
             Licence key: <span className={styles.key}>{licenceKey}</span>
           </p>
@@ -92,47 +121,55 @@ function LicenceKey() {
             Email address: <span className={styles.key}>{email}</span>
           </p>
         </div>
-      );
-    }
-
-    const onSave = async () => {
-      setLicenceKey(value);
-    };
-    return (
-      <>
-        <form
-          id="licence-key-form"
-          className={styles.form}
-          onSubmit={e => {
-            e.preventDefault();
-            return onSave();
-          }}
-        >
-          <p>Enter licence key...</p>
-          <InputGroup>
-            <FormInput
-              name="licenceKey"
-              value={value}
-              onChange={e => setValue(e.currentTarget.value)}
-              className={styles.licenceInput}
-            />
-            <Button type="submit" as="button" disabled={!value}>
-              Save
-            </Button>
-          </InputGroup>
-        </form>
-        <p>
-          Need a licence key? Purchase one{' '}
-          <TextLink href="https://subscriptionscore.com">
-            on our website
-          </TextLink>
-          .
-        </p>
+        <div className={styles.pageSection}>
+          <h2>Plan</h2>
+          {planContent}
+        </div>
       </>
     );
-  }, [email, initialized, licenceKey, setLicenceKey, value]);
+  }, [email, initialized, licenceKey, planId]);
 
   return content;
+}
+
+function LicenceKeyForm() {
+  const [, { setLicenceKey }] = useUser();
+  const [value, setValue] = useState('');
+
+  const onSave = async () => {
+    setLicenceKey(value);
+  };
+
+  return (
+    <>
+      <form
+        id="licence-key-form"
+        className={styles.form}
+        onSubmit={e => {
+          e.preventDefault();
+          return onSave();
+        }}
+      >
+        <p>Enter licence key...</p>
+        <InputGroup>
+          <FormInput
+            name="licenceKey"
+            value={value}
+            onChange={e => setValue(e.currentTarget.value)}
+            className={styles.licenceInput}
+          />
+          <Button type="submit" as="button" disabled={!value}>
+            Save
+          </Button>
+        </InputGroup>
+      </form>
+      <p>
+        Need a licence key? Purchase one{' '}
+        <TextLink href="https://subscriptionscore.com">on our website</TextLink>
+        .
+      </p>
+    </>
+  );
 }
 
 export default BillingPage;

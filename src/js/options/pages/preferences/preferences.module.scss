@@ -30,14 +30,16 @@
 }
 
 .help-text {
-  // padding-left: 24px;
-  padding-top: 20px;
   p {
     opacity: 0.75;
   }
   img {
     width: 100%;
   }
+}
+
+.radios {
+  margin-bottom: 20px;
 }
 
 .rank-radio {
