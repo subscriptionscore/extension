@@ -9,6 +9,7 @@ const Button = ({
   loading = false,
   muted = false,
   smaller,
+  outlined = false,
   className = '',
   ...btnProps
 }) => {
@@ -17,7 +18,8 @@ const Button = ({
     [styles.btn]: true,
     [styles.loading]: loading,
     [styles.muted]: muted,
-    [styles.smaller]: smaller
+    [styles.smaller]: smaller,
+    [styles.outlined]: outlined
   });
   if (as === 'a') {
     return (

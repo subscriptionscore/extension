@@ -1,0 +1,80 @@
+@import '../../../components/form/form.module.scss';
+@import '../../../../styles/common/colors.scss';
+
+.email-form {
+  display: flex;
+  margin-bottom: 0.5em;
+  flex-direction: row;
+  align-items: center;
+  line-height: 36px;
+}
+
+.email-input {
+  @extend .input;
+  display: inline-block;
+  width: auto;
+  padding: 1px 10px;
+  margin-right: 0.25em;
+  line-height: 36px;
+}
+
+.forwarding-email-input {
+  @extend .input;
+  display: inline-block;
+  width: 100%;
+  max-width: 500px;
+}
+
+.error {
+  margin-bottom: 1em;
+  color: $color-bg-error;
+  font-size: 14px;
+  &:empty {
+    display: none;
+  }
+}
+
+.arrow {
+  display: inline-block;
+  margin: 0 10px 0 10px;
+
+  svg {
+    margin-left: 5px;
+    top: 4px;
+  }
+}
+
+.table {
+  padding: 0;
+  margin: 0 0 1em 0;
+
+  td {
+    vertical-align: middle;
+    text-align: left;
+  }
+
+  .enable-cell {
+    text-align: center;
+  }
+
+  .filtering-col {
+    min-width: 110px;
+  }
+}
+
+.item {
+  padding: 0;
+}
+
+.email-domain {
+  opacity: 0.45;
+}
+
+.delete {
+  color: $color-bg-error;
+  font-size: 14px;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}

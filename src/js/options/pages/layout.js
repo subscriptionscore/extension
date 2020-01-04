@@ -25,7 +25,7 @@ const NAV_ITEMS = [
     value: 'preferences'
   },
   {
-    label: 'Black Hole',
+    label: 'Emails',
     value: 'emails',
     feature: 'emails'
   },

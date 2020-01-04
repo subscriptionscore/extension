@@ -27,6 +27,11 @@ const UserProvider = ({ children }) => {
       if (!state.initialized) {
         dispatch({ type: 'initialize', data: value });
       }
+      if (!value || !value.preferences) {
+        // if store is totally empty then the ext has just
+        // been installed so we should populate it
+        dispatch({ type: 'save-preference', data: {} });
+      }
       if (value.licenceKey && value.licenceKey !== licenceKey) {
         setLicenceKey(value.licenceKey);
       }
@@ -106,6 +111,84 @@ const UserProvider = ({ children }) => {
     dispatch({ type: 'save-preference', data });
   }, []);
 
+  const createEmail = useCallback(
+    async ({ email, forwardingAddress }) => {
+      let response;
+      try {
+        response = await createEmailForUser({
+          email,
+          forwardingAddress,
+          licenceKey
+        });
+        if (response.email) {
+          dispatch({
+            type: 'add-email',
+            data: { email, forwardingAddress, enabled: true }
+          });
+        }
+      } catch (err) {
+        return {
+          error: err,
+          value: null
+        };
+      }
+      return { value: response };
+    },
+    [licenceKey]
+  );
+  const setEmailStatus = useCallback(
+    async (email, status) => {
+      let response;
+      // update now so UI updates
+      dispatch({
+        type: 'update-email-status',
+        data: { email, enabled: status }
+      });
+      try {
+        response = await setEmailStatusForUser({
+          email,
+          enabled: status,
+          licenceKey
+        });
+      } catch (err) {
+        // rollback
+        dispatch({
+          type: 'update-email-status',
+          data: { email, enabled: !status }
+        });
+        return {
+          error: err,
+          value: null
+        };
+      }
+      return { value: response };
+    },
+    [licenceKey]
+  );
+  const updateEmail = useCallback((email, forwardingAddress) => {}, []);
+  const deleteEmail = useCallback(
+    async email => {
+      let response;
+      try {
+        response = await deleteEmailForUser({
+          email,
+          licenceKey
+        });
+        dispatch({
+          type: 'remove-email',
+          data: email
+        });
+      } catch (err) {
+        console.error(err);
+        return {
+          error: err,
+          value: null
+        };
+      }
+      return { value: response };
+    },
+    [licenceKey]
+  );
   const value = useMemo(
     () => [
       state,
@@ -115,7 +198,11 @@ const UserProvider = ({ children }) => {
         setPreference,
         clearFeedback,
         changeEmailIgnoreList,
-        changeSiteIgnoreList
+        changeSiteIgnoreList,
+        createEmail,
+        updateEmail,
+        deleteEmail,
+        setEmailStatus
       }
     ],
     [
@@ -125,7 +212,11 @@ const UserProvider = ({ children }) => {
       setPreference,
       clearFeedback,
       changeEmailIgnoreList,
-      changeSiteIgnoreList
+      changeSiteIgnoreList,
+      createEmail,
+      updateEmail,
+      deleteEmail,
+      setEmailStatus
     ]
   );
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
@@ -145,7 +236,11 @@ query User($licenceKey: ID!) {
       blockedRank
     }
     features
-    emails
+    emails {      
+      email
+      forwardingAddress
+      enabled
+    }
   }
 }
 `;
@@ -156,6 +251,44 @@ async function getUser(licenceKey) {
   return getUserByLicenceKey;
 }
 
+const createEmailGql = `
+mutation CreateEmail($email: String!, $forwardingAddress: String!) {
+  createEmail(email: $email, forwardingAddress: $forwardingAddress) {
+    email
+  }
+}
+`;
+async function createEmailForUser({ email, forwardingAddress, licenceKey }) {
+  const options = { variables: { licenceKey, email, forwardingAddress } };
+  const { createEmail } = await graphqlRequest(createEmailGql, options);
+  return createEmail;
+}
+
+const deleteEmailGql = `
+mutation DeleteEmail($email: String!) {
+  deleteEmail(email: $email) {
+    success
+  }
+}
+`;
+async function deleteEmailForUser({ email, licenceKey }) {
+  const options = { variables: { licenceKey, email } };
+  const { deleteEmail } = await graphqlRequest(deleteEmailGql, options);
+  return deleteEmail;
+}
+
+const setStatusGql = `
+mutation SetStatusEmail($email: String!, $enabled: Boolean!) {
+  setEmailStatus(email: $email, enabled: $enabled) {
+    success
+  }
+}
+`;
+async function setEmailStatusForUser({ email, enabled, licenceKey }) {
+  const options = { variables: { licenceKey, email, enabled } };
+  const { deleteEmail } = await graphqlRequest(setStatusGql, options);
+  return deleteEmail;
+}
 export default UserProvider;
 
 export const useUser = () => useContext(UserContext);

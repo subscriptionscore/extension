@@ -1,5 +1,16 @@
 import { FormInput, InputGroup } from '../../../components/form';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
+import {
+  shareOnFacebook,
+  shareOnLinkedIn,
+  shareOnTwitter
+} from '../../../utils/social';
+import CopyButton from '../../../components/copy-to-clipboard';
+import {
+  TwitterIcon,
+  FacebookIcon,
+  LinkedInIcon
+} from '../../../components/icons';
 
 import Button from '../../../components/button';
 import { TextLink } from '../../../components/text';
@@ -66,6 +77,9 @@ const BillingPage = ({ showWelcome }) => {
           <LicenceKey />
         </div>
         <div className={styles.pageSection}>
+          <Referral />
+        </div>
+        <div className={styles.pageSection}>
           <p>
             Enjoying Subscription Score? Take a look at some of our other email
             products...{' '}
@@ -84,6 +98,77 @@ const BillingPage = ({ showWelcome }) => {
   }, [showWelcome]);
   return content;
 };
+
+function Referral() {
+  const [{ user }] = useUser();
+  const { referralCode } = user;
+
+  const tweetText = `I've been using this new browser extension to protect myself from spammy mailing lists! 💌 https://subscriptionscore.com/r/${referralCode}`;
+  const facebookText = `I've been using this new browser extension to protect myself from spammy mailing lists! 💌 https://subscriptionscore.com/r/${referralCode}`;
+
+  const onClickTweet = useCallback(() => {
+    try {
+      shareOnTwitter(tweetText);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [tweetText]);
+
+  const onClickFacebook = useCallback(() => {
+    try {
+      shareOnFacebook(facebookText, { referralCode });
+    } catch (err) {
+      console.error(err);
+    }
+  }, [facebookText, referralCode]);
+
+  const onClickLinkedIn = useCallback(() => {
+    try {
+      shareOnLinkedIn({ referralCode });
+    } catch (err) {
+      console.error(err);
+    }
+  }, [referralCode]);
+  const onClickInvite = useCallback(() => {});
+
+  return (
+    <div>
+      <p>
+        Get <strong>1 month free</strong> for every friend you invite to use
+        Subscription Score
+      </p>
+
+      <InputGroup>
+        <FormInput
+          name="referral"
+          type="email"
+          placeholder="friend@example.com"
+          button={
+            <span>
+              <Button onClick={onClickInvite}>Invite</Button>
+            </span>
+          }
+        />
+      </InputGroup>
+      <div className={styles.btnGroup}>
+        <CopyButton string={`${process.env.REFERRAL_URL}${referralCode}`}>
+          Copy link
+        </CopyButton>
+        <Button onClick={onClickTweet}>
+          <TwitterIcon /> Tweet
+        </Button>
+        <Button onClick={onClickFacebook}>
+          <FacebookIcon width="15" height="15" />
+          Post
+        </Button>
+        <Button onClick={onClickLinkedIn}>
+          <LinkedInIcon />
+          Share
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 function LicenceKey() {
   const [{ user, initialized }, { setLicenceKey }] = useUser();

@@ -38,3 +38,10 @@
 .popup-img {
   width: 450px;
 }
+
+.btn-group {
+  display: grid;
+  margin-top: 1em;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+}

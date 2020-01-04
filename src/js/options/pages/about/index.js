@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextLink } from '../../../components/text';
 import styles from './about.module.scss';
+import { VERSION_NAME } from '../../../constants';
 
 const teamImage =
   'https://cdn.leavemealone.app/images/subscriptionscore/about-us.png';
@@ -9,6 +10,13 @@ const AboutPage = () => {
   return (
     <div className={styles.about}>
       <h1>About</h1>
+      <div className={styles.pageSection}>
+        <ul className={styles.metadata}>
+          <li>
+            Version: <strong>{VERSION_NAME}</strong>
+          </li>
+        </ul>
+      </div>
       <div className={styles.pageSection}>
         <h2>Our mission.</h2>
         <p>

@@ -24,6 +24,7 @@ export const FormInput = ({
   className = '',
   type = 'text',
   label,
+  button = null,
   ...props
 }) => {
   const classes = cx({
@@ -37,14 +38,17 @@ export const FormInput = ({
           {label}
         </label>
       ) : null}
-      <input
-        {...props}
-        id={id}
-        type={type}
-        name={name}
-        className={classes}
-        spellCheck="false"
-      />
+      <span className={styles.inputWrapper}>
+        <input
+          {...props}
+          id={id}
+          type={type}
+          name={name}
+          className={classes}
+          spellCheck="false"
+        />
+        {button}
+      </span>
     </>
   );
 };

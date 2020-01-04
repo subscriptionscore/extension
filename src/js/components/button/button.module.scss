@@ -45,6 +45,10 @@
     max-height: 100%;
     font-size: 12px;
   }
+
+  svg {
+    margin-right: 7px;
+  }
 }
 
 .muted {
@@ -64,6 +68,12 @@
   .content {
     visibility: hidden;
   }
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pulse {

@@ -54,7 +54,7 @@ typings/
 
 # dotenv environment variable files
 .env
-.env.production
+.env.*
 
 # gatsby files
 .cache/

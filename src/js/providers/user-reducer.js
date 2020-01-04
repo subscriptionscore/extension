@@ -159,6 +159,37 @@ export default (state = initialState, action) => {
         licenceKey: action.data
       };
     }
+    case 'add-email': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          emails: [...(state.user.emails || []), action.data]
+        }
+      };
+    }
+    case 'remove-email': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          emails: state.user.emails.filter(e => e.email !== action.data)
+        }
+      };
+    }
+    case 'update-email-status': {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          emails: state.user.emails.map(e =>
+            e.email !== action.data.email
+              ? e
+              : { ...e, enabled: action.data.enabled }
+          )
+        }
+      };
+    }
     default:
       return state;
   }
