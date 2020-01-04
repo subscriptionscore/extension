@@ -62,28 +62,27 @@ const reducer = (state, action) => {
           otherDetails: action.data
         }
       };
-    case 'reset': {
-      return {
-        ...state,
-        feedback: initialState.feedback
-      };
-    }
     case 'set-loading': {
       return {
         ...state,
-        loading: action.data
+        loading: action.data,
+        error: false
       };
     }
     case 'set-error': {
       return {
         ...state,
-        error: action.data
+        error: action.data,
+        loading: false
       };
     }
     case 'set-submitted': {
       return {
         ...state,
-        submitted: action.data
+        submitted: action.data,
+        loading: false,
+        error: false,
+        feedback: initialState.feedback
       };
     }
   }
