@@ -126,8 +126,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: {
-          dirty: true,
           ...state.user,
+          dirty: true,
           preferences: {
             ...state.user.preferences,
             ignoredSites: [
