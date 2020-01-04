@@ -136,7 +136,7 @@ query User($licenceKey: ID!) {
   getUserByLicenceKey(licenceKey: $licenceKey) {
     email
     licenceKey
-    planId
+    planName
     preferences {
       darkMode
       colorSet

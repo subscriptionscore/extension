@@ -73,7 +73,7 @@ const BillingPage = ({ showWelcome }) => {
 
 function LoggedInContent() {
   const [{ user, initialized }] = useUser();
-  const { licenceKey, email, planId } = user;
+  const { licenceKey, email, planName } = user;
 
   const content = useMemo(() => {
     // settings havent been fetched from storage yet
@@ -82,7 +82,7 @@ function LoggedInContent() {
     }
 
     let planContent;
-    if (!planId) {
+    if (!planName) {
       planContent = (
         <>
           <p>Your account has been activated for free!</p>
@@ -93,7 +93,6 @@ function LoggedInContent() {
         </>
       );
     } else {
-      const planName = getPlanName(planId);
       planContent = (
         <>
           <p>
@@ -127,7 +126,7 @@ function LoggedInContent() {
         </div>
       </>
     );
-  }, [email, initialized, licenceKey, planId]);
+  }, [email, initialized, licenceKey, planName]);
 
   return content;
 }
@@ -170,15 +169,6 @@ function LicenceKeyForm() {
       </p>
     </>
   );
-}
-
-function getPlanName(id) {
-  if (id === process.env.STRIPE_PLAN_ID_MONTHLY) {
-    return 'monthly';
-  }
-  if (id === process.env.STRIPE_PLAN_ID_YEARLY) {
-    return 'yearly';
-  }
 }
 
 export default BillingPage;
