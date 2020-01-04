@@ -6,8 +6,10 @@
   "author": "James Ivings <james@squarecat.io>",
   "license": "MIT",
   "scripts": {
-    "build": "NODE_ENV=production webpack -p --mode=production --config webpack.config.js",
-    "build:dev": "NODE_ENV=development webpack --watch --config webpack.config.js",
+    "build": "NODE_ENV=production webpack -p --mode=production --config webpack.chrome.js",
+    "build:dev": "NODE_ENV=development webpack --watch --config webpack.chrome.js",
+    "build:ff": "NODE_ENV=production webpack -p --mode=production --config webpack.firefox.js",
+    "build:ff:dev": "NODE_ENV=development webpack --watch --config webpack.firefox.js",
     "verify": "npx lockfile-lint --path yarn.lock --type yarn --validate-https --allowed-hosts yarnpkg.org registry.yarnpkg.com"
   },
   "devDependencies": {

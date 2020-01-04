@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const path = require('path');
+
 const Dotenv = require('dotenv-webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,18 +11,6 @@ const ZipPlugin = require('zip-webpack-plugin');
 const manifest = require('./src/manifest.json');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-
-console.log('API-URL', process.env.GRAPHQL_URL);
-
-const prodPlugins = [
-  // clean the build folder
-  new CleanWebpackPlugin({
-    cleanOnceBeforeBuildPatterns: [
-      '**/*',
-      path.join(process.cwd(), 'releases/**/*')
-    ]
-  })
-];
 
 const fileExtensions = [
   'jpg',
@@ -36,34 +25,19 @@ const fileExtensions = [
   'woff2'
 ];
 
-const options = {
-  mode: process.env.NODE_ENV || 'development',
-  entry: {
-    content: [
-      'babel-polyfill',
-      path.join(__dirname, 'src', 'js', 'content', 'index.js')
-    ],
-    popup: [
-      'babel-polyfill',
-      path.join(__dirname, 'src', 'js', 'popup', 'index.js')
-    ],
-    options: [
-      'babel-polyfill',
-      path.join(__dirname, 'src', 'js', 'options', 'index.js')
-    ],
-    background: [
-      'babel-polyfill',
-      path.join(__dirname, 'src', 'js', 'background', 'chrome', 'index.js')
-    ],
-    frame: [
-      'babel-polyfill',
-      path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+const prodPlugins = [
+  // clean the build folder
+  new CleanWebpackPlugin({
+    cleanOnceBeforeBuildPatterns: [
+      '**/*',
+      path.join(process.cwd(), 'releases/**/*')
     ]
-  },
-  output: {
-    path: path.join(__dirname, 'build'),
-    filename: '[name].bundle.js'
-  },
+  })
+];
+
+module.exports = {
+  isDevelopment: isDevelopment,
+  mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
       {
@@ -132,32 +106,6 @@ const options = {
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new Dotenv(),
-    new CopyWebpackPlugin([
-      {
-        from: 'src/manifest.json',
-        transform: function(content) {
-          const manifest = JSON.parse(content.toString());
-          let name = manifest.name;
-          let version_name = manifest.version_name;
-          if (isDevelopment) {
-            name = `${name} Dev`;
-            version_name = `${version_name} - Development`;
-          }
-          // generates the manifest file using the package.json informations
-          return Buffer.from(
-            JSON.stringify({
-              ...manifest,
-              name,
-              version_name
-            })
-          );
-        }
-      },
-      {
-        from: 'assets',
-        to: 'assets'
-      }
-    ]),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'popup.html'),
       filename: 'popup.html',
@@ -194,9 +142,3 @@ const options = {
         ])
   ]
 };
-
-if (process.env.NODE_ENV === 'development') {
-  options.devtool = 'cheap-module-eval-source-map';
-}
-
-module.exports = options;

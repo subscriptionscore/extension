@@ -12,7 +12,8 @@
     "es6": true
   },
   "globals": {
-    "chrome": true
+    "chrome": true,
+    "browser": true
   },
   "settings": {
     "react": {

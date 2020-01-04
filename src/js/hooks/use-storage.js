@@ -20,9 +20,9 @@ function useStorage() {
   }, []);
 
   const set = useCallback(async data => {
-    const newData = await setItem(data);
+    await setItem(data);
     setState({
-      value: newData
+      value: data
     });
   }, []);
 

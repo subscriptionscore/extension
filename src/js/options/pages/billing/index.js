@@ -74,9 +74,7 @@ const BillingPage = ({ showWelcome }) => {
     return (
       <>
         <h1>Billing</h1>
-        <div className={styles.pageSection}>
-          <LicenceKeyForm />
-        </div>
+
         <LoggedInContent />
         <div className={styles.pageSection}>
           <Referral />
