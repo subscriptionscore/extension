@@ -237,11 +237,12 @@ query User($licenceKey: ID!) {
       blockedRank
     }
     features
-    emails {      
+    emails {
       email
       forwardingAddress
       enabled
     }
+    referralCode
   }
 }
 `;

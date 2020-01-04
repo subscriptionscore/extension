@@ -63,7 +63,6 @@ const Form = ({ domain }) => {
   const onSave = useCallback(async feedbackData => {
     try {
       dispatch({ type: 'set-loading', data: true });
-      dispatch({ type: 'set-error', data: false });
 
       const {
         domain,
@@ -94,14 +93,11 @@ const Form = ({ domain }) => {
       await new Promise(resolve => {
         return setTimeout(() => {
           dispatch({ type: 'set-submitted', data: true });
-          dispatch({ type: 'reset' });
           resolve();
         }, 2000);
       });
     } catch (err) {
       dispatch({ type: 'set-error', data: err });
-    } finally {
-      dispatch({ type: 'set-loading', data: false });
     }
   }, []);
 

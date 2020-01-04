@@ -1,19 +1,12 @@
 import { FormInput, InputGroup } from '../../../components/form';
-import React, { useMemo, useState, useCallback } from 'react';
-import {
-  shareOnFacebook,
-  shareOnLinkedIn,
-  shareOnTwitter
-} from '../../../utils/social';
-import CopyButton from '../../../components/copy-to-clipboard';
-import {
-  TwitterIcon,
-  FacebookIcon,
-  LinkedInIcon
-} from '../../../components/icons';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
+import CopyButton from '../../../components/copy-to-clipboard';
+import InviteForm from './invite';
 import { TextLink } from '../../../components/text';
+import { TwitterIcon } from '../../../components/icons';
+import { shareOnTwitter } from '../../../utils/social';
 import styles from './billing.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
@@ -74,10 +67,7 @@ const BillingPage = ({ showWelcome }) => {
     return (
       <>
         <h1>Billing</h1>
-        <div className={styles.pageSection}>
-          <LicenceKeyForm />
-        </div>
-        <LoggedInContent />
+        <Billing />
         <div className={styles.pageSection}>
           <Referral />
         </div>
@@ -102,11 +92,12 @@ const BillingPage = ({ showWelcome }) => {
 };
 
 function Referral() {
-  const [{ user }] = useUser();
+  const [{ user }, { setSuccess }] = useUser();
   const { referralCode } = user;
 
-  const tweetText = `I've been using this new browser extension to protect myself from spammy mailing lists! 💌 https://subscriptionscore.com/r/${referralCode}`;
-  const facebookText = `I've been using this new browser extension to protect myself from spammy mailing lists! 💌 https://subscriptionscore.com/r/${referralCode}`;
+  const referralUrl = `https://subscriptionscore.com/r/${referralCode}`;
+
+  const tweetText = `I've been using this new browser extension to protect myself from spammy mailing lists! 💌 ${referralUrl}`;
 
   const onClickTweet = useCallback(() => {
     try {
@@ -116,63 +107,27 @@ function Referral() {
     }
   }, [tweetText]);
 
-  const onClickFacebook = useCallback(() => {
-    try {
-      shareOnFacebook(facebookText, { referralCode });
-    } catch (err) {
-      console.error(err);
-    }
-  }, [facebookText, referralCode]);
-
-  const onClickLinkedIn = useCallback(() => {
-    try {
-      shareOnLinkedIn({ referralCode });
-    } catch (err) {
-      console.error(err);
-    }
-  }, [referralCode]);
-  const onClickInvite = useCallback(() => {});
-
   return (
     <div>
+      <h2>Refer</h2>
       <p>
-        Get <strong>1 month free</strong> for every friend you invite to use
-        Subscription Score
+        Get <strong>1 month free</strong> for every friend you invite that signs
+        up to Subscription Score.
       </p>
 
-      <InputGroup>
-        <FormInput
-          name="referral"
-          type="email"
-          placeholder="friend@example.com"
-          button={
-            <span>
-              <Button onClick={onClickInvite}>Invite</Button>
-            </span>
-          }
-        />
-      </InputGroup>
+      <InviteForm onSuccess={() => setSuccess(`Invite sent!`)} />
+
       <div className={styles.btnGroup}>
-        <CopyButton string={`${process.env.REFERRAL_URL}${referralCode}`}>
-          Copy link
-        </CopyButton>
+        <CopyButton string={referralUrl}>Copy referral link</CopyButton>
         <Button onClick={onClickTweet}>
-          <TwitterIcon /> Tweet
-        </Button>
-        <Button onClick={onClickFacebook}>
-          <FacebookIcon width="15" height="15" />
-          Post
-        </Button>
-        <Button onClick={onClickLinkedIn}>
-          <LinkedInIcon />
-          Share
+          <TwitterIcon /> Share on Twitter
         </Button>
       </div>
     </div>
   );
 }
 
-function LoggedInContent() {
+function Billing() {
   const [{ user, initialized }] = useUser();
   const { licenceKey, email, planName } = user;
 
