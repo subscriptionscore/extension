@@ -4,11 +4,11 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState,
-  useReducer
+  useReducer,
+  useState
 } from 'react';
-
 import userReducer, { initialState } from './user-reducer';
+
 import { graphqlRequest } from '../utils/request';
 import { updateUserPreferences } from '../utils/preferences';
 import useStorage from '../hooks/use-storage';
@@ -227,6 +227,7 @@ query User($licenceKey: ID!) {
   getUserByLicenceKey(licenceKey: $licenceKey) {
     email
     licenceKey
+    planName
     preferences {
       darkMode
       colorSet

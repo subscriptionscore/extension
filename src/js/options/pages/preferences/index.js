@@ -101,9 +101,10 @@ function AlertContent({
         <div className={styles.helpText}>
           <p>We will only show an alert if the rank is below this value.</p>
         </div>
-        {ranks.map(rank => (
-          <span key={rank}>
+        <div className={styles.radios}>
+          {ranks.map(rank => (
             <Radio
+              key={rank}
               vertical={true}
               name="blockedRank"
               className={styles.rankRadio}
@@ -116,8 +117,8 @@ function AlertContent({
             >
               <Rank rank={rank} colorblind={colorblind} />
             </Radio>
-          </span>
-        ))}
+          ))}
+        </div>
         <div className={styles.helpText}>
           <p>
             An alert will show for sites ranked{' '}
