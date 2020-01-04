@@ -93,12 +93,12 @@ function LoggedInContent() {
         </>
       );
     } else {
-      const planType = planId === '3' ? 'monthly' : 'yearly';
+      const planName = getPlanName(planId);
       planContent = (
         <>
           <p>
             You are subscribed to the{' '}
-            <span className={styles.key}>{planType} plan</span>
+            <span className={styles.key}>{planName} plan</span>
           </p>
           <p>
             Please{' '}
@@ -170,6 +170,15 @@ function LicenceKeyForm() {
       </p>
     </>
   );
+}
+
+function getPlanName(id) {
+  if (id === process.env.STRIPE_PLAN_ID_MONTHLY) {
+    return 'monthly';
+  }
+  if (id === process.env.STRIPE_PLAN_ID_YEARLY) {
+    return 'yearly';
+  }
 }
 
 export default BillingPage;
