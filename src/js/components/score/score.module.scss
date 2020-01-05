@@ -9,9 +9,6 @@
   }
 }
 
-.score-content {
-}
-
 .email-address {
   white-space: nowrap;
   overflow: hidden;
@@ -43,6 +40,10 @@
   font-weight: 500;
 
   @include rating;
+
+  [data-colorblind='true'] & {
+    @include rating($colorblind: true);
+  }
 }
 
 .desc {
@@ -52,30 +53,35 @@
   margin: 0.75em 0 2em 0;
 }
 
-.rank-value {
-  display: inline-block;
-  height: 40px;
-  width: 40px;
-  padding: 2px;
-  font-size: 18px;
-  line-height: 30px;
-  border-radius: 5px;
-  font-weight: 500;
-  text-align: center;
-  border: 2px solid rgba(0, 0, 0, 0.25);
-  @include ranking($useBg: true, $useFont: true);
-}
+// .rank-value {
+//   display: inline-block;
+//   height: 40px;
+//   width: 40px;
+//   padding: 2px;
+//   font-size: 18px;
+//   line-height: 30px;
+//   border-radius: 5px;
+//   font-weight: 500;
+//   text-align: center;
+//   border: 2px solid rgba(0, 0, 0, 0.25);
+//   @include ranking($useBg: true, $useFont: true);
+// }
 
-.delta {
-  @include trend();
-  display: none;
-}
+// .delta {
+//   @include trend();
+//   display: none;
+// }
 
-.score {
-  font-size: 28px;
-  line-height: 30px;
-  position: relative;
-  top: 4px;
-  margin-left: 0.5em;
-  @include rankingFontColor;
-}
+// .score {
+//   font-size: 28px;
+//   line-height: 30px;
+//   position: relative;
+//   top: 4px;
+//   margin-left: 0.5em;
+
+//   @include rankingFontColor;
+
+//   &.colorblind {
+//     @include rankingFontColor($colorblind: true);
+//   }
+// }

@@ -1,11 +1,11 @@
 import React from 'react';
-
+import cx from '../../utils/classnames';
 import styles from './score.module.scss';
 
-const Score = ({ emailScore }) => {
+const Score = ({ emailScore, colorblind = false }) => {
   return (
     <div className={styles.scoreContainer}>
-      <Content {...emailScore} />
+      <Content {...emailScore} colorblind={colorblind} />
     </div>
   );
 };
@@ -14,10 +14,11 @@ const Content = ({
   frequencyPerWeek = 0,
   unsubscribeRate = 0,
   unsubscribeDifficulty = 0,
-  contentQuality = 1
+  contentQuality = 1,
+  colorblind = false
 } = {}) => {
   return (
-    <div className={styles.scoreContent}>
+    <div data-colorblind={colorblind}>
       <div className={styles.scoreItem}>
         <UnsubRate unsubscribeRate={unsubscribeRate} />
       </div>
@@ -73,6 +74,7 @@ const UnsubRate = ({ unsubscribeRate }) => {
   } else {
     rank = 'high';
   }
+
   return (
     <>
       <span data-rating={rank} className={styles.value}>
@@ -118,27 +120,28 @@ const Frequency = ({ frequencyPerWeek }) => {
     </>
   );
 };
-const Rank = ({ rank = 'A+', score, showDelta = true, trend = 0 }) => {
-  let trendText = 'neutral';
-  if (trend > 0) {
-    trendText = 'up';
-  } else if (trend < 0) {
-    trendText = 'down';
-  }
-  return (
-    <div className={styles.rank}>
-      <span data-rank={rank} className={styles.rankValue}>
-        {rank}
-      </span>
-      {showDelta ? (
-        <span data-trend={trendText} className={styles.delta}></span>
-      ) : null}
-      <span data-rank={rank} className={styles.score}>
-        {(score * 10).toFixed(2)}
-      </span>
-    </div>
-  );
-};
+
+// const Rank = ({ rank = 'A+', score, showDelta = true, trend = 0 }) => {
+//   let trendText = 'neutral';
+//   if (trend > 0) {
+//     trendText = 'up';
+//   } else if (trend < 0) {
+//     trendText = 'down';
+//   }
+//   return (
+//     <div className={styles.rank}>
+//       <span data-rank={rank} className={styles.rankValue}>
+//         {rank}
+//       </span>
+//       {showDelta ? (
+//         <span data-trend={trendText} className={styles.delta}></span>
+//       ) : null}
+//       <span data-rank={rank} className={styles.score}>
+//         {(score * 10).toFixed(2)}
+//       </span>
+//     </div>
+//   );
+// };
 
 const ContentScore = ({ contentQuality = 1 }) => {
   let text;
