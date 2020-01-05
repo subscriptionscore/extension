@@ -24,22 +24,40 @@ $rating-scale: (
   high: #ec6d62
 );
 
-@function rankColor($rank) {
+$colorblind-rating-scale: (
+  low: map-get($colorblind-scale, 'A+'),
+  medium: map-get($colorblind-scale, 'E'),
+  high: map-get($colorblind-scale, 'F')
+);
+
+@function rankColor($rank, $colorblind: false) {
+  @if $colorblind {
+    @return map-get($colorblind-scale, $rank);
+  }
   @return map-get($normal-scale, $rank);
 }
 
-@function ratingColor($rating) {
+@function ratingColor($rating, $colorblind: false) {
+  @if $colorblind {
+    @return map-get($colorblind-rating-scale, $rating);
+  }
   @return map-get($rating-scale, $rating);
 }
 
-@mixin rating() {
-  @each $rating, $color in $rating-scale {
+@mixin rating($colorblind: false) {
+  $scale: $rating-scale;
+
+  @if $colorblind {
+    $scale: $colorblind-rating-scale;
+  }
+
+  @each $rating, $color in $scale {
     &[data-rating='#{$rating}'] {
       color: $color;
     }
   }
 }
-@mixin trend() {
+@mixin trend($colorblind: false) {
   display: inline-block;
   width: 10px;
   height: 15px;
@@ -49,16 +67,22 @@ $rating-scale: (
   margin: 0 10px;
 
   &[data-trend='up'] {
-    border-bottom-color: map-get($rating-scale, 'low');
+    border-bottom-color: ratingColor('low', $colorblind);
   }
 
   &[data-trend='down'] {
-    border-top-color: map-get($rating-scale, 'high');
+    border-top-color: ratingColor('high', $colorblind);
   }
 }
 
-@mixin rankingFontColor {
-  @each $rank, $color in $normal-scale {
+@mixin rankingFontColor($colorblind: false) {
+  $scale: $normal-scale;
+
+  @if $colorblind {
+    $scale: $colorblind-scale;
+  }
+
+  @each $rank, $color in $scale {
     &[data-rank='#{$rank}'] {
       color: $color;
     }

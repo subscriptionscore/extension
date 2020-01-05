@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
-import Rank from '../rank';
 
-import styles from './domain-score.module.scss';
+import Rank from '../rank';
 import Score from '../score';
+import styles from './domain-score.module.scss';
 import useDomainScore from '../../hooks/use-domain-score';
 
-export default function DomainScore({ url, isLoading }) {
+export default function DomainScore({ url, isLoading, colorSet }) {
   const content = useMemo(() => {
     if (isLoading) {
       return (
@@ -20,13 +20,13 @@ export default function DomainScore({ url, isLoading }) {
         </div>
       );
     }
-    return <Content url={url} />;
-  }, [url, isLoading]);
+    return <Content url={url} colorSet={colorSet} />;
+  }, [url, isLoading, colorSet]);
 
   return content;
 }
 
-function Content({ url }) {
+function Content({ url, colorSet }) {
   const { value, loading, error, domain } = useDomainScore(url);
 
   const { title, content, rank } = useMemo(() => {
@@ -64,16 +64,18 @@ function Content({ url }) {
     const { rank, domain: normalizedDomain, ...scoreData } = searchDomain;
     return {
       title: normalizedDomain || domain,
-      content: <Score emailScore={scoreData} />,
+      content: (
+        <Score emailScore={scoreData} colorblind={colorSet === 'colorblind'} />
+      ),
       rank
     };
-  }, [loading, domain, value, error]);
+  }, [loading, error, value, domain, colorSet]);
 
   return (
     <div className={styles.domainScore}>
       <div className={styles.avgScore}>
         <h2>
-          <Rank compact rank={rank} />
+          <Rank compact rank={rank} colorblind={colorSet === 'colorblind'} />
           <span className={styles.title}>{title}</span>
         </h2>
       </div>

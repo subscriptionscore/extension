@@ -9,7 +9,6 @@ const Rank = ({ rank = 'A+', compact, colorblind = false }) => {
         data-rank={rank}
         className={cx({
           [styles.value]: true,
-          [styles.normal]: !colorblind,
           [styles.colorblind]: colorblind,
           [styles.compact]: compact
         })}
