@@ -1,3 +1,35 @@
+@font-face {
+  font-family: Roboto;
+  src: url(../../../assets/fonts/Roboto/Roboto-Medium.ttf);
+}
+@font-face {
+  font-family: Roboto-Light;
+  src: url(../../../assets/fonts/Roboto/Roboto-Light.ttf);
+}
+@font-face {
+  font-family: Roboto-Mono;
+  src: url(../../../assets/fonts/Roboto_Mono/RobotoMono-Medium.ttf);
+}
+
+html {
+  font-family: Roboto-Light, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+body {
+  font-family: Roboto, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+h1,
+h2 {
+  font-family: Roboto-Light;
+  font-weight: 600;
+}
+p {
+  font-family: Roboto-Light;
+  font-weight: 500;
+  line-height: 26px;
+}
+
 html,
 body,
 h1,

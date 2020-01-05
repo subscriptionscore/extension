@@ -8,7 +8,7 @@ export const initialState = {
       alertOnSubmit: true,
       ignoredEmailAddresses: [],
       ignoredSites: [],
-      blockedRank: 'B'
+      blockedRank: 'A'
     }
   },
   licenceKey: '',

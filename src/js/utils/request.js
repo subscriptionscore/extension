@@ -1,4 +1,4 @@
-import { getLicenceKey } from './storage';
+import { getLicenceKey, onStorageChange } from './storage';
 import { GRAPHQL_URL, VERSION } from '../constants.js';
 let licenceKey = getLicenceKey();
 
@@ -7,7 +7,7 @@ const HEADERS = {
   'Content-Type': 'application/json; charset=utf-8'
 };
 
-chrome.storage.onChanged.addListener(prefs => {
+onStorageChange(prefs => {
   if (prefs.licenceKey) {
     licenceKey = prefs.licenceKey.newValue;
   }
