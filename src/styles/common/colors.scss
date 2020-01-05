@@ -6,7 +6,6 @@ $color-bg-success: #1bc775;
 
 // Shared
 $border-color: rgba(#f1f1f1, 0.25);
-$input-border-color: rgba(0, 0, 0, 0.1);
 
 // --- Themes ---
 // light
@@ -16,6 +15,7 @@ $text--light: #353739;
 $nav-active-background--light: #f1f1f1;
 $nav-text--light: #606367;
 $input-background--light: #ffffff;
+$input-border-color--light: #e5e5e5;
 $input-border-focus--light: #1d1e26;
 $button-background--light: $color-highlight;
 $button-pulse-from--light: lighten($color-highlight, 30%);
@@ -30,6 +30,7 @@ $text--dark: #efefef;
 $nav-active-background--dark: #4b4b4b;
 $nav-text--dark: #dbdcdc;
 $input-background--dark: #292b36;
+$input-border-color--dark: #2d3033;
 $input-border-focus--dark: #e7e7e7;
 $button-background--dark: $button-background--light;
 $button-pulse-from--dark: $button-pulse-from--light;

@@ -9,10 +9,10 @@
   border-radius: 3px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   font-size: 14px;
+
   @include themify() {
     color: theme('textColor');
     background-color: theme('backgroundColor');
-    border: 1px solid theme('inputBorder');
   }
 }
 
