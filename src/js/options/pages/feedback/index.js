@@ -258,7 +258,11 @@ mutation Feedback($domain: String!, $feedback: Feedback!) {
 }
 `;
 
-async function submitFeedback(domain, data) {
+async function submitFeedback(url, data) {
+  let domain = url;
+  if (/^http(s)?/.test(url)) {
+    domain = new URL(url).hostname;
+  }
   const options = {
     variables: {
       domain,

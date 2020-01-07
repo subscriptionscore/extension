@@ -53,6 +53,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: message,
+        success: null,
         loading: false
       };
     }
@@ -60,6 +61,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         success: action.data,
+        error: null,
         loading: false
       };
     }
