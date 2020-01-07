@@ -10,8 +10,9 @@ import Button from '../../components/button';
 import { Message, Settings } from '../../components/icons';
 import useBackground from '../../hooks/use-background';
 import useNewTab from '../../hooks/use-new-tab';
+import browser from 'browser';
 
-const origin = chrome.runtime.getURL('/frame.html');
+const origin = browser.runtime.getURL('/frame.html');
 
 const Popup = () => {
   const { loading: urlLoading, url } = useCurrentUrl();

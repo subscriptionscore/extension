@@ -23,7 +23,9 @@
   padding: 0 15px;
   justify-content: flex-start;
 
-  border-bottom: 1px solid $border-color;
+  @include themify() {
+    border-bottom: 1px solid theme('inputBorder');
+  }
 }
 
 .popup-actions {

@@ -2,8 +2,10 @@
 
 .popup {
   min-width: 320px;
+  max-width: 320px;
 
   @include themify() {
+    border: 1px solid theme('inputBorder');
     color: theme('textColor');
     background-color: theme('backgroundColor');
   }

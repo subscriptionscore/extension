@@ -1,11 +1,12 @@
 import React, { useState, useEffect, createContext } from 'react';
+import browser from 'browser';
 
 export const ConnectContext = createContext(null);
 
 const ConnectProvider = ({ children }) => {
   const [state, set] = useState({ domain: null, rank: null });
   useEffect(() => {
-    var port = chrome.extension.connect({
+    var port = browser.extension.connect({
       name: 'Sample Communication'
     });
     port.postMessage('Connect');

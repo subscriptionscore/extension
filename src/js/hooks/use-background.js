@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+import browser from 'browser';
 
 const useBackground = action => {
   const [state, set] = useState({ loading: true, value: null });
   useEffect(() => {
-    chrome.runtime.sendMessage({ action }, response => {
+    browser.runtime.sendMessage({ action }, response => {
       set({ loading: false, value: response });
     });
   }, [action]);

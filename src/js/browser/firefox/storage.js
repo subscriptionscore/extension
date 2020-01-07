@@ -14,13 +14,11 @@ export function onStorageChange(fn) {
 }
 
 export function setItem(data) {
-  console.log('setting store', data);
   return browser.storage.sync.set(data);
 }
 
 export async function getItem(key) {
   const result = await browser.storage.sync.get(key);
-  console.log(`get from store ${key}`, result[key]);
   return result[key];
 }
 

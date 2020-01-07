@@ -7,8 +7,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ZipPlugin = require('zip-webpack-plugin');
-const manifest = require('./src/manifest.json');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -28,15 +26,44 @@ const fileExtensions = [
 const prodPlugins = [
   // clean the build folder
   new CleanWebpackPlugin({
-    cleanOnceBeforeBuildPatterns: [
-      '**/*',
-      path.join(process.cwd(), 'releases/**/*')
-    ]
+    cleanOnceBeforeBuildPatterns: ['**/*']
   })
 ];
 
+const entrypoints = [
+  {
+    name: 'content',
+    path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
+  },
+  {
+    name: 'popup',
+    path: path.join(__dirname, 'src', 'js', 'popup', 'index.js')
+  },
+  {
+    name: 'options',
+    path: path.join(__dirname, 'src', 'js', 'options', 'index.js')
+  },
+  {
+    name: 'background',
+    path: path.join(__dirname, 'src', 'js', 'background', 'index.js')
+  },
+  {
+    name: 'frame',
+    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+  }
+];
+
+const entry = entrypoints.reduce(
+  (out, { name, path }) => ({
+    ...out,
+    [name]: ['babel-polyfill', path]
+  }),
+  {}
+);
+
 module.exports = {
   isDevelopment: isDevelopment,
+  entry,
   mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
@@ -131,14 +158,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
-    }),
-    ...(isDevelopment
-      ? []
-      : [
-          new ZipPlugin({
-            path: '../releases',
-            filename: `subscriptionscore-${manifest.version}.zip`
-          })
-        ])
+    })
   ]
 };
