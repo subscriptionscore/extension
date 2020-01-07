@@ -194,6 +194,11 @@ function IgnoreForm({ name, type = 'text', onSubmit }) {
           Add
         </Button>
       </InputGroup>
+      {name === 'ignoredSites' ? (
+        <span className={styles.help}>
+          Just domain part - e.g. linkedin.com or facebook.com
+        </span>
+      ) : null}
     </form>
   );
 }

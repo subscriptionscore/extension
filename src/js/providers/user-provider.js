@@ -84,16 +84,28 @@ const UserProvider = ({ children }) => {
       dispatch({ type: 'remove-ignored-email-address', data: email });
     }
   }, []);
-  const changeSiteIgnoreList = useCallback((action, site) => {
+  const changeSiteIgnoreList = useCallback(async (action, site) => {
     if (action === 'add') {
-      dispatch({ type: 'add-ignored-site', data: site });
+      const { success, domain } = await addIgnoredSiteStat(site, 'add');
+      if (success) {
+        dispatch({ type: 'add-ignored-site', data: domain });
+      } else {
+        dispatch({ type: 'set-error', data: { message: 'invalid-site' } });
+      }
     } else {
       dispatch({ type: 'remove-ignored-site', data: site });
+      addIgnoredSiteStat(site, 'remove');
     }
   }, []);
   const setSuccess = useCallback(data => {
     dispatch({
       type: 'set-success',
+      data
+    });
+  }, []);
+  const setError = useCallback(data => {
+    dispatch({
+      type: 'set-error',
       data
     });
   }, []);
@@ -195,6 +207,7 @@ const UserProvider = ({ children }) => {
       {
         setLicenceKey,
         setSuccess,
+        setError,
         setPreference,
         clearFeedback,
         changeEmailIgnoreList,
@@ -209,6 +222,7 @@ const UserProvider = ({ children }) => {
       state,
       setLicenceKey,
       setSuccess,
+      setError,
       setPreference,
       clearFeedback,
       changeEmailIgnoreList,
@@ -291,6 +305,28 @@ async function setEmailStatusForUser({ email, enabled, licenceKey }) {
   const { deleteEmail } = await graphqlRequest(setStatusGql, options);
   return deleteEmail;
 }
+
+const addIgnoredSiteStatGql = `
+mutation ($domain: String!, $action: String!) {
+  addIgnoredSiteStat(domain: $domain, action: $action) {
+    success
+    domain
+  }
+}
+`;
+async function addIgnoredSiteStat(site, action) {
+  let domain = site;
+  if (/^http(s)?/.test(site)) {
+    domain = new URL(site).hostname;
+  }
+  const options = { variables: { domain, action } };
+  const { addIgnoredSiteStat } = await graphqlRequest(
+    addIgnoredSiteStatGql,
+    options
+  );
+  return addIgnoredSiteStat;
+}
+
 export default UserProvider;
 
 export const useUser = () => useContext(UserContext);
