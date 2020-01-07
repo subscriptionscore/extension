@@ -15,10 +15,17 @@
     "128": "assets/icon.png"
   },
   "web_accessible_resources": ["frame.html", "frame.bundle.js", "frame.css"],
-  "permissions": ["tabs", "storage", "activeTab"],
+  "permissions": ["<all_urls>", "tabs", "storage"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "externally_connectable": {
     "matches": ["https://subscriptionscore.com/*"]
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["/content.bundle.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }

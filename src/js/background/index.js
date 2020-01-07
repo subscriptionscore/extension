@@ -9,7 +9,8 @@ import {
 
 let currentPage = {
   rank: null,
-  domain: null
+  domain: null,
+  url: null
 };
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -29,7 +30,6 @@ browser.tabs.onActivated.addListener(() => {
 browser.runtime.onInstalled.addListener(details => {
   if (details.reason !== 'update') {
     // first install, launch the settings page
-    // browser.runtime.openOptionsPage();
     const url = '/options.html?welcome=true';
     browser.tabs.create({ url });
   }
@@ -53,6 +53,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const domain = request.data;
     return addIgnoreSite(domain);
   }
+  if (request.action === 'get-current-url') {
+    return sendResponse(currentPage.url);
+  }
   if (request.action === 'log') {
     if (sender.id === browser.runtime.id) {
       return console.log(`[subscriptionscore]:`, request.data);
@@ -60,19 +63,26 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+// FIXME, inject script here would be better because then
+// we would only inject if the user has enabled blocking
 async function injectScript() {
-  browser.contentScripts.register({
-    js: [
-      {
-        file: '/content.bundle.js'
-      }
-    ],
-    runAt: 'document_idle'
-  });
+  // browser.contentScripts.register({
+  //   js: [
+  //     {
+  //       file: '/content.bundle.js'
+  //     }
+  //   ],
+  //   matches: ['<all_urls>'],
+  //   runAt: 'document_idle'
+  // });
 }
+
 // call when the page changes and we need to
 // fetch a new rank for the current url
 async function onPageChange(url, { inject = false } = {}) {
+  currentPage = {
+    url
+  };
   browser.browserAction.setBadgeText({ text: '' });
   if (!/http(s)?:\/\//.test(url)) {
     browser.browserAction.disable();
@@ -84,6 +94,7 @@ async function onPageChange(url, { inject = false } = {}) {
       if (domainScore) {
         const { rank, domain } = domainScore;
         currentPage = {
+          url,
           domain,
           rank
         };

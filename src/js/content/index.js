@@ -1,3 +1,13 @@
+// This is the content script injected into every page
+// specified in the `matches` param in the manifest
+//
+// It searches the page for email inputs and attaches
+// to the form action that submits them.
+//
+// If the form attempts to submit an email address that
+// the user has not previously added to their ignore
+// list then we inject our popup that alerts the user
+//
 import { injectModal } from './modal';
 import { getPreference } from '../utils/storage';
 import browser from 'browser';
@@ -48,6 +58,7 @@ function onSubmitForm(
   ignoredSites,
   blockedRank
 ) {
+  console.log('[subscriptionscore]: on submit');
   const previouslyApproved = $form.getAttribute(FORM_DATA_ATTRIBUTE) === 'true';
   if (previouslyApproved) {
     return true;
@@ -58,6 +69,7 @@ function onSubmitForm(
   // block the form
   const formData = new FormData($form);
   let hasNonIgnoredEmail = false;
+
   for (let item of formData) {
     const [, value] = item;
     if (value.includes('@') && !ignoredEmailAddresses.includes(value)) {
@@ -65,13 +77,18 @@ function onSubmitForm(
     }
   }
   if (!hasNonIgnoredEmail) {
+    console.warn('[subscriptionscore]: no email');
     return true;
   }
   haltedForm = $form;
+
+  console.log('[subscriptionscore]: checking rank...');
+
   // get the domain rank from the background script
   browser.runtime.sendMessage({ action: 'get-current-rank' }, response => {
     const { rank, domain } = response;
     const isIgnored = ignoredSites.some(is => is === domain);
+    console.log('[subscriptionscore]: ranked', `${rank} - ${domain}`);
 
     if (!isIgnored && ranks.indexOf(rank) <= ranks.indexOf(blockedRank)) {
       console.log('[subscriptionscore]: preventing form submit');
