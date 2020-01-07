@@ -39,7 +39,7 @@ const Form = ({ domain }) => {
     reducer,
     initialState
   );
-  const [, { setSuccess }] = useUser();
+  const [, { setSuccess, setError }] = useUser();
 
   useEffect(() => {
     if (domain) {
@@ -54,11 +54,11 @@ const Form = ({ domain }) => {
       );
     }
     if (error) {
-      setSuccess(
+      setError(
         `Something went wrong submitting your feedback, please try again or contact support.`
       );
     }
-  }, [submitted, error, setSuccess]);
+  }, [submitted, error, setSuccess, setError]);
 
   const onSave = useCallback(async feedbackData => {
     try {

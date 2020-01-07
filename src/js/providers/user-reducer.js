@@ -196,11 +196,18 @@ export default (state = initialState, action) => {
 };
 
 function getError(err, state) {
+  if (!err) return null;
+
   const defaultMsg = `Something went wrong, please try again or contact support.`;
 
   // we have fetched the licence key but the user is null
-  if (err && err.message && err.message === 'invalid-key') {
-    return `That licence key is invalid, please try again or contact support.`;
+  if (err && err.message) {
+    if (err.message === 'invalid-key') {
+      return `That licence key is invalid, please try again or contact support.`;
+    }
+    if (err.message === 'invalid-site') {
+      return `That website is not valid, please try again or contact support.`;
+    }
   }
   // there is a licence key to restore but the user has failed to load
   if (state.licenceKey && !state.loaded) {
