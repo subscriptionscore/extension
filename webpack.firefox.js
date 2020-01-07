@@ -2,6 +2,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const commonOptions = require('./webpack.config');
+const baseManifest = require('./manifest.json');
 
 const options = {
   mode: commonOptions.mode,
@@ -26,9 +27,12 @@ const options = {
         from: 'src/manifest.firefox.json',
         to: 'manifest.json',
         transform: function(content) {
-          const manifest = JSON.parse(content.toString());
+          const manifest = {
+            ...baseManifest,
+            ...JSON.parse(content.toString())
+          };
           let name = manifest.name;
-          let version_name = manifest.version_name;
+          let version_name = `v${manifest.version}`;
           if (commonOptions.isDevelopment) {
             name = `${name} Dev`;
           }

@@ -1,9 +1,7 @@
 {
   "name": "Subscription Score",
   "description": "Never regret subscribing to a mailing list again",
-  "version": "0.2.4",
-  "version_name": "v0.2.4 Beta",
-  "options_page": "options.html",
+  "version": "0.3.0",
   "background": {
     "page": "background.html"
   },
@@ -18,9 +16,6 @@
   "permissions": ["<all_urls>", "tabs", "storage"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "externally_connectable": {
-    "matches": ["https://subscriptionscore.com/*"]
-  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

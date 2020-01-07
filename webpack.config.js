@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
-const manifest = require('./src/manifest.json');
+const manifest = require('./manifest.json');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 

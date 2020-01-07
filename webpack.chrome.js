@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const baseManifest = require('./manifest.json');
 const commonOptions = require('./webpack.config');
 
 const options = {
@@ -23,11 +24,14 @@ const options = {
     ...commonOptions.plugins,
     new CopyWebpackPlugin([
       {
-        from: 'src/manifest.json',
+        from: 'src/manifest.chrome.json',
         transform: function(content) {
-          const manifest = JSON.parse(content.toString());
+          const manifest = {
+            ...baseManifest,
+            ...JSON.parse(content.toString())
+          };
           let name = manifest.name;
-          let version_name = manifest.version_name;
+          let version_name = `v${manifest.version}`;
           if (commonOptions.isDevelopment) {
             name = `${name} Dev`;
             version_name = `${version_name} - Development`;
