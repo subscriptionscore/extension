@@ -1,12 +1,13 @@
 @import '../layout.module.scss';
 
 .image {
-  float: right;
   border-radius: 50%;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   width: 220px;
   height: 220px;
   margin: 0 30px;
+  flex-basis: 220px;
+
   @media (max-width: 900px) {
     margin: 0;
   }
@@ -20,7 +21,8 @@
 }
 
 .left {
-  float: left;
+  // float: left;
+  flex: 1;
 }
 
 .page-section {
