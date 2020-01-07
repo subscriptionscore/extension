@@ -112,8 +112,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: {
-          dirty: true,
           ...state.user,
+          dirty: true,
           preferences: {
             ...state.user.preferences,
             ignoredEmailAddresses: existingList.filter(d => d !== email)
@@ -144,8 +144,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         user: {
-          dirty: true,
           ...state.user,
+          dirty: true,
           preferences: {
             ...state.user.preferences,
             ignoredSites: existingList.filter(d => d !== email)
