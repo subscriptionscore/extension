@@ -39,7 +39,7 @@ const Form = ({ domain }) => {
     reducer,
     initialState
   );
-  const [, { setSuccess }] = useUser();
+  const [, { setSuccess, setError }] = useUser();
 
   useEffect(() => {
     if (domain) {
@@ -54,11 +54,11 @@ const Form = ({ domain }) => {
       );
     }
     if (error) {
-      setSuccess(
+      setError(
         `Something went wrong submitting your feedback, please try again or contact support.`
       );
     }
-  }, [submitted, error, setSuccess]);
+  }, [submitted, error, setSuccess, setError]);
 
   const onSave = useCallback(async feedbackData => {
     try {
@@ -258,7 +258,11 @@ mutation Feedback($domain: String!, $feedback: Feedback!) {
 }
 `;
 
-async function submitFeedback(domain, data) {
+async function submitFeedback(url, data) {
+  let domain = url;
+  if (/^http(s)?/.test(url)) {
+    domain = new URL(url).hostname;
+  }
   const options = {
     variables: {
       domain,
