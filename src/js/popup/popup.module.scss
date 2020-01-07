@@ -6,6 +6,5 @@
   @include themify() {
     color: theme('textColor');
     background-color: theme('backgroundColor');
-    border: 1px solid theme('inputBorder');
   }
 }

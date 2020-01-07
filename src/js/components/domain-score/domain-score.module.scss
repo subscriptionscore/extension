@@ -6,10 +6,6 @@
     background-color: theme('backgroundColor');
   }
 
-  @include themify() {
-    border-top: 1px solid theme('inputBorder');
-  }
-
   h2 {
     padding: 10px 15px;
   }
@@ -23,6 +19,7 @@
   @include themify() {
     background-color: theme('backgroundColorDropped');
   }
+
   ul {
     list-style: none;
   }
