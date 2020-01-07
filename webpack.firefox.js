@@ -1,11 +1,17 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const ZipPlugin = require('zip-webpack-plugin');
+const manifest = require('./manifest.json');
 const commonOptions = require('./webpack.config');
 const baseManifest = require('./manifest.json');
 
 const options = {
   mode: commonOptions.mode,
+  optimization: {
+    // We no not want to minimize our code.
+    minimize: false
+  },
   entry: commonOptions.entry,
   output: {
     path: path.join(__dirname, 'build/firefox'),
@@ -50,7 +56,15 @@ const options = {
         from: 'assets',
         to: 'assets'
       }
-    ])
+    ]),
+    ...(commonOptions.isDevelopment
+      ? []
+      : [
+          new ZipPlugin({
+            path: '../../releases',
+            filename: `subscriptionscore-firefox-${manifest.version}.zip`
+          })
+        ])
   ]
 };
 

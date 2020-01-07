@@ -7,8 +7,6 @@ const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ZipPlugin = require('zip-webpack-plugin');
-const manifest = require('./manifest.json');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -28,10 +26,7 @@ const fileExtensions = [
 const prodPlugins = [
   // clean the build folder
   new CleanWebpackPlugin({
-    cleanOnceBeforeBuildPatterns: [
-      '**/*',
-      path.join(process.cwd(), 'releases/**/*')
-    ]
+    cleanOnceBeforeBuildPatterns: ['**/*']
   })
 ];
 
@@ -163,14 +158,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
-    }),
-    ...(isDevelopment
-      ? []
-      : [
-          new ZipPlugin({
-            path: '../releases',
-            filename: `subscriptionscore-${manifest.version}.zip`
-          })
-        ])
+    })
   ]
 };

@@ -1,5 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ZipPlugin = require('zip-webpack-plugin');
+const manifest = require('./manifest.json');
 
 const baseManifest = require('./manifest.json');
 const commonOptions = require('./webpack.config');
@@ -50,7 +52,15 @@ const options = {
         from: 'assets',
         to: 'assets'
       }
-    ])
+    ]),
+    ...(commonOptions.isDevelopment
+      ? []
+      : [
+          new ZipPlugin({
+            path: '../../releases',
+            filename: `subscriptionscore-chrome-${manifest.version}.zip`
+          })
+        ])
   ]
 };
 
