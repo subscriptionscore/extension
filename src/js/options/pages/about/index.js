@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextLink } from '../../../components/text';
-import styles from './about.module.scss';
 import { VERSION_NAME } from '../../../constants';
+import styles from './about.module.scss';
 
 const teamImage =
   'https://cdn.leavemealone.app/images/subscriptionscore/about-us.png';
