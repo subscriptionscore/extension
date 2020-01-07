@@ -1,4 +1,6 @@
-chrome.extension.onConnect.addListener(function(port) {
+import browser from 'browser';
+
+browser.extension.onConnect.addListener(function(port) {
   console.log('Connected .....');
   port.onMessage.addListener(function(msg) {
     console.log('message recieved' + msg);

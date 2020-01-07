@@ -3,7 +3,8 @@ import { GRAPHQL_URL, VERSION } from '../constants.js';
 let licenceKey = getLicenceKey();
 
 const HEADERS = {
-  'x-app-version': VERSION,
+  'X-App-Version': VERSION,
+  'Access-Control-Allow-Origin': '*',
   'Content-Type': 'application/json; charset=utf-8'
 };
 

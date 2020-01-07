@@ -1,3 +1,7 @@
+// A naive cache implementation for scores that
+// are returned from the SubscriptionScore API
+//
+// Uses indexdb with a 6 hour ttl per key
 const indexedDB =
   window.indexedDB ||
   window.mozIndexedDB ||

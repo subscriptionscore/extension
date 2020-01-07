@@ -1,4 +1,5 @@
-const path = chrome.runtime.getURL('/frame.html');
+import browser from 'browser';
+const path = browser.runtime.getURL('/frame.html');
 
 const styles = {
   border: 'none',

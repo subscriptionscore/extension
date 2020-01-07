@@ -35,8 +35,40 @@ const prodPlugins = [
   })
 ];
 
+const entrypoints = [
+  {
+    name: 'content',
+    path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
+  },
+  {
+    name: 'popup',
+    path: path.join(__dirname, 'src', 'js', 'popup', 'index.js')
+  },
+  {
+    name: 'options',
+    path: path.join(__dirname, 'src', 'js', 'options', 'index.js')
+  },
+  {
+    name: 'background',
+    path: path.join(__dirname, 'src', 'js', 'background', 'index.js')
+  },
+  {
+    name: 'frame',
+    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+  }
+];
+
+const entry = entrypoints.reduce(
+  (out, { name, path }) => ({
+    ...out,
+    [name]: ['babel-polyfill', path]
+  }),
+  {}
+);
+
 module.exports = {
   isDevelopment: isDevelopment,
+  entry,
   mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [

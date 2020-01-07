@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
+import browser from 'browser';
 
 export default url => {
   return useCallback(() => {
-    chrome.tabs.create({ url });
+    browser.tabs.create({ url });
   }, [url]);
 };

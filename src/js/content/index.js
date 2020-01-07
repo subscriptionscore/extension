@@ -1,5 +1,6 @@
 import { injectModal } from './modal';
 import { getPreference } from '../utils/storage';
+import browser from 'browser';
 
 const ranks = ['F', 'E', 'D', 'C', 'B', 'A', 'A+'];
 let haltedForm;
@@ -68,7 +69,7 @@ function onSubmitForm(
   }
   haltedForm = $form;
   // get the domain rank from the background script
-  chrome.runtime.sendMessage({ action: 'get-current-rank' }, response => {
+  browser.runtime.sendMessage({ action: 'get-current-rank' }, response => {
     const { rank, domain } = response;
     const isIgnored = ignoredSites.some(is => is === domain);
 
@@ -96,7 +97,7 @@ function onSubmitForm(
 
 function onApproved() {
   haltedForm.setAttribute(FORM_DATA_ATTRIBUTE, 'true');
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'signup-allowed'
   });
   haltedForm.submit();
@@ -104,7 +105,7 @@ function onApproved() {
 
 function onCancelled() {
   haltedForm.setAttribute(FORM_DATA_ATTRIBUTE, 'false');
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'signup-blocked'
   });
 }
@@ -112,7 +113,7 @@ function onCancelled() {
 function addIgnoreEmail() {
   const emails = getEmailValues(haltedForm);
   if (emails.length) {
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       action: 'ignore-email',
       data: emails
     });
@@ -121,7 +122,7 @@ function addIgnoreEmail() {
 }
 
 function addIgnoreSite(domain) {
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
     action: 'ignore-site',
     data: domain
   });

@@ -3,40 +3,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const commonOptions = require('./webpack.config');
 
-const entrypoints = [
-  {
-    name: 'content',
-    path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
-  },
-  {
-    name: 'popup',
-    path: path.join(__dirname, 'src', 'js', 'popup', 'index.js')
-  },
-  {
-    name: 'options',
-    path: path.join(__dirname, 'src', 'js', 'options', 'index.js')
-  },
-  {
-    name: 'background',
-    path: path.join(__dirname, 'src', 'js', 'background', 'chrome', 'index.js')
-  },
-  {
-    name: 'frame',
-    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
-  }
-];
-
-const entry = entrypoints.reduce(
-  (out, { name, path }) => ({
-    ...out,
-    [name]: ['babel-polyfill', path]
-  }),
-  {}
-);
-
 const options = {
   mode: commonOptions.mode,
-  entry,
+  entry: commonOptions.entry,
   output: {
     path: path.join(__dirname, 'build/chrome'),
     filename: '[name].bundle.js'
