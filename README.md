@@ -24,6 +24,19 @@ or
 npm install
 ```
 
+### Environment
+
+You will need to specify a connection to our API in your `.env` file. This is the endpoint that the built extension will use to fetch subscription scores.
+
+Currently we don't have a development endpoint, so you will need to use the production one at `https://api.leavemealone.app/graphql`.
+
+```
+# .env
+GRAPHQL_URL=https://api.leavemealone.app/graphql
+```
+
+You will need to [purchase an API key](#API-Key) in order to make requests.
+
 ### Build for development
 
 ```
@@ -54,13 +67,13 @@ npm run build
 
 Zipped releases can be found in `/releases` directory.
 
-## Usage
-
-Once you've built a version of the extension and installed it into your browser of choice you can connect it to our API. You will still need a valid API key in order to connect. You can buy a key from our [website][2], or [contact us][1] for a development key.
-
 ### TODO
 
 - Set up test environment for development contributions.
+
+## API Key
+
+An API key is required to run the extension and make requests to the API, you can purchase a key from our [website][2], or [contact us][1] for a development key.
 
 ## Licence
 
