@@ -250,12 +250,7 @@ query User($licenceKey: ID!) {
       ignoredSites
       blockedRank
     }
-    features
-    emails {
-      email
-      forwardingAddress
-      enabled
-    }
+    features    
     referralCode
   }
 }
