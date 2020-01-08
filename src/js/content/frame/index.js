@@ -1,16 +1,17 @@
 import './frame.scss';
 
-import React, { useMemo, useCallback } from 'react';
-import ReactDOM from 'react-dom';
-import styles from './popup.module.scss';
-import DomainScore from '../../components/domain-score';
-import useCurrentUrl from '../../hooks/use-current-url';
-import useStorage from '../../hooks/use-storage';
-import Button from '../../components/button';
 import { Message, Settings } from '../../components/icons';
-import useBackground from '../../hooks/use-background';
-import useNewTab from '../../hooks/use-new-tab';
+import React, { useCallback, useMemo } from 'react';
+
+import Button from '../../components/button';
+import DomainScore from '../../components/domain-score';
+import ReactDOM from 'react-dom';
 import browser from 'browser';
+import styles from './popup.module.scss';
+import useBackground from '../../hooks/use-background';
+import useCurrentUrl from '../../hooks/use-current-url';
+import useNewTab from '../../hooks/use-new-tab';
+import useStorage from '../../hooks/use-storage';
 
 const origin = browser.runtime.getURL('/frame.html');
 
@@ -48,8 +49,12 @@ const Popup = () => {
       return null;
     }
     let theme = 'light';
+    let colorSet = 'normal';
     if (storage.preferences && storage.preferences.darkMode) {
       theme = 'dark';
+    }
+    if (storage.preferences.colorset) {
+      colorSet = storage.preferences.colorset;
     }
     return (
       <div className={styles.container} data-color-theme={theme}>
@@ -57,7 +62,7 @@ const Popup = () => {
           <div className={styles.popupHead}>
             🚨 Wait, this looks like a spammy mailing list!
           </div>
-          <DomainScore url={url} />
+          <DomainScore url={url} colorSet={colorSet} />
           <div className={styles.popupActions}>
             <Button muted onClick={onCancel}>
               Cancel

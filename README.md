@@ -1,10 +1,10 @@
 # Subscription Score Extension
 
-The is the code for building the [Subscription Score][2] browser extension.
+This is the code for building the [Subscription Score][2] browser extension.
 
 ## Bugs or Feature requests
 
-Please submit a [issue][3].
+Please submit an [issue][3].
 
 ## Setup
 
@@ -66,6 +66,10 @@ npm run build
 ```
 
 Zipped releases can be found in `/releases` directory.
+
+## Usage
+
+Once you've built a version of the extension and installed it into your browser of choice you can connect it to our API. You will still need a valid licence key in order to connect. You can buy a key from our [website][2], or [contact us][1] for a development key.
 
 ### TODO
 
