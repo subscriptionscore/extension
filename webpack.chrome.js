@@ -27,6 +27,7 @@ const options = {
     new CopyWebpackPlugin([
       {
         from: 'src/manifest.chrome.json',
+        to: 'manifest.json',
         transform: function(content) {
           const manifest = {
             ...baseManifest,
