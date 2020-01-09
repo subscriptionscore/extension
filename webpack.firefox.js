@@ -62,7 +62,7 @@ const options = {
       : [
           new ZipPlugin({
             path: '../../releases',
-            filename: `subscriptionscore-firefox-${manifest.version}.zip`
+            filename: `firefox-latest.zip`
           })
         ])
   ]

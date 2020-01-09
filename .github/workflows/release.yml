@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+
+    steps:
+      - uses: actions/setup-node@v1
+          with:
+            node-version: 12.9.x
+      - name: Install dependencies
+        run: yarn 
+      - name: Build
+        run: GITHUB_WORKSPACE/scripts/build.sh
+        env:
+          GRAPHQL_URL: https://api.leavemealone.app/graphql
+          REFERRAL_URL: https://subscriptionscore.com/r/
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}          
+          draft: false
+      - name: Upload Chrome Asset
+        id: upload-chrome-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./releases/chrome-latest.zip
+          asset_name: chrome-latest.zip
+          asset_content_type: application/zip   
+      - name: Upload Firefox Asset
+        id: upload-firefox-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./releases/firefox-latest.zip
+          asset_name: firefox-latest.zip
+          asset_content_type: application/zip          
+          
+file: releases/subscriptionscore*.zip
