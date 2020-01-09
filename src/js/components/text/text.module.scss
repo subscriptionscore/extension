@@ -4,6 +4,7 @@
 .text-link {
   text-decoration: none;
   font-family: Roboto;
+  cursor: pointer;
 
   @include themify() {
     color: theme('linkColor');

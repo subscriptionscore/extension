@@ -1,20 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useUser } from '../../providers/user-provider';
+
 import About from './about';
+import Account from './account';
 import Appearance from './appearance';
-import Billing from './billing';
+import Emails from './emails';
 import Feedback from './feedback';
+import Help from './help';
 import Preferences from './preferences';
 import { VERSION_NAME } from '../../constants';
 import cx from '../../utils/classnames';
 import logo from '../../../../assets/logo.png';
 import styles from './layout.module.scss';
-import Emails from './emails';
+import { useUser } from '../../providers/user-provider';
 
 const NAV_ITEMS = [
   {
-    label: 'Billing',
-    value: 'billing'
+    label: 'Account',
+    value: 'account'
   },
   {
     label: 'Appearance',
@@ -32,6 +34,10 @@ const NAV_ITEMS = [
   {
     label: 'About',
     value: 'about'
+  },
+  {
+    label: 'Help',
+    value: 'help'
   },
   {
     label: 'Feedback',
@@ -64,9 +70,11 @@ const Options = () => {
   }, [page]);
 
   const content = useMemo(() => {
-    if (page === 'billing') {
+    if (page === 'account') {
       const showWelcome = !licenceKey;
-      return <Billing showWelcome={showWelcome} />;
+      return (
+        <Account showWelcome={showWelcome} onSetPage={page => setPage(page)} />
+      );
     }
     if (page === 'appearance') {
       return <Appearance />;
@@ -79,6 +87,9 @@ const Options = () => {
     }
     if (page === 'about') {
       return <About />;
+    }
+    if (page === 'help') {
+      return <Help onSetPage={page => setPage(page)} />;
     }
     if (page === 'emails') {
       return <Emails />;

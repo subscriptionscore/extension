@@ -24,7 +24,6 @@ export const FormInput = ({
   className = '',
   type = 'text',
   label,
-  button = null,
   ...props
 }) => {
   const classes = cx({
@@ -33,12 +32,12 @@ export const FormInput = ({
   });
   return (
     <>
-      {label ? (
-        <label htmlFor={name} className={styles.inputLabel}>
-          {label}
-        </label>
-      ) : null}
       <span className={styles.inputWrapper}>
+        {label ? (
+          <label htmlFor={name} className={styles.inputLabel}>
+            {label}
+          </label>
+        ) : null}
         <input
           {...props}
           id={id}
@@ -47,7 +46,6 @@ export const FormInput = ({
           className={classes}
           spellCheck="false"
         />
-        {button}
       </span>
     </>
   );
