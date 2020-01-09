@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Build
-        run: GITHUB_WORKSPACE/scripts/build.sh
+        run: ./scripts/build.sh
         env:
           GRAPHQL_URL: https://api.leavemealone.app/graphql
           REFERRAL_URL: https://subscriptionscore.com/r/
