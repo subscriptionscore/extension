@@ -3,7 +3,6 @@ export const initialState = {
     domain: '',
     isOwner: false,
     ownerEmail: '',
-    isScoreInaccurate: false,
     scoreInaccurateReason: '',
     otherDetails: ''
   },
@@ -36,14 +35,6 @@ const reducer = (state, action) => {
         feedback: {
           ...state.feedback,
           domain: action.data
-        }
-      };
-    case 'set-is-score-inaccurate':
-      return {
-        ...state,
-        feedback: {
-          ...state.feedback,
-          isScoreInaccurate: action.data
         }
       };
     case 'set-score-inaccurate-reason':
@@ -83,6 +74,12 @@ const reducer = (state, action) => {
         loading: false,
         error: false,
         feedback: initialState.feedback
+      };
+    }
+    case 'reset': {
+      return {
+        ...state,
+        ...initialState
       };
     }
   }
