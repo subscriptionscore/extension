@@ -2,6 +2,8 @@
 
 This is the code for building the [Subscription Score][2] browser extension.
 
+[![](https://github.com/subscriptionscore/extension/workflows/Build/badge.svg)](https://github.com/subscriptionscore/extension/actions)
+
 ## Bugs or Feature requests
 
 Please submit an [issue][3].
@@ -23,6 +25,19 @@ or
 ```
 npm install
 ```
+
+### Environment
+
+You will need to specify a connection to our API in your `.env` file. This is the endpoint that the built extension will use to fetch subscription scores.
+
+Currently we don't have a development endpoint, so you will need to use the production one at `https://api.leavemealone.app/graphql`.
+
+```
+# .env
+GRAPHQL_URL=https://api.leavemealone.app/graphql
+```
+
+You will need to [purchase an API key](#API-Key) in order to make requests.
 
 ### Build for development
 
@@ -61,6 +76,10 @@ Once you've built a version of the extension and installed it into your browser 
 ### TODO
 
 - Set up test environment for development contributions.
+
+## API Key
+
+An API key is required to run the extension and make requests to the API, you can purchase a key from our [website][2], or [contact us][1] for a development key.
 
 ## Licence
 
