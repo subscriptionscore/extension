@@ -7,7 +7,9 @@ $input-line-height: 26px;
 .input-wrapper {
   display: flex;
   flex: 1;
+  flex-direction: column;
 }
+
 .input {
   border-radius: 5px;
   height: 42px;
@@ -177,10 +179,10 @@ $input-line-height: 26px;
 
 .input-group {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 
   input {
-    flex: 1;
+    width: auto;
     margin-right: 10px;
   }
 

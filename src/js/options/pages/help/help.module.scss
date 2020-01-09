@@ -1,0 +1,16 @@
+@import '../layout.module.scss';
+
+.page-section {
+  @extend .section;
+}
+
+.toolbar-img {
+  width: 250px;
+  margin: 0 0 1em 35px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.55);
+}
+
+.popup-img {
+  width: 450px;
+  margin: 0;
+}

@@ -5,6 +5,11 @@
   margin-bottom: 40px;
 }
 
+.account-page h2.subtitle {
+  margin: 3rem 0 2rem 0;
+  font-size: 22px;
+}
+
 .form {
   max-width: 500px; // wide enough for licence key in monospace
 }
@@ -25,16 +30,6 @@
 
 .page-section {
   @extend .section;
-}
-
-.toolbar-img {
-  width: 250px;
-  margin: 0 0 1em 35px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.55);
-}
-
-.popup-img {
-  width: 450px;
 }
 
 .btn-group {
