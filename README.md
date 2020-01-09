@@ -2,7 +2,7 @@
 
 This is the code for building the [Subscription Score][2] browser extension.
 
-![](https://github.com/subscriptionscore/extension/workflows/release/badge.svg)
+![](https://github.com/subscriptionscore/extension/workflows/Build/badge.svg)
 
 ## Bugs or Feature requests
 
