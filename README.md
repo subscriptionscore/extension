@@ -32,14 +32,25 @@ You will need to specify a connection to our API in your `.env` file. This is th
 
 Currently we don't have a development endpoint, so you will need to use the production one at `https://api.leavemealone.app/graphql`.
 
+Simply copy the `.env.default` to use our default envirnoment values.
+
 ```
-# .env
-GRAPHQL_URL=https://api.leavemealone.app/graphql
+$ cp .env.default .env
 ```
 
-You will need to [purchase an API key](#API-Key) in order to make requests.
+You will also need to [purchase an API key](#API-Key) in order to make requests.
 
-### Build for development
+### Build new release
+
+The following command will build for all release targets;
+
+```
+npm run build
+```
+
+Zipped releases can be found in the `/releases` directory.
+
+### Run development version
 
 ```
 npm run build:dev <target>
@@ -58,16 +69,6 @@ npm run build:dev firefox
 ```
 
 Development `manifest.json` files can be found in `/build/{target}` directory.
-
-### Build new release
-
-The following command will build for all release targets;
-
-```
-npm run build
-```
-
-Zipped releases can be found in `/releases` directory.
 
 ## Usage
 
