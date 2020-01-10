@@ -1,7 +1,30 @@
 @import '../layout.module.scss';
+@import '../../../../styles/common/colors.scss';
+@import '../../../../styles/mixins/themes.scss';
 
 .page-section {
   @extend .section;
+}
+
+.select {
+}
+
+.option {
+  @include themify() {
+    background-color: theme('buttonBackground');
+  }
+
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  &:hover {
+    @include themify() {
+      background-color: theme('buttonBackgroundHover');
+    }
+  }
 }
 
 .form-group {
@@ -16,4 +39,9 @@
   opacity: 0.7;
   font-size: 12px;
   margin-left: 5px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
 }

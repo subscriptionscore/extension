@@ -64,19 +64,15 @@ const InviteForm = ({ onSuccess }) => {
           onChange={({ currentTarget }) =>
             setState({ ...state, email: currentTarget.value })
           }
-          button={
-            <span>
-              <Button
-                type="submit"
-                as="button"
-                disabled={state.loading || !state.email}
-                loading={state.loading}
-              >
-                Invite
-              </Button>
-            </span>
-          }
         />
+        <Button
+          type="submit"
+          as="button"
+          disabled={state.loading || !state.email}
+          loading={state.loading}
+        >
+          Invite
+        </Button>
       </InputGroup>
     </form>
   );

@@ -3,70 +3,45 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import Button from '../../../components/button';
 import CopyButton from '../../../components/copy-to-clipboard';
+import { HelpContent } from '../help';
 import InviteForm from './invite';
 import { TextLink } from '../../../components/text';
 import { TwitterIcon } from '../../../components/icons';
 import { shareOnTwitter } from '../../../utils/social';
-import styles from './billing.module.scss';
+import styles from './account.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
-const toolbarUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-toolbar.png';
-const popupUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
-
-const BillingPage = ({ showWelcome }) => {
+const AccountPage = ({ showWelcome, onSetPage }) => {
   const content = useMemo(() => {
     if (showWelcome) {
       return (
-        <>
+        <div className={styles.accountPage}>
           <h1>Welcome!</h1>
-          <div className={styles.pageSection}>
-            <LicenceKeyForm />
-          </div>
           <div className={styles.pageSection}>
             <p>Thanks for downloading Subscription Score!</p>
             <p>
-              For each webpage you visit we will check our score database and
-              show you the statistics of the emails that are sent from that
-              domain.
+              For each webpage you visit we will{' '}
+              <strong>
+                check our score database and show you the statistics of the
+                emails
+              </strong>{' '}
+              that are sent from that domain.
             </p>
-
-            <div className={styles.blocks}>
-              <p>
-                We grade each website from <strong>A+</strong> to{' '}
-                <strong>F</strong>, and this grade will appear in your toolbar
-                like this.
-              </p>
-              <img
-                className={styles.toolbarImg}
-                src={toolbarUrl}
-                alt="Toolbar example"
-              />
-              <p>
-                Clicking the toolbar icon will show you a summary of the current
-                page.
-              </p>
-            </div>
-            <div className={styles.blocks}>
-              <p>
-                Each time you submit an email capture form we can also show you
-                a warning about the mailing list you are signing up for.
-              </p>
-              <img
-                className={styles.popupImg}
-                src={popupUrl}
-                alt="Popup example"
-              />
-            </div>
+            <p>
+              Check out how it works below or on the{' '}
+              <TextLink onClick={() => onSetPage('help')}>help page</TextLink>.
+            </p>
+            <LicenceKeyForm />
           </div>
-        </>
+          <h2 className={styles.subtitle}>How it works</h2>
+          <HelpContent />
+        </div>
       );
     }
 
     return (
       <>
-        <h1>Billing</h1>
+        <h1>Account</h1>
         <Billing />
         <div className={styles.pageSection}>
           <Referral />
@@ -205,10 +180,11 @@ function LicenceKeyForm() {
           return onSave();
         }}
       >
-        <p>Enter licence key...</p>
+        {/* <p>Enter licence key...</p> */}
         <InputGroup>
           <FormInput
             name="licenceKey"
+            label="Enter licence key..."
             value={value}
             onChange={e => setValue(e.currentTarget.value)}
             className={styles.licenceInput}
@@ -227,4 +203,4 @@ function LicenceKeyForm() {
   );
 }
 
-export default BillingPage;
+export default AccountPage;
