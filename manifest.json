@@ -1,7 +1,7 @@
 {
   "name": "Subscription Score",
   "description": "Never regret subscribing to a mailing list again",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "background": {
     "page": "background.html"
   },
