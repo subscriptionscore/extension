@@ -8,6 +8,10 @@ const commonOptions = require('./webpack.config');
 
 const options = {
   mode: commonOptions.mode,
+  optimization: {
+    // We no not want to minimize our code.
+    minimize: false
+  },
   entry: commonOptions.entry,
   output: {
     path: path.join(__dirname, 'build/chrome'),
