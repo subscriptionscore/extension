@@ -25,6 +25,7 @@ const options = {
   plugins: [
     ...commonOptions.plugins,
     new CopyWebpackPlugin([
+      ...commonOptions.copyFiles,
       {
         from: 'src/manifest.chrome.json',
         to: 'manifest.json',
@@ -48,10 +49,6 @@ const options = {
             })
           );
         }
-      },
-      {
-        from: 'assets',
-        to: 'assets'
       }
     ]),
     ...(commonOptions.isDevelopment

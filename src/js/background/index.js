@@ -6,6 +6,7 @@ import {
   addSignupBlockedRequest,
   getDomainScore
 } from './scores';
+import { getAddressScores } from './addresses';
 
 let currentPage = {
   rank: null,
@@ -35,7 +36,7 @@ browser.runtime.onInstalled.addListener(details => {
   }
 });
 
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action == 'signup-allowed') {
     return addSignupAllowedRequest(currentPage.domain);
   }
@@ -55,6 +56,17 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   if (request.action === 'get-current-url') {
     return sendResponse(currentPage.url);
+  }
+  if (request.action === 'fetch-scores') {
+    const scoresIter = getAddressScores(request.data);
+    let nextScores = await scoresIter.next();
+    while (!nextScores.done) {
+      browser.tabs.sendMessage(sender.tab.id, {
+        action: 'fetched-scores',
+        data: { scores: nextScores.value, emails: request.data }
+      });
+      nextScores = await scoresIter.next();
+    }
   }
   if (request.action === 'log') {
     if (sender.id === browser.runtime.id) {

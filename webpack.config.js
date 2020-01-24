@@ -50,6 +50,10 @@ const entrypoints = [
   {
     name: 'frame',
     path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+  },
+  {
+    name: 'gmail',
+    path: path.join(__dirname, 'src', 'js', 'content', 'gmail', 'index.js')
   }
 ];
 
@@ -128,6 +132,16 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.scss']
   },
+  copyFiles: [
+    {
+      from: 'assets',
+      to: 'assets'
+    },
+    {
+      from: 'src/vendor/inboxsdk.js',
+      to: '.'
+    }
+  ],
   plugins: [
     ...(isDevelopment ? [] : prodPlugins),
     // expose and write the allowed env vars on the compiled bundle

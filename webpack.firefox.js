@@ -2,7 +2,6 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const ZipPlugin = require('zip-webpack-plugin');
-const manifest = require('./manifest.json');
 const commonOptions = require('./webpack.config');
 const baseManifest = require('./manifest.json');
 
@@ -29,6 +28,7 @@ const options = {
   plugins: [
     ...commonOptions.plugins,
     new CopyWebpackPlugin([
+      ...commonOptions.copyFiles,
       {
         from: 'src/manifest.firefox.json',
         to: 'manifest.json',
@@ -38,7 +38,6 @@ const options = {
             ...JSON.parse(content.toString())
           };
           let name = manifest.name;
-          let version_name = `v${manifest.version}`;
           if (commonOptions.isDevelopment) {
             name = `${name} Dev`;
           }
@@ -46,15 +45,10 @@ const options = {
           return Buffer.from(
             JSON.stringify({
               ...manifest,
-              name,
-              version_name
+              name
             })
           );
         }
-      },
-      {
-        from: 'assets',
-        to: 'assets'
       }
     ]),
     ...(commonOptions.isDevelopment

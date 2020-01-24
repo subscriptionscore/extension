@@ -22,6 +22,7 @@ esac
 if [ $BUILD_CHROME -eq 1 ]; then
   echo "Building Chrome Plugin...";
   NODE_ENV=production node ./node_modules/webpack-cli/bin/cli.js -p --mode=production --config webpack.chrome.js --display errors-only
+  node ./node_modules/crx3/bin/crx3.js --crxURL=https://cdn.leavemealone.app/subscriptionscore/chrome-latest.crx -z releases/chrome-latest.zip --crxPath releases/chrome-latest.crx -x releases/update.xml -p ./.keys/chrome.pem build/chrome/
   echo "OK";
 fi
 
