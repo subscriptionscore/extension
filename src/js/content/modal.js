@@ -1,6 +1,3 @@
-import browser from 'browser';
-const path = browser.runtime.getURL('/frame.html');
-
 const styles = {
   border: 'none',
   position: 'fixed',
@@ -15,10 +12,11 @@ export function injectModal({
   onApproved,
   onCancelled,
   addIgnoreEmail,
-  addIgnoreSite
+  addIgnoreSite,
+  framePath
 }) {
   const $frame = document.createElement('iframe');
-  $frame.src = path;
+  $frame.src = framePath;
   Object.keys(styles).forEach(s => {
     $frame.style[s] = styles[s];
   });

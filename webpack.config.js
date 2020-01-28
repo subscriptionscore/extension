@@ -36,6 +36,10 @@ const entrypoints = [
     path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
   },
   {
+    name: 'onload',
+    path: path.join(__dirname, 'src', 'js', 'content', 'onload.js')
+  },
+  {
     name: 'popup',
     path: path.join(__dirname, 'src', 'js', 'popup', 'index.js')
   },
@@ -65,6 +69,25 @@ module.exports = {
   isDevelopment: isDevelopment,
   entry,
   mode: process.env.NODE_ENV || 'development',
+  devtool:
+    process.env.NODE_ENV === 'production' ? null : 'cheap-module-source-map',
+  optimization: {
+    minimize: false
+    // splitChunks: {
+    //   cacheGroups: {
+    //     default: false,
+    //     commonContent: {
+    //       name: 'common-content',
+    //       chunks: chunk => {
+    //         return chunk.name === 'content' || chunk.name === 'patch';
+    //       }
+    //     }
+    //   }
+    // }
+  },
+  node: {
+    global: false
+  },
   module: {
     rules: [
       {
@@ -158,6 +181,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+    }),
+    // Placeholder for global used in any node_modules
+    new webpack.DefinePlugin({
+      global: 'window'
     })
   ]
 };
