@@ -1,4 +1,5 @@
 import { getItem, setItem } from 'browser/storage';
+import logger from './logger';
 export { getItem, setItem, getItems, onStorageChange } from 'browser/storage';
 
 export async function pushPreference(pref, value) {
@@ -12,7 +13,7 @@ export async function pushPreference(pref, value) {
       [pref]: newArr
     }
   };
-  console.log('[subscriptionscore]: updating prefs', newPrefs);
+  logger('updating prefs', newPrefs);
   return setItem(newPrefs);
 }
 

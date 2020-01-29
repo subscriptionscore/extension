@@ -1,3 +1,8 @@
+/**
+ * This is loaded as the src of an iFrame that is injected into
+ * the current page, it comminicates the details of the blocked
+ * form to the user as a popup
+ */
 import './frame.scss';
 
 import { Message, Settings } from '../../components/icons';
@@ -12,6 +17,7 @@ import useBackground from '../../hooks/use-background';
 import useCurrentUrl from '../../hooks/use-current-url';
 import useNewTab from '../../hooks/use-new-tab';
 import useStorage from '../../hooks/use-storage';
+import logger from '../../utils/logger';
 
 const origin = browser.runtime.getURL('/frame.html');
 
@@ -27,11 +33,11 @@ const Popup = () => {
   const [{ value: storage = {}, loading: storageLoading }] = useStorage();
 
   const onContinue = useCallback(() => {
-    console.log('[subscriptionscore]: sending message continue from ', origin);
+    logger('sending message continue from ', origin);
     window.parent.postMessage({ popupResponse: 'continue' }, '*');
   }, []);
   const onCancel = useCallback(() => {
-    console.log('[subscriptionscore]: sending message cancel from ', origin);
+    console.log('sending message cancel from ', origin);
     window.parent.postMessage({ popupResponse: 'cancel' }, '*');
   }, []);
   const onIgnoreEmail = useCallback(() => {

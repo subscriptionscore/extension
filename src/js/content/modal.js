@@ -21,7 +21,6 @@ export function injectModal({
     $frame.style[s] = styles[s];
   });
   const onMessage = event => {
-    console.log('[subscriptionscore]: received message from ', event.origin);
     let remove = false;
     if (event.data.popupResponse === 'continue') {
       onApproved();
