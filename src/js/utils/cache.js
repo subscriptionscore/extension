@@ -39,14 +39,14 @@ if (indexedDB) {
   };
 }
 
-export function put(domain, rank) {
+export function put(domain, rank, normalizedDomain) {
   if (!db) return null;
   const tx = db.transaction([DB_NAME], 'readwrite');
   const objectStore = tx.objectStore(DB_NAME);
   return new Promise((resolve, reject) => {
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject();
-    objectStore.put({ domain, rank, timestamp: Date.now() });
+    objectStore.put({ domain, rank, normalizedDomain, timestamp: Date.now() });
   });
 }
 

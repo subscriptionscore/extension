@@ -1,3 +1,5 @@
+import browser from 'browser';
+import { getPreference } from '../utils/storage';
 // This is the content script injected into every page
 // specified in the `matches` param in the manifest
 //
@@ -9,8 +11,6 @@
 // list then we inject our popup that alerts the user
 //
 import { injectModal } from './modal';
-import { getPreference } from '../utils/storage';
-import browser from 'browser';
 
 const ranks = ['F', 'E', 'D', 'C', 'B', 'A', 'A+'];
 let haltedForm;
@@ -90,7 +90,11 @@ function onSubmitForm(
     const isIgnored = ignoredSites.some(is => is === domain);
     console.log('[subscriptionscore]: ranked', `${rank} - ${domain}`);
 
-    if (!isIgnored && ranks.indexOf(rank) <= ranks.indexOf(blockedRank)) {
+    const isBelowAlertThreshold =
+      !!rank && ranks.indexOf(rank) <= ranks.indexOf(blockedRank);
+    const blockFormSubmit = !isIgnored && isBelowAlertThreshold;
+
+    if (blockFormSubmit) {
       console.log('[subscriptionscore]: preventing form submit');
       injectModal({
         onApproved,
