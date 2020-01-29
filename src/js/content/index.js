@@ -8,8 +8,10 @@
 // the user has not previously added to their ignore
 // list then we inject our popup that alerts the user
 //
+import logger from '../utils/logger';
 import browser from 'browser';
 import { getPreference } from '../utils/storage';
+import digest from '../utils/digest';
 
 const onloadScriptPath = browser.runtime.getURL('/onload.bundle.js');
 const framePath = browser.runtime.getURL('/frame.html');
@@ -17,6 +19,12 @@ const framePath = browser.runtime.getURL('/frame.html');
 const ranks = ['F', 'E', 'D', 'C', 'B', 'A', 'A+'];
 
 (async () => {
+  // if user has not enabled this then bail out here
+  const alertOnSubmit = await getPreference('alertOnSubmit');
+  if (!alertOnSubmit) {
+    return;
+  }
+
   injectPatchScript();
   const ignoredSites = await getPreference('ignoredSites');
   const ignoredEmailAddresses = await getPreference('ignoredEmailAddresses');
@@ -24,9 +32,9 @@ const ranks = ['F', 'E', 'D', 'C', 'B', 'A', 'A+'];
   browser.runtime.sendMessage({ action: 'get-current-rank' }, response => {
     const { rank, domain } = response;
     const isIgnored = ignoredSites.some(is => is === domain);
-    console.log('[subscriptionscore]: ranked', `${rank} - ${domain}`);
+    logger('ranked', `${rank} - ${domain}`);
     if (!isIgnored && ranks.indexOf(rank) <= ranks.indexOf(blockedRank)) {
-      console.log('[subscriptionscore]: preventing form submit');
+      logger('preventing form submit');
       injectScripts({
         ignoredEmailAddresses
       });
@@ -37,12 +45,9 @@ const ranks = ['F', 'E', 'D', 'C', 'B', 'A', 'A+'];
 function injectPatchScript() {
   const $script = document.createElement('script');
   $script.type = 'text/javascript';
-  // $script.async = 'true';
-  $script.textContent = `  
-  console.log('[subscriptionscore]: running monkey patches');
+  $script.textContent = `    
   Element.prototype._addEventListener = Element.prototype.addEventListener;  
-  Element.prototype.addEventListener = function(eventName, fn, ...args) {
-    console.log('[subscriptionscore]: checking event listener ['+eventName+'] - ', this);
+  Element.prototype.addEventListener = function(eventName, fn, ...args) {    
     if (eventName === 'onsubmit' || eventName === 'submit') {
       console.log(
         "[subscriptionscore]: monkey patching event listener "+eventName+" on element " + this
@@ -52,7 +57,7 @@ function injectPatchScript() {
   };
   `;
   document.addEventListener('DOMContentLoaded', () =>
-    document.head.appendChild($script)
+    document.head.prepend($script)
   );
 }
 
@@ -60,13 +65,19 @@ let awaitDomLoaded = new Promise(resolve => {
   document.addEventListener('DOMContentLoaded', () => resolve());
 });
 
-function injectScripts({ ignoredEmailAddresses }) {
+async function injectScripts({ ignoredEmailAddresses }) {
   const $script = document.createElement('script');
   $script.src = `${onloadScriptPath}`;
   $script.type = 'text/javascript';
-  // $script.async = 'true';
+  // TODO how can we achieve this subresource integrity?
+  // https://github.com/subscriptionscore/extension/issues/5
+  if (process.env.SUBRESOURCE_INTEGRITY_ONLOAD) {
+    $script.integrity = process.env.SUBRESOURCE_INTEGRITY_ONLOAD;
+  }
+
+  const emails = await Promise.all(ignoredEmailAddresses.map(e => digest(e)));
   $script.innerText = JSON.stringify({
-    ignoredEmailAddresses: ignoredEmailAddresses,
+    ignoredEmailAddresses: emails,
     framePath: framePath
   });
   awaitDomLoaded.then(() => document.head.appendChild($script));
