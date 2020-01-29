@@ -32,12 +32,16 @@ const prodPlugins = [
 
 const entrypoints = [
   {
-    name: 'content',
-    path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
-  },
-  {
     name: 'onload',
     path: path.join(__dirname, 'src', 'js', 'content', 'onload.js')
+  },
+  {
+    name: 'frame',
+    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+  },
+  {
+    name: 'content',
+    path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
   },
   {
     name: 'popup',
@@ -50,10 +54,6 @@ const entrypoints = [
   {
     name: 'background',
     path: path.join(__dirname, 'src', 'js', 'background', 'index.js')
-  },
-  {
-    name: 'frame',
-    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
   }
 ];
 
@@ -73,17 +73,6 @@ module.exports = {
     process.env.NODE_ENV === 'production' ? null : 'cheap-module-source-map',
   optimization: {
     minimize: false
-    // splitChunks: {
-    //   cacheGroups: {
-    //     default: false,
-    //     commonContent: {
-    //       name: 'common-content',
-    //       chunks: chunk => {
-    //         return chunk.name === 'content' || chunk.name === 'patch';
-    //       }
-    //     }
-    //   }
-    // }
   },
   node: {
     global: false
