@@ -1,8 +1,8 @@
-import Hashes from './hashes';
 import { graphqlRequest } from '../utils/request';
 import { get, put } from '../utils/cache';
 import { pushPreference, getItem } from '../utils/storage';
 import { updateUserPreferences } from '../utils/preferences';
+import digest from '../utils/digest';
 
 // just get the rank to show in the
 // subscription score icon
@@ -21,7 +21,9 @@ export async function* getAddressScores(addresses) {
   let errors = [];
   // hash all the addresses before we send, we
   // dont want to send plaintext email addresses
-  const hashedAddresses = addresses.map(hashEmail);
+  const hashedAddresses = await Promise.all(
+    addresses.map(a => digest(a, 'SHA-1'))
+  );
   console.log(
     `[subscriptionscore]: fetching scores for ${hashedAddresses.length} emails`
   );
@@ -42,8 +44,4 @@ export async function* getAddressScores(addresses) {
     }
   }
   return errors;
-}
-
-function hashEmail(email) {
-  return new Hashes.SHA1().hex(email);
 }
