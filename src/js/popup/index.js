@@ -1,6 +1,6 @@
 import './reset.scss';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import DomainScore from '../components/domain-score';
 import Footer from './footer/index';
@@ -25,6 +25,14 @@ const App = () => {
       return value.preferences.colorSet;
     }
   }, [value]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.style.backgroundColor = '#323639';
+    } else {
+      document.body.style.backgroundColor = '#FFFFFF';
+    }
+  }, [theme]);
 
   return (
     <div data-color-theme={theme}>

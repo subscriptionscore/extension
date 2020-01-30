@@ -1,4 +1,3 @@
-import browser from 'browser';
 import {
   addIgnoreEmail,
   addIgnoreSite,
@@ -6,8 +5,11 @@ import {
   addSignupBlockedRequest,
   getDomainScore
 } from './scores';
+
+import browser from 'browser';
 import { getAddressScores } from './addresses';
 import logger from '../utils/logger';
+import { respondToMessage } from 'browser/messages';
 
 let currentPage = {
   rank: null,
@@ -45,7 +47,7 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     return addSignupBlockedRequest(currentPage.domain);
   }
   if (request.action === 'get-current-rank') {
-    return sendResponse(currentPage);
+    return respondToMessage(sendResponse, currentPage);
   }
   if (request.action === 'ignore-email') {
     const emails = request.data;
@@ -56,7 +58,7 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     return addIgnoreSite(domain);
   }
   if (request.action === 'get-current-url') {
-    return sendResponse(currentPage.url);
+    return respondToMessage(sendResponse, currentPage.url);
   }
   if (request.action === 'fetch-scores') {
     const scoresIter = getAddressScores(request.data);
