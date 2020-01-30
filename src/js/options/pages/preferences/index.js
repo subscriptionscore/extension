@@ -1,5 +1,5 @@
 import { FormCheckbox, FormInput, InputGroup } from '../../../components/form';
-// import Rank from '../../../components/rank';
+import browser from 'browser';
 import React, { useCallback, useState } from 'react';
 
 import Button from '../../../components/button';
@@ -42,6 +42,23 @@ function Prefs() {
     [setPreference]
   );
 
+  const requestPermission = useCallback(
+    () =>
+      browser.permissions.request(
+        {
+          permissions: [],
+          origins: ['<all_urls>']
+        },
+        granted => {
+          // The callback argument will be true if the user granted the permissions.
+          if (granted) {
+            onChange('alertOnSubmit', !alertOnSubmit);
+          }
+        }
+      ),
+    [alertOnSubmit, onChange]
+  );
+
   return (
     <>
       <form>
@@ -49,7 +66,7 @@ function Prefs() {
           <FormCheckbox
             name="alertOnSubmit"
             checked={alertOnSubmit}
-            onChange={() => onChange('alertOnSubmit', !alertOnSubmit)}
+            onChange={() => requestPermission()}
             label="Show alerts when submitting forms"
           />
           {alertOnSubmit ? null : (

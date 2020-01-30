@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Form - Event Listener</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <h2>Form with Event Listener</h2>
+    <form
+      id="handlerForm"
+      name="submit-action-form"
+      method="get"
+      action="/submit.html"
+    >
+      <label>
+        <span>Email:</span>
+        <input
+          name="email"
+          required
+          type="text"
+          value="test@subscriptionscore.com"
+          autocomplete="username"
+        />
+      </label>
+      <label>
+        <span>Password:</span>
+        <input name="password" type="password" autocomplete="new-password" />
+      </label>
+      <input type="submit" value="Submit" />
+      <span id="output"></span>
+    </form>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        window.handlerForm.addEventListener('submit', e => {
+          e.preventDefault();
+          const formData = new FormData(window.handlerForm);
+          window.output.innerText = `Form submitted with email ${formData.get(
+            'email'
+          )}`;
+
+          return false;
+        });
+      });
+    </script>
+  </body>
+</html>
