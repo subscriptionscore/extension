@@ -78,7 +78,7 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
 // call when the page changes and we need to
 // fetch a new rank for the current url
-async function onPageChange(url, { inject = false } = {}) {
+async function onPageChange(url) {
   currentPage = {
     url
   };
