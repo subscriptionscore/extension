@@ -29,10 +29,12 @@ function Prefs() {
 
   const {
     alertOnSubmit,
-    blockedRank = 'C',
+    blockedRank = 'A',
     ignoredEmailAddresses = [],
     ignoredSites = [],
-    colorSet = 'normal'
+    colorSet = 'normal',
+    autoAllow = true,
+    autoAllowTimeout = 10
   } = user.preferences;
 
   const onChange = useCallback(
@@ -89,7 +91,9 @@ function Prefs() {
         blockedRank={blockedRank}
         ignoredEmailAddresses={ignoredEmailAddresses}
         ignoredSites={ignoredSites}
-        colorblind={colorSet === 'colorblind'}
+        colorSet={colorSet}
+        autoAllow={autoAllow}
+        autoAllowTimeout={autoAllowTimeout}
         setPreference={setPreference}
         changeEmailIgnoreList={changeEmailIgnoreList}
         changeSiteIgnoreList={changeSiteIgnoreList}
@@ -103,7 +107,9 @@ function AlertContent({
   blockedRank,
   ignoredEmailAddresses,
   ignoredSites,
-  colorblind,
+  colorSet,
+  autoAllow,
+  autoAllowTimeout,
   setPreference,
   changeEmailIgnoreList,
   changeSiteIgnoreList
@@ -111,6 +117,7 @@ function AlertContent({
   if (!show) {
     return null;
   }
+
   return (
     <>
       <div className={styles.pageSection}>
@@ -132,7 +139,7 @@ function AlertContent({
                 }
               }}
             >
-              <Rank rank={rank} colorblind={colorblind} />
+              <Rank rank={rank} colorblind={colorSet === 'colorblind'} />
             </Radio>
           ))}
         </div>
@@ -146,6 +153,35 @@ function AlertContent({
             .
           </p>
         </div>
+      </div>
+      <div className={styles.pageSection}>
+        <h2>Form submission</h2>
+        <p>We will automatically submit the form after the popup is shown.</p>
+        <div className={styles.formGroup}>
+          <FormCheckbox
+            name="autoAllow"
+            checked={autoAllow}
+            onChange={() => setPreference({ autoAllow: !autoAllow })}
+            label={`Automatically allow after ${autoAllowTimeout} seconds`}
+          />
+        </div>
+        {!autoAllow ? null : (
+          <div className={styles.formGroup}>
+            <FormInput
+              name={name}
+              label="Seconds until auto submission"
+              type="number"
+              min="1"
+              max="60"
+              step="1"
+              value={autoAllowTimeout}
+              onChange={({ currentTarget }) => {
+                setPreference({ autoAllowTimeout: +currentTarget.value });
+              }}
+            />
+            <span className={styles.help}>Between 1 and 60 seconds</span>
+          </div>
+        )}
       </div>
       <div className={styles.pageSection}>
         <h2>Ignore emails</h2>
