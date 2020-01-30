@@ -68,7 +68,7 @@ const Popup = () => {
 
     if (autoAllow) {
       const seconds = autoAllowTimeout;
-      setTimeout(() => onContinue, seconds * 1000);
+      setTimeout(onContinue, seconds * 1000);
       continueButton = (
         <button
           role="button"
