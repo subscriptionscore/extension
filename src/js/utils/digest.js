@@ -1,4 +1,10 @@
 export default async function digest(data) {
+  // if the site is not HTTPS then crypto.subtle will be
+  // undefined. So if the ext is being used on HTTP we
+  // just wont pass around data that should be encrypted
+  if (!crypto.subtle) {
+    return '';
+  }
   const hashBuffer = await crypto.subtle.digest(
     'SHA-256',
     new TextEncoder().encode(data)

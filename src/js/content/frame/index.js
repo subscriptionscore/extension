@@ -21,7 +21,7 @@ import logger from '../../utils/logger';
 
 const origin = browser.runtime.getURL('/frame.html');
 
-const Popup = () => {
+const Popup = ({ emails }) => {
   const { loading: urlLoading, url } = useCurrentUrl();
   const { value } = useBackground('get-current-rank');
   const domain = value ? value.domain : '';
@@ -35,19 +35,33 @@ const Popup = () => {
   const onContinue = useCallback(() => {
     logger('sending message continue from ', origin);
     window.parent.postMessage({ popupResponse: 'continue' }, '*');
+    browser.runtime.sendMessage({
+      action: 'signup-allowed'
+    });
   }, []);
   const onCancel = useCallback(() => {
     console.log('sending message cancel from ', origin);
     window.parent.postMessage({ popupResponse: 'cancel' }, '*');
+    browser.runtime.sendMessage({
+      action: 'signup-blocked'
+    });
   }, []);
   const onIgnoreEmail = useCallback(() => {
     window.parent.postMessage({ popupResponse: 'add-ignore-email' }, '*');
-  }, []);
+    browser.runtime.sendMessage({
+      action: 'ignore-email',
+      data: emails
+    });
+  }, [emails]);
   const onIgnoreSite = useCallback(() => {
     window.parent.postMessage(
       { popupResponse: 'add-ignore-site', domain },
       '*'
     );
+    browser.runtime.sendMessage({
+      action: 'ignore-site',
+      data: domain
+    });
   }, [domain]);
 
   const content = useMemo(() => {
@@ -113,4 +127,16 @@ const Popup = () => {
   return content;
 };
 
-ReactDOM.render(<Popup />, document.querySelector('#root'));
+window.addEventListener(
+  'message',
+  ({ data }) => {
+    ReactDOM.render(
+      <Popup emails={data.emails} />,
+      document.querySelector('#root')
+    );
+  },
+  { capture: true, once: true }
+);
+
+// tell the parent we are ready for the initial data
+window.parent.postMessage({ action: 'loaded' }, '*');

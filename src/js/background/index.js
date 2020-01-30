@@ -37,6 +37,7 @@ browser.runtime.onInstalled.addListener(details => {
 });
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('request', request.action);
   if (request.action == 'signup-allowed') {
     return addSignupAllowedRequest(currentPage.domain);
   }

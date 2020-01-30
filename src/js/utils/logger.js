@@ -1,3 +1,9 @@
+/**
+ * Simple console logger.
+ *
+ * To enable on a webpage;
+ *  localStorage.setItem('subscore-debug', true);
+ */
 const prefix = `[subscriptionscore]:`;
 let isDev;
 if (process) {
@@ -13,3 +19,7 @@ export default (...args) => {
     console.debug.apply(console, [prefix, ...args]);
   }
 };
+
+export function errorLogger(...args) {
+  console.error.apply(console, [prefix, ...args]);
+}

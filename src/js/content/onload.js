@@ -25,22 +25,24 @@
  * </script>
  */
 import { injectModal } from './modal';
-import logger from '../utils/logger';
+import logger, { errorLogger } from '../utils/logger';
 import digest from '../utils/digest';
 
 let haltedForm;
-
 const FORM_DATA_ATTRIBUTE = 'data-ss-approved';
 
 logger('running content script');
 
+/**
+ * Attach our submit listener to every <form> element in the DOM
+ * that contains an input[type=email] or input[type=password]
+ * because this is likely a login or signup form we want to intercept
+ */
 async function attachToEmailForms({ framePath, ignoredEmailAddresses }) {
   logger('loaded');
-
   const $inputs = document.querySelectorAll(
     'input[type="email"],input[type="password"]'
   );
-
   $inputs.forEach($input => {
     logger(`attached to form ${$input.form.name}`);
     addSubmitListener($input.form, ignoredEmailAddresses, framePath);
@@ -52,22 +54,35 @@ function addSubmitListener($form, ignoredEmailAddresses, framePath) {
     $form._onsubmit = $form.onsubmit;
     $form.onsubmit = () => {
       console.warn(
-        'This form has been prevented from submitting by your Subscription Score extension.'
+        '[subscriptionscore] A form has been blocked from submitting by your Subscription Score extension.'
       );
     };
   }
+  // replace the submit handler with ours...
   $form._internalSubmit = onSubmitForm.bind(
     this,
     $form,
     ignoredEmailAddresses,
     framePath
   );
+  // ...and add the submit event
   $form._addEventListener('submit', e => $form._internalSubmit(e));
 }
 
+/**
+ * Our submit handler that intercepts whatever submit handler is
+ * on the page's form.
+ *
+ * The submit handler gets the formData and makes sure we want to
+ * block this first, if we do then we show our modal
+ *
+ * @param {<Form> Element} $form
+ * @param {[String]} ignoredEmailAddresses
+ * @param {String} framePath
+ * @param {submit Event} e
+ */
 function onSubmitForm($form, ignoredEmailAddresses, framePath, e) {
   $form._originalEvent = e;
-  logger('on submit');
   const previouslyApproved = $form.getAttribute(FORM_DATA_ATTRIBUTE) === 'true';
   if (previouslyApproved) {
     return true;
@@ -76,29 +91,26 @@ function onSubmitForm($form, ignoredEmailAddresses, framePath, e) {
   // address in them. If any of the email addresses
   // are NOT in our ingored email list then
   // block the form
-  const formData = new FormData($form);
-  let hasNonIgnoredEmail = false;
+  //
+  // we don't use await here because we want to return false
+  // from the function in order to block the native submit handler
+  hasCriticalEmailAddress($form, ignoredEmailAddresses)
+    .then(hasNonIgnoredEmail => {
+      if (!hasNonIgnoredEmail) {
+        return doSubmit($form);
+      }
+      haltedForm = $form;
+      return injectModal({
+        onApproved,
+        onCancelled,
+        addIgnoreEmail,
+        addIgnoreSite,
+        emails: getEmailValues(haltedForm),
+        framePath
+      });
+    })
+    .catch(err => errorLogger(err));
 
-  for (let item of formData) {
-    const [, value] = item;
-    if (value.includes('@') && !ignoredEmailAddresses.includes(digest(value))) {
-      hasNonIgnoredEmail = true;
-    }
-  }
-  if (!hasNonIgnoredEmail) {
-    console.warn('no email');
-    return doSubmit($form);
-  }
-  haltedForm = $form;
-
-  logger('checking rank...');
-  injectModal({
-    onApproved,
-    onCancelled,
-    addIgnoreEmail,
-    addIgnoreSite,
-    framePath
-  });
   // block submission, will get resubmitted either
   // after the background script tells us it's ok
   // or the user says it's okay
@@ -106,6 +118,20 @@ function onSubmitForm($form, ignoredEmailAddresses, framePath, e) {
   return false;
 }
 
+async function hasCriticalEmailAddress($form, ignoredEmailAddresses) {
+  const formData = new FormData($form);
+  for (let item of formData) {
+    const [, value] = item;
+    if (typeof value === 'undefined' || !value.includes('@')) {
+      continue; // definitely not an email
+    }
+    const hashedValue = await digest(value);
+    if (!ignoredEmailAddresses.includes(hashedValue)) {
+      return true;
+    }
+  }
+  return false;
+}
 function doSubmit($form) {
   $form.removeEventListener('submit', $form._internalSubmit);
   if ($form._onsubmit) {
@@ -116,40 +142,23 @@ function doSubmit($form) {
     }
   }
   // fallback to default submit action
-  $form.submit();
+  return $form.submit();
 }
 
 function onApproved() {
   haltedForm.setAttribute(FORM_DATA_ATTRIBUTE, 'true');
-  // browser.runtime.sendMessage({
-  //   action: 'signup-allowed'
-  // });
   doSubmit(haltedForm);
 }
 
 function onCancelled() {
   haltedForm.setAttribute(FORM_DATA_ATTRIBUTE, 'false');
-  // browser.runtime.sendMessage({
-  //   action: 'signup-blocked'
-  // });
 }
 
 function addIgnoreEmail() {
-  const emails = getEmailValues(haltedForm);
-  if (emails.length) {
-    // browser.runtime.sendMessage({
-    //   action: 'ignore-email',
-    //   data: emails
-    // });
-  }
   doSubmit(haltedForm);
 }
 
-function addIgnoreSite(domain) {
-  // browser.runtime.sendMessage({
-  //   action: 'ignore-site',
-  //   data: domain
-  // });
+function addIgnoreSite() {
   doSubmit(haltedForm);
 }
 
@@ -165,15 +174,20 @@ function getEmailValues($form) {
   return emails;
 }
 
+/**
+ * Lets get started
+ */
 (async () => {
-  if (document.body.getAttribute('data-ss-running')) {
+  // if the script has already run for some reason then
+  // don't run it again
+  if (document.currentScript.getAttribute('data-ss-running')) {
     return;
   }
-  document.body.setAttribute('data-ss-running', true);
-
+  document.currentScript.setAttribute('data-ss-running', true);
+  // get the variables passed in from the script content
   const { framePath, ignoredEmailAddresses } = JSON.parse(
     document.currentScript.innerText
   );
-
+  // attach to forms!
   attachToEmailForms({ framePath, ignoredEmailAddresses });
 })();
