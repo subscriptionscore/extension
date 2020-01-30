@@ -1,7 +1,7 @@
 {
   "name": "Subscription Score",
   "description": "Never regret subscribing to a mailing list again",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "background": {
     "page": "background.html"
   },
@@ -12,8 +12,14 @@
   "icons": {
     "128": "assets/icon.png"
   },
-  "web_accessible_resources": ["frame.html", "frame.bundle.js", "frame.css"],
-  "permissions": ["<all_urls>", "tabs", "storage"],
+  "web_accessible_resources": [
+    "onload.bundle.js",
+    "frame.html",
+    "frame.bundle.js",
+    "frame.css"
+  ],
+  "permissions": ["tabs", "storage"],
+  "optional_permissions": ["<all_urls>"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
@@ -25,7 +31,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["/content.bundle.js"],
-      "run_at": "document_idle"
+      "run_at": "document_start"
     }
   ]
 }

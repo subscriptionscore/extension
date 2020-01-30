@@ -7,6 +7,7 @@ import {
   getDomainScore
 } from './scores';
 import { getAddressScores } from './addresses';
+import logger from '../utils/logger';
 
 let currentPage = {
   rank: null,
@@ -70,24 +71,10 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   }
   if (request.action === 'log') {
     if (sender.id === browser.runtime.id) {
-      return console.log(`[subscriptionscore]:`, request.data);
+      return logger(request.data);
     }
   }
 });
-
-// FIXME, inject script here would be better because then
-// we would only inject if the user has enabled blocking
-async function injectScript() {
-  // browser.contentScripts.register({
-  //   js: [
-  //     {
-  //       file: '/content.bundle.js'
-  //     }
-  //   ],
-  //   matches: ['<all_urls>'],
-  //   runAt: 'document_idle'
-  // });
-}
 
 // call when the page changes and we need to
 // fetch a new rank for the current url
@@ -101,7 +88,7 @@ async function onPageChange(url, { inject = false } = {}) {
   } else {
     browser.browserAction.enable();
     try {
-      console.log('[subscriptionscore]: fetching score');
+      logger('fetching score');
       const domainScore = await getDomainScore(url);
       if (domainScore) {
         const { rank, domain } = domainScore;
@@ -113,9 +100,6 @@ async function onPageChange(url, { inject = false } = {}) {
         if (rank) {
           browser.browserAction.setBadgeText({ text: rank });
         }
-      }
-      if (inject) {
-        injectScript();
       }
     } catch (err) {
       console.error(err);

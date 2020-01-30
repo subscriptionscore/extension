@@ -1,0 +1,27 @@
+body {
+  background: #f5f5f5;
+}
+
+form {
+  width: 310px;
+}
+
+label {
+  display: block;
+  padding: 10px 0;
+}
+
+label span {
+  display: inline-block;
+  width: 100px;
+}
+
+input {
+  width: 200px;
+}
+
+input[type='submit'] {
+  width: 100px;
+  margin-top: 1em;
+  float: right;
+}

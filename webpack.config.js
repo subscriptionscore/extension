@@ -32,6 +32,14 @@ const prodPlugins = [
 
 const entrypoints = [
   {
+    name: 'onload',
+    path: path.join(__dirname, 'src', 'js', 'content', 'onload.js')
+  },
+  {
+    name: 'frame',
+    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+  },
+  {
     name: 'content',
     path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
   },
@@ -46,10 +54,6 @@ const entrypoints = [
   {
     name: 'background',
     path: path.join(__dirname, 'src', 'js', 'background', 'index.js')
-  },
-  {
-    name: 'frame',
-    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
   },
   {
     name: 'gmail',
@@ -69,6 +73,14 @@ module.exports = {
   isDevelopment: isDevelopment,
   entry,
   mode: process.env.NODE_ENV || 'development',
+  devtool:
+    process.env.NODE_ENV === 'production' ? null : 'cheap-module-source-map',
+  optimization: {
+    minimize: false
+  },
+  node: {
+    global: false
+  },
   module: {
     rules: [
       {
@@ -172,6 +184,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+    }),
+    // Placeholder for global used in any node_modules
+    new webpack.DefinePlugin({
+      global: 'window'
     })
   ]
 };
