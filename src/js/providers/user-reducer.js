@@ -10,7 +10,8 @@ export const initialState = {
       ignoredSites: [],
       blockedRank: 'A',
       autoAllow: true,
-      autoAllowTimeout: 10
+      autoAllowTimeout: 10,
+      gmailEnabled: false
     }
   },
   licenceKey: '',

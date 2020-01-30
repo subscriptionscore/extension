@@ -251,6 +251,7 @@ query User($licenceKey: ID!) {
       blockedRank
       autoAllow
       autoAllowTimeout
+      gmailEnabled
     }
     features
     referralCode

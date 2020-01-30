@@ -12,6 +12,7 @@ mutation User($preferences: Preferences!) {
       blockedRank
       autoAllow
       autoAllowTimeout
+      gmailEnabled
     }
   }
 }
