@@ -249,8 +249,10 @@ query User($licenceKey: ID!) {
       ignoredEmailAddresses
       ignoredSites
       blockedRank
+      autoAllow
+      autoAllowTimeout
     }
-    features    
+    features
     referralCode
   }
 }

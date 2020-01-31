@@ -70,12 +70,44 @@ const Popup = ({ emails }) => {
     }
     let theme = 'light';
     let colorSet = 'normal';
+    let autoAllow = false;
+    let autoAllowTimeout = 0;
+
     if (storage.preferences && storage.preferences.darkMode) {
       theme = 'dark';
     }
     if (storage.preferences.colorset) {
       colorSet = storage.preferences.colorset;
     }
+    if (storage.preferences.autoAllow) {
+      autoAllow = true;
+      autoAllowTimeout = storage.preferences.autoAllowTimeout || 10;
+    }
+
+    let continueButton;
+
+    if (autoAllow) {
+      const seconds = autoAllowTimeout;
+      setTimeout(onContinue, seconds * 1000);
+      continueButton = (
+        <button
+          role="button"
+          className={styles.continueBtn}
+          onClick={onContinue}
+        >
+          <span
+            className={styles.progressBar}
+            style={{
+              animationDuration: `${seconds}s`
+            }}
+          />
+          <span className={styles.progressText}>Continue anyway →</span>
+        </button>
+      );
+    } else {
+      continueButton = <Button onClick={onContinue}>Continue anyway →</Button>;
+    }
+
     return (
       <div className={styles.container} data-color-theme={theme}>
         <div className={styles.popup}>
@@ -87,7 +119,7 @@ const Popup = ({ emails }) => {
             <Button muted onClick={onCancel}>
               Cancel
             </Button>
-            <Button onClick={onContinue}>Continue anyway →</Button>
+            {continueButton}
           </div>
 
           <ul className={styles.popupOptions}>

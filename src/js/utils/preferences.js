@@ -10,6 +10,8 @@ mutation User($preferences: Preferences!) {
       ignoredEmailAddresses
       ignoredSites
       blockedRank
+      autoAllow
+      autoAllowTimeout
     }
   }
 }
