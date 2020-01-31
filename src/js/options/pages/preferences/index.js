@@ -1,15 +1,17 @@
 import { FormCheckbox, FormInput, InputGroup } from '../../../components/form';
-import browser from 'browser';
 import React, { useCallback, useState } from 'react';
 
 import Button from '../../../components/button';
 import Radio from '../../../components/radio';
 import Rank from '../../../components/rank';
+import browser from 'browser';
 import styles from './preferences.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
-const popupUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
+const popupImgUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup-new.png';
+const gmailImgUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-gmail-new.png';
 
 const ranks = ['A+', 'A', 'B', 'C', 'D', 'E', 'F'];
 const PreferencesPage = () => {
@@ -27,13 +29,7 @@ function Prefs() {
     { setPreference, changeEmailIgnoreList, changeSiteIgnoreList }
   ] = useUser();
 
-  const {
-    alertOnSubmit,
-    blockedRank = 'C',
-    ignoredEmailAddresses = [],
-    ignoredSites = [],
-    colorSet = 'normal'
-  } = user.preferences;
+  const { alertOnSubmit, gmailEnabled } = user.preferences;
 
   const onChange = useCallback(
     (key, value) => {
@@ -61,49 +57,71 @@ function Prefs() {
 
   return (
     <>
-      <form>
-        <div className={styles.pageSection}>
+      <div className={styles.pageSection}>
+        <div className={styles.formGroup}>
           <FormCheckbox
             name="alertOnSubmit"
             checked={alertOnSubmit}
             onChange={() => requestPermission()}
             label="Show alerts when submitting forms"
           />
-          {alertOnSubmit ? null : (
-            <div className={styles.helpText}>
-              <p>
-                We can show you an alert if you are subscribing to a mailing
-                list that we think is particulaly bad.
-              </p>
-              <p>
-                When you submit a form that you have entered your email address
-                into then we will show you a popup like this;
-              </p>
-              <img src={popupUrl} alt="Example popup" />
-            </div>
-          )}
         </div>
-      </form>
+        {alertOnSubmit ? null : (
+          <div className={styles.helpText}>
+            <p>
+              We can show you an alert if you are subscribing to a mailing list
+              that we think is particularly bad.
+            </p>
+            <p>
+              When you submit a form that you have entered your email address
+              into then we will show you a popup like this;
+            </p>
+            <img
+              className={styles.exampleImg}
+              src={popupImgUrl}
+              alt="Example alert showing a warning for a spammy mailing list"
+            />
+          </div>
+        )}
+      </div>
       <AlertContent
         show={alertOnSubmit}
-        blockedRank={blockedRank}
-        ignoredEmailAddresses={ignoredEmailAddresses}
-        ignoredSites={ignoredSites}
-        colorblind={colorSet === 'colorblind'}
+        preferences={user.preferences}
         setPreference={setPreference}
         changeEmailIgnoreList={changeEmailIgnoreList}
         changeSiteIgnoreList={changeSiteIgnoreList}
       />
+
+      <div className={styles.pageSection}>
+        <div className={styles.formGroup}>
+          <FormCheckbox
+            name="gmailEnabled"
+            checked={gmailEnabled}
+            onChange={() => setPreference({ gmailEnabled: !gmailEnabled })}
+            label={`Show mailing list ranks in my inbox`}
+          />
+        </div>
+        {gmailEnabled ? null : (
+          <div className={styles.helpText}>
+            <p>
+              We can show the rank for mailing lists in your inbox like this
+              (Gmail only);
+            </p>
+            <img
+              className={styles.exampleImg}
+              src={gmailImgUrl}
+              alt="Gmail inbox showing mailing lists ranked from A-F"
+            />
+          </div>
+        )}
+      </div>
     </>
   );
 }
 
 function AlertContent({
   show,
-  blockedRank,
-  ignoredEmailAddresses,
-  ignoredSites,
-  colorblind,
+  preferences,
   setPreference,
   changeEmailIgnoreList,
   changeSiteIgnoreList
@@ -111,6 +129,16 @@ function AlertContent({
   if (!show) {
     return null;
   }
+
+  const {
+    blockedRank = 'A',
+    ignoredEmailAddresses = [],
+    ignoredSites = [],
+    colorSet = 'normal',
+    autoAllow = true,
+    autoAllowTimeout = 10
+  } = preferences;
+
   return (
     <>
       <div className={styles.pageSection}>
@@ -132,7 +160,7 @@ function AlertContent({
                 }
               }}
             >
-              <Rank rank={rank} colorblind={colorblind} />
+              <Rank rank={rank} colorblind={colorSet === 'colorblind'} />
             </Radio>
           ))}
         </div>
@@ -146,6 +174,35 @@ function AlertContent({
             .
           </p>
         </div>
+      </div>
+      <div className={styles.pageSection}>
+        <h2>Form submission</h2>
+        <p>We will automatically submit the form after the popup is shown.</p>
+        <div className={styles.formGroup}>
+          <FormCheckbox
+            name="autoAllow"
+            checked={autoAllow}
+            onChange={() => setPreference({ autoAllow: !autoAllow })}
+            label={`Automatically allow after ${autoAllowTimeout} seconds`}
+          />
+        </div>
+        {!autoAllow ? null : (
+          <div className={styles.formGroup}>
+            <FormInput
+              name={name}
+              label="Seconds until auto submission"
+              type="number"
+              min="1"
+              max="60"
+              step="1"
+              value={autoAllowTimeout}
+              onChange={({ currentTarget }) => {
+                setPreference({ autoAllowTimeout: +currentTarget.value });
+              }}
+            />
+            <span className={styles.help}>Between 1 and 60 seconds</span>
+          </div>
+        )}
       </div>
       <div className={styles.pageSection}>
         <h2>Ignore emails</h2>

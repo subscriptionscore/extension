@@ -1,5 +1,7 @@
 @import '../../../../styles/common/colors.scss';
+@import '../../../../styles/mixins/themes.scss';
 @import '../layout.module.scss';
+@import '../../../components/button/button.module.scss';
 
 .page-section {
   @extend .section;
@@ -39,9 +41,11 @@
   p {
     opacity: 0.75;
   }
-  img {
-    width: 100%;
-  }
+}
+
+.example-img {
+  width: 100%;
+  margin: 0;
 }
 
 .radios {
@@ -52,5 +56,44 @@
   label {
     display: flex;
     flex-direction: column;
+  }
+}
+
+.form-group {
+  margin-bottom: 40px;
+}
+
+.test-btn {
+  @extend .btn;
+  overflow: hidden;
+}
+
+.progress-bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  animation-name: progress;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+
+  @include themify() {
+    background-color: darken(theme('buttonBackground'), 20%);
+  }
+}
+
+.progress-text {
+  z-index: 2;
+}
+
+@keyframes progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }

@@ -2,10 +2,12 @@ import React from 'react';
 import { TextLink } from '../../../components/text';
 import styles from './help.module.scss';
 
-const toolbarUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-toolbar.png';
-const popupUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
+const toolbarImgUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-toolbar-new.png';
+const popupImgUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup-new.png';
+const gmailImgUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-gmail-new.png';
 
 const HelpPage = ({ onSetPage }) => {
   return (
@@ -40,8 +42,8 @@ export const HelpContent = ({ onSetPage }) => {
         </p>
         <img
           className={styles.toolbarImg}
-          src={toolbarUrl}
-          alt="Toolbar example"
+          src={toolbarImgUrl}
+          alt="Example website score shown from clicking on the toolbar icon"
         />
       </div>
 
@@ -59,7 +61,31 @@ export const HelpContent = ({ onSetPage }) => {
           </TextLink>{' '}
           settings.
         </p>
-        <img className={styles.popupImg} src={popupUrl} alt="Popup example" />
+        <img
+          className={styles.popupImg}
+          src={popupImgUrl}
+          alt="Example alert showing a warning for a spammy mailing list"
+        />
+      </div>
+
+      <div className={styles.pageSection}>
+        <h2>See scores in your inbox</h2>
+        <p>
+          Get mailing list scores right in your Gmail inbox so that you can see
+          what emails are worth holding onto.
+        </p>
+        <p>
+          Enable this setting in the{' '}
+          <TextLink onClick={() => onSetPage('preferences')}>
+            preferences
+          </TextLink>{' '}
+          settings.
+        </p>
+        <img
+          className={styles.gmailImg}
+          src={gmailImgUrl}
+          alt="Gmail inbox showing mailing lists ranked from A-F"
+        />
       </div>
     </>
   );
