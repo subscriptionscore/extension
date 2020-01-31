@@ -47,7 +47,9 @@ Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function(eventName, fn, ...args) {    
   if (eventName === 'submit') {    
     this._onsubmit = fn;      
-  }        
+  } else {
+    return Element.prototype._addEventEventListener(eventName, fn, ...args);
+  }
 };`;
   return awaitDomLoaded.then(() => {
     return document.head.prepend($script);
