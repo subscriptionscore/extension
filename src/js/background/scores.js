@@ -1,6 +1,6 @@
 import { graphqlRequest } from '../utils/request';
 import isMailProvider from '../utils/is-mail-provider';
-import { get, put } from '../utils/cache';
+import { getDomainScore as get, putDomainScore as put } from '../utils/cache';
 import { pushPreference, getItem } from '../utils/storage';
 import { updateUserPreferences } from '../utils/preferences';
 

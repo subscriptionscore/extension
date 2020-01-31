@@ -1,6 +1,6 @@
 @import '../../../styles/mixins/ranks.scss';
 
-:global(.inboxsdk__thread_row_label .inboxsdk__button_icon) {
+.icon {
   display: inline-flex !important;
   margin: 0 !important;
   width: 18px !important;
@@ -11,9 +11,7 @@
   font-size: 12px;
   font-weight: bolder;
   border: 1px solid rgba(white, 0.2);
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  margin: 0 6px 0 0 !important;
 
   &:after {
     position: absolute;

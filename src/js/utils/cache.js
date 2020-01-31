@@ -12,7 +12,7 @@ let db;
 const DB_NAME = 'subscriptionscores';
 let DBOpenRequest;
 if (indexedDB) {
-  DBOpenRequest = indexedDB.open(DB_NAME, 4);
+  DBOpenRequest = indexedDB.open(DB_NAME, 5);
   // these two event handlers act on the database being opened successfully, or not
   DBOpenRequest.onerror = function() {
     console.log('error opening cache');
@@ -32,31 +32,70 @@ if (indexedDB) {
       console.log('[cache]: error', ev);
     };
     // Create an objectStore for this database
-    const objectStore = db.createObjectStore(DB_NAME, {
+    const domainStore = db.createObjectStore('domainscores', {
       keyPath: 'domain'
     });
-    objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+    const addressStrore = db.createObjectStore('addressscores', {
+      keyPath: 'address'
+    });
+
+    domainStore.createIndex('timestamp', 'timestamp', { unique: false });
+    addressStrore.createIndex('timestamp', 'timestamp', { unique: false });
   };
 }
 
-export function put(domain, rank) {
+export function putDomainScore(domain, rank) {
+  return put('domainscores', { domain, rank });
+}
+export function getDomainScore(domain) {
+  return get('domainscores', domain);
+}
+export function putAddressScore(address, rank) {
+  return put('addressscores', { address, rank });
+}
+export function getAddressScore(address) {
+  return get('addressscores', address);
+}
+export function getAddressScores(addresses) {
+  return getAll('addressscores', addresses);
+}
+
+export function put(store, value) {
   if (!db) return null;
-  const tx = db.transaction([DB_NAME], 'readwrite');
-  const objectStore = tx.objectStore(DB_NAME);
+  const tx = db.transaction([store], 'readwrite');
+  const objectStore = tx.objectStore(store);
   return new Promise((resolve, reject) => {
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject();
-    objectStore.put({ domain, rank, timestamp: Date.now() });
+    objectStore.put({ ...value, timestamp: Date.now() });
   });
 }
 
-export function get(domain) {
+export function getAll(store, keys) {
+  if (!db) return null;
+  const tx = db.transaction([store], 'readwrite');
+  const objectStore = tx.objectStore(store);
+  return Promise.all(
+    keys.map(key => {
+      return new Promise((resolve, reject) => {
+        tx.onerror = () => reject();
+        const objectStoreRequest = objectStore.get(key);
+        objectStoreRequest.onsuccess = () => {
+          let data = objectStoreRequest.result;
+          resolve(data);
+        };
+      });
+    })
+  ).then(arr => arr.filter(a => a));
+}
+
+export function get(store, key) {
   if (!db) return null;
   const tx = db.transaction([DB_NAME], 'readwrite');
-  const objectStore = tx.objectStore(DB_NAME);
+  const objectStore = tx.objectStore(store);
   return new Promise((resolve, reject) => {
     tx.onerror = () => reject();
-    const objectStoreRequest = objectStore.get(domain);
+    const objectStoreRequest = objectStore.get(key);
     objectStoreRequest.onsuccess = () => {
       let data = objectStoreRequest.result;
       resolve(data);
@@ -65,16 +104,26 @@ export function get(domain) {
 }
 
 const SIX_HOURS = 1000 * 60 * 60 * 6;
+const ONE_DAY = 1000 * 60 * 60 * 24;
+
 export function clearCache() {
   const tx = db.transaction([DB_NAME], 'readwrite');
-  const range = IDBKeyRange.upperBound(new Date() - SIX_HOURS);
-  tx
-    .objectStore(DB_NAME)
-    .index('timestamp')
-    .openCursor(range).onsuccess = function(e) {
+  const sixHourRange = IDBKeyRange.upperBound(new Date() - SIX_HOURS);
+  const oneDayRange = IDBKeyRange.upperBound(new Date() - ONE_DAY);
+
+  function onsuccess(e) {
     var cursor = e.target.result;
     if (!cursor) return;
     cursor.delete();
     cursor.continue();
-  };
+  }
+
+  tx
+    .objectStore('domainscores')
+    .index('timestamp')
+    .openCursor(sixHourRange).onsuccess = onsuccess;
+  tx
+    .objectStore('addressscores')
+    .index('timestamp')
+    .openCursor(oneDayRange).onsuccess = onsuccess;
 }

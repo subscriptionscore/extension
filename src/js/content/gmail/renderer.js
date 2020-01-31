@@ -1,12 +1,5 @@
 import styles from './gmail.module.scss';
-
-export async function render(v, scoreData) {
-  const { rank, unsubscribed, perWeek } = scoreData;
-  // const percentile = percentileRanks[rank];
-  // const asArray = Object.keys(percentileRanks);
-  // const negativePercentile =
-  //   percentileRanks[asArray[asArray.indexOf(rank) + 1]];
-
+function getPerWeekText({ perWeek = 0 } = {}) {
   let perWeekText = '';
   if (perWeek < 0.25) {
     perWeekText = 'They usually send 1 or fewer emails per month';
@@ -21,24 +14,68 @@ export async function render(v, scoreData) {
       perWeek
     )} emails per week`;
   }
-
-  v.addLabel({
-    iconClass: styles[`btn-rank-${rank === 'A+' ? 'Aplus' : rank}`],
-    title: `${rank} - ${perWeekText}`,
-    backgroundColor: 'transparent',
-    foregroundColor: 'transparent'
-  });
-
-  // const source = await gmail.get.email_source_promise(view.getThreadID());
+  return perWeekText;
 }
 
-export function renderScores(scores, views) {
-  scores.forEach(({ rank, email }) => {
-    const viewsWithRank = views.filter(e => e.email === email).map(e => e.view);
-    const data = {
-      rank: rank,
-      perWeek: 10
-    };
-    viewsWithRank.forEach(v => render(v, data));
+function getLabelMarkup(rank) {
+  return `
+      <div class="ar as ${
+        styles[`btn-rank-${rank === 'A+' ? 'Aplus' : rank}`]
+      } ${styles.icon}">
+        <div
+          class="at"
+          title="${rank} - ${getPerWeekText()}"          
+        >
+          <div class="au" style="border-color:#ddd">
+            <div class="av" style="color: #666">
+              ${rank}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="as">&nbsp;</div>
+    `;
+}
+
+// function insetLabelMarkup
+
+export function renderScores(scores) {
+  scores.forEach(({ email, rank }) => {
+    const $items = [...document.querySelectorAll(`[email="${email}"]`)];
+    const $rows = $items
+      .map($item => getNearestRow($item))
+      .filter((v, i, arr) => arr.indexOf(v) === i)
+      .filter($row => !$row.getAttribute('sub-scored'));
+
+    injectRankIntoRows($rows, rank);
   });
+}
+
+const SELECTORS = {
+  subject: '.a4W .y6',
+  subjectGroup: '.xT'
+};
+
+function injectRankIntoRows($rows, rank) {
+  const labelInner = getLabelMarkup(rank);
+  $rows.forEach($row => {
+    const label = document.createElement('div');
+    label.classList.add('yi');
+    label.id = ':4q';
+    label.innerHTML = labelInner;
+    const $subject = $row.querySelector(SELECTORS.subject);
+    $row.querySelector(SELECTORS.subjectGroup).insertBefore(label, $subject);
+    $row.setAttribute('sub-scored', true);
+  });
+}
+
+function getNearestRow($element) {
+  let $el = $element;
+  do {
+    if ($el.nodeName === 'TR') {
+      return $el;
+    }
+    $el = $el.parentElement;
+  } while ($el);
+  return null;
 }

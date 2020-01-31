@@ -32,6 +32,10 @@ const prodPlugins = [
 
 const entrypoints = [
   {
+    name: 'gmail-onload',
+    path: path.join(__dirname, 'src', 'js', 'content', 'gmail', 'onload.js')
+  },
+  {
     name: 'onload',
     path: path.join(__dirname, 'src', 'js', 'content', 'onload.js')
   },
@@ -64,7 +68,7 @@ const entrypoints = [
 const entry = entrypoints.reduce(
   (out, { name, path }) => ({
     ...out,
-    [name]: ['babel-polyfill', path]
+    [name]: name.startsWith('gmail') ? [path] : ['babel-polyfill', path]
   }),
   {}
 );
