@@ -91,7 +91,7 @@ export function getAll(store, keys) {
 
 export function get(store, key) {
   if (!db) return null;
-  const tx = db.transaction([DB_NAME], 'readwrite');
+  const tx = db.transaction([store], 'readwrite');
   const objectStore = tx.objectStore(store);
   return new Promise((resolve, reject) => {
     tx.onerror = () => reject();
@@ -107,7 +107,7 @@ const SIX_HOURS = 1000 * 60 * 60 * 6;
 const ONE_DAY = 1000 * 60 * 60 * 24;
 
 export function clearCache() {
-  const tx = db.transaction([DB_NAME], 'readwrite');
+  const tx = db.transaction(['domainscores', 'addressscores'], 'readwrite');
   const sixHourRange = IDBKeyRange.upperBound(new Date() - SIX_HOURS);
   const oneDayRange = IDBKeyRange.upperBound(new Date() - ONE_DAY);
 

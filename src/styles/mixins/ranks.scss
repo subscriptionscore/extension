@@ -66,6 +66,9 @@ $colorblind-rating-scale: (
   @if $rank == 'E' {
     @return darken(map-get($scale, 'E'), 55%);
   }
+  @if $rank == 'F' {
+    @return white;
+  }
   @return black;
 }
 

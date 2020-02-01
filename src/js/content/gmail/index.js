@@ -24,7 +24,7 @@ browser.runtime.onMessage.addListener(async request => {
 })();
 
 function handlePageEmails() {
-  console.log('[subscriptionscoree]: searching page for emails');
+  console.log('[subscriptionscore]: searching page for emails');
   const uniqueAddresses = getEmailAddressesOnPage();
   browser.runtime.sendMessage({
     action: 'fetch-scores',
