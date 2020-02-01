@@ -46,7 +46,7 @@ function EmptyState({ email = 'example@gmail.com', createEmail }) {
       error = testError;
       if (success) {
         const email = `${emailPrefix}@leavemealone.email`;
-        const { error: createError, value } = await createEmail({
+        const { error: createError } = await createEmail({
           email,
           forwardingAddress: forwardingEmail
         });

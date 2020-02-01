@@ -177,7 +177,7 @@ const UserProvider = ({ children }) => {
     },
     [licenceKey]
   );
-  const updateEmail = useCallback((email, forwardingAddress) => {}, []);
+  const updateEmail = useCallback(() => {}, []);
   const deleteEmail = useCallback(
     async email => {
       let response;

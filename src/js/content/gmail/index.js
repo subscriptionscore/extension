@@ -1,7 +1,7 @@
 import browser from 'browser';
 import { renderScores } from './renderer';
 import { getPreference } from '../../utils/storage';
-import logger from '../../utils/logger';
+
 import {
   getEmailAddressesOnPage,
   startListening,

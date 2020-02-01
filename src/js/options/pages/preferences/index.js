@@ -277,7 +277,7 @@ function IgnoreForm({ name, type = 'text', onSubmit }) {
   );
 }
 
-const IgnoredList = React.memo(function IgnoredList({ type, items, onRemove }) {
+const IgnoredList = React.memo(function IgnoredList({ items, onRemove }) {
   const [removing, setRemoving] = useState(false);
 
   const remove = useCallback(

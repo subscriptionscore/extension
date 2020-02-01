@@ -32,10 +32,6 @@ const prodPlugins = [
 
 const entrypoints = [
   {
-    name: 'gmail-onload',
-    path: path.join(__dirname, 'src', 'js', 'content', 'gmail', 'onload.js')
-  },
-  {
     name: 'onload',
     path: path.join(__dirname, 'src', 'js', 'content', 'onload.js')
   },

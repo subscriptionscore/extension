@@ -1,4 +1,6 @@
 import styles from './gmail.module.scss';
+
+// eslint-disable-next-line
 function getPerWeekText({ perWeek = 0 } = {}) {
   let perWeekText = '';
   if (perWeek < 0.25) {
@@ -24,7 +26,7 @@ function getLabelMarkup(rank) {
       } ${styles.icon}">
         <div
           class="at"
-          title="${rank} - ${getPerWeekText()}"          
+          title="${rank}"          
         >
           <div class="au" style="border-color:#ddd">
             <div class="av" style="color: #666">

@@ -7,6 +7,7 @@
   "author": "James Ivings <james@squarecat.io>",
   "license": "MIT",
   "scripts": {
+    "lint": "eslint ./src/js",
     "build": "./scripts/build.sh",
     "build:dev": "./scripts/build-dev.sh",
     "verify": "npx lockfile-lint --path yarn.lock --type yarn --validate-https --allowed-hosts yarnpkg.org registry.yarnpkg.com"

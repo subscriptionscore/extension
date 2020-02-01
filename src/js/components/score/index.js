@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from '../../utils/classnames';
 import styles from './score.module.scss';
 
 const Score = ({ emailScore, colorblind = false }) => {

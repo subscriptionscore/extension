@@ -3,8 +3,6 @@ import {
   getAddressScores as getAll,
   putAddressScore as put
 } from '../utils/cache';
-import { pushPreference, getItem } from '../utils/storage';
-import { updateUserPreferences } from '../utils/preferences';
 import digest from '../utils/digest';
 
 // just get the rank to show in the
