@@ -13,6 +13,10 @@ export function onStorageChange(fn) {
   browser.storage.onChanged.addListener(fn);
 }
 
+export function removeOnStorageChange(fn) {
+  browser.storage.onChanged.removeListener(fn);
+}
+
 export function setItem(data) {
   return browser.storage.sync.set(data);
 }

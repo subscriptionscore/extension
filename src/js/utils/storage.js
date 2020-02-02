@@ -1,6 +1,13 @@
 import { getItem, setItem } from 'browser/storage';
+
 import logger from './logger';
-export { getItem, setItem, getItems, onStorageChange } from 'browser/storage';
+export {
+  getItem,
+  setItem,
+  getItems,
+  onStorageChange,
+  removeOnStorageChange
+} from 'browser/storage';
 
 export async function pushPreference(pref, value) {
   const newValues = value.length ? value : [value];
