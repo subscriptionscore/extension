@@ -60,6 +60,29 @@ function Prefs() {
       <div className={styles.pageSection}>
         <div className={styles.formGroup}>
           <FormCheckbox
+            name="gmailEnabled"
+            checked={gmailEnabled}
+            onChange={() => setPreference({ gmailEnabled: !gmailEnabled })}
+            label={`Show mailing list ranks in my inbox`}
+          />
+        </div>
+        {/* {gmailEnabled ? null : (
+          <div className={styles.helpText}>
+            <p>
+              We can show the rank for mailing lists in your inbox like this
+              (Gmail only);
+            </p>
+            <img
+              className={styles.exampleImg}
+              src={gmailImgUrl}
+              alt="Gmail inbox showing mailing lists ranked from A-F"
+            />
+          </div>
+        )} */}
+      </div>
+      <div className={styles.pageSection}>
+        <div className={styles.formGroup}>
+          <FormCheckbox
             name="alertOnSubmit"
             checked={alertOnSubmit}
             onChange={() => requestPermission()}
@@ -91,30 +114,6 @@ function Prefs() {
         changeEmailIgnoreList={changeEmailIgnoreList}
         changeSiteIgnoreList={changeSiteIgnoreList}
       />
-
-      <div className={styles.pageSection}>
-        <div className={styles.formGroup}>
-          <FormCheckbox
-            name="gmailEnabled"
-            checked={gmailEnabled}
-            onChange={() => setPreference({ gmailEnabled: !gmailEnabled })}
-            label={`Show mailing list ranks in my inbox`}
-          />
-        </div>
-        {gmailEnabled ? null : (
-          <div className={styles.helpText}>
-            <p>
-              We can show the rank for mailing lists in your inbox like this
-              (Gmail only);
-            </p>
-            <img
-              className={styles.exampleImg}
-              src={gmailImgUrl}
-              alt="Gmail inbox showing mailing lists ranked from A-F"
-            />
-          </div>
-        )}
-      </div>
     </>
   );
 }
