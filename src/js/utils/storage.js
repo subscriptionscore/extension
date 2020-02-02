@@ -10,6 +10,17 @@ export {
   removeOnStorageChange
 } from 'browser/storage';
 
+export async function setPreference(pref, value) {
+  const preferences = await getItem('preferences');
+  const newPrefs = {
+    ...preferences,
+    [pref]: value
+  };
+  logger('setting pref', pref, value);
+  await setItem(newPrefs);
+  return newPrefs;
+}
+
 export async function pushPreference(pref, value) {
   const newValues = value.length ? value : [value];
   const preferences = await getItem('preferences');

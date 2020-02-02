@@ -10,6 +10,9 @@
     "default_icon": "assets/logo.png"
   },
   "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "64": "assets/icon-64.png",
     "128": "assets/icon.png"
   },
   "web_accessible_resources": [
@@ -18,7 +21,7 @@
     "frame.bundle.js",
     "frame.css"
   ],
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "contextMenus"],
   "optional_permissions": ["<all_urls>"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",

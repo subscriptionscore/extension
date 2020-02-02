@@ -10,8 +10,8 @@ import { useUser } from '../../../providers/user-provider';
 
 const popupImgUrl =
   'https://cdn.leavemealone.app/images/subscriptionscore/example-popup-new.png';
-const gmailImgUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-gmail-new.png';
+// const gmailImgUrl =
+// 'https://cdn.leavemealone.app/images/subscriptionscore/example-gmail-new.png';
 
 const ranks = ['A+', 'A', 'B', 'C', 'D', 'E', 'F'];
 const PreferencesPage = () => {

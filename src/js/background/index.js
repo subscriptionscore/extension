@@ -1,3 +1,5 @@
+import './menus';
+
 import {
   addIgnoreEmail,
   addIgnoreSite,
@@ -10,6 +12,8 @@ import browser from 'browser';
 import { getAddressScores } from './addresses';
 import logger from '../utils/logger';
 import { respondToMessage } from 'browser/messages';
+
+const popupUrl = browser.runtime.getURL('/popup.html');
 
 let currentPage = {
   rank: null,
@@ -85,10 +89,16 @@ async function onPageChange(url) {
     url
   };
   browser.browserAction.setBadgeText({ text: '' });
-  if (!/http(s)?:\/\//.test(url)) {
+  if (url.includes('mail.google.com')) {
+    browser.browserAction.disable();
+    browser.browserAction.setPopup({ popup: '' });
+  } else if (!/http(s)?:\/\//.test(url)) {
     browser.browserAction.disable();
   } else {
     browser.browserAction.enable();
+
+    browser.contextMenus.removeAll();
+    browser.browserAction.setPopup({ popup: popupUrl });
     try {
       logger('fetching score');
       const domainScore = await getDomainScore(url);

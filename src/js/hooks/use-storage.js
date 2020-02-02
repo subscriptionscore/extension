@@ -6,8 +6,6 @@ import {
 } from '../utils/storage';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
-
 function useStorage() {
   const [state, setState] = useState({
     loading: true,
