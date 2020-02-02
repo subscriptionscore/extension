@@ -6,6 +6,8 @@ import {
 } from '../utils/storage';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { unstable_renderSubtreeIntoContainer } from 'react-dom';
+
 function useStorage() {
   const [state, setState] = useState({
     loading: true,
@@ -13,8 +15,8 @@ function useStorage() {
     error: null
   });
 
-  useEffect(() => {
-    function handleChange(v) {
+  const handleChange = useCallback(
+    v => {
       console.log('use-storage: on storage change', v);
       console.log('current state:', state.value);
       let newState = state.value;
@@ -31,16 +33,17 @@ function useStorage() {
         };
       }
       console.log('setting storage state to', newState);
-      debugger;
       setState({ value: newState });
-    }
+    },
+    [state.value]
+  );
 
+  useEffect(() => {
     onStorageChange(handleChange);
-
-    return function cleanup() {
+    return function unmount() {
       return removeOnStorageChange(handleChange);
     };
-  }, [state.value]);
+  }, [handleChange]);
 
   useEffect(() => {
     setState({ loading: true });

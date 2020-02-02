@@ -1,6 +1,7 @@
 import { getItem, setItem } from 'browser/storage';
 
 import logger from './logger';
+
 export {
   getItem,
   setItem,
