@@ -1,23 +1,25 @@
-import browser from 'browser';
-import { renderScores } from './renderer';
-import { getPreference } from '../../utils/storage';
-
 import {
+  addPageChangeListener,
   getEmailAddressesOnPage,
-  startListening,
-  addPageChangeListener
+  startListening
 } from './utils';
+
+import browser from 'browser';
+import { getPreference } from '../../utils/storage';
+import { renderScores } from './renderer';
+
+let theme;
 
 browser.runtime.onMessage.addListener(async request => {
   if (request.action === 'fetched-scores') {
-    renderScores(request.data.scores);
+    renderScores(request.data.scores, theme);
   }
 });
 
 (async () => {
   const enabledForGmail = await getPreference('gmailEnabled');
-  // FIXME invert this when we ready
-  if (!enabledForGmail) {
+  theme = await getPreference('colorSet');
+  if (enabledForGmail) {
     handlePageEmails();
     listen();
   }

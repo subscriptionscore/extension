@@ -21,9 +21,9 @@ function getPerWeekText({ perWeek = 0 } = {}) {
 
 function getLabelMarkup(rank) {
   return `
-      <div class="ar as ${
-        styles[`btn-rank-${rank === 'A+' ? 'Aplus' : rank}`]
-      } ${styles.icon}">
+      <div data-rank="${rank}" class="ar as ${
+    styles[`btn-rank-${rank === 'A+' ? 'Aplus' : rank}`]
+  } ${styles.icon}">
         <div
           class="at"
           title="${rank}"          
@@ -39,9 +39,7 @@ function getLabelMarkup(rank) {
     `;
 }
 
-// function insetLabelMarkup
-
-export function renderScores(scores) {
+export function renderScores(scores, theme) {
   scores.forEach(({ email, rank }) => {
     const $items = [...document.querySelectorAll(`[email="${email}"]`)];
     const $rows = $items
@@ -49,7 +47,7 @@ export function renderScores(scores) {
       .filter((v, i, arr) => arr.indexOf(v) === i)
       .filter($row => !$row.getAttribute('sub-scored'));
 
-    injectRankIntoRows($rows, rank);
+    injectRankIntoRows($rows, rank, theme);
   });
 }
 
@@ -58,10 +56,11 @@ const SELECTORS = {
   subjectGroup: '.xT'
 };
 
-function injectRankIntoRows($rows, rank) {
+function injectRankIntoRows($rows, rank, theme) {
   const labelInner = getLabelMarkup(rank);
   $rows.forEach($row => {
     const label = document.createElement('div');
+    label.setAttribute('data-theme', theme);
     label.classList.add('yi');
     label.id = ':4q';
     label.innerHTML = labelInner;

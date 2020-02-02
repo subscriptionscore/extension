@@ -1,5 +1,7 @@
 @import '../../../styles/mixins/ranks.scss';
 
+$ranks: ('unknown', 'F', 'E', 'D', 'C', 'B', 'A', 'A+');
+
 .icon {
   display: inline-flex !important;
   margin: 0 !important;
@@ -24,62 +26,25 @@
   display: none;
 }
 
-.btn-rank-Aplus {
-  background-color: rankColor('A+');
-  &:after {
-    color: rankFontColor('A+');
-    content: 'A+';
-  }
-}
-
-.btn-rank-A {
-  background-color: rankColor('A');
-  &:after {
-    color: rankFontColor('A');
-    content: 'A';
-  }
-}
-.btn-rank-B {
-  background-color: rankColor('B');
-  &:after {
-    color: rankFontColor('B');
-    content: 'B';
-  }
-}
-.btn-rank-C {
-  background-color: rankColor('C');
-  &:after {
-    color: rankFontColor('C');
-    content: 'C';
-  }
-}
-.btn-rank-D {
-  background-color: rankColor('D');
-  &:after {
-    color: rankFontColor('D');
-    content: 'D';
-  }
-}
-.btn-rank-E {
-  background-color: rankColor('E');
-  &:after {
-    color: rankFontColor('E');
-    content: 'E';
-  }
-}
-.btn-rank-F {
-  background-color: rankColor('F');
-  &:after {
-    color: rankFontColor('F');
-    content: 'F';
-  }
-}
-.btn-rank-unknown {
-  opacity: 0.25;
-  background-color: rankColor('unknown');
-  &:after {
-    color: rankFontColor('unknown');
-    content: '-';
+@each $rank in $ranks {
+  [data-rank='#{$rank}'] {
+    @if ($rank == 'unknown') {
+      opacity: 0.25;
+    }
+    background-color: rankColor($rank);
+    [data-theme='colorblind'] & {
+      background-color: rankColor($rank, $colorblind: true);
+    }
+    &:after {
+      color: rankFontColor($rank);
+      [data-theme='colorblind'] & {
+        color: rankFontColor($rank, $colorblind: true);
+      }
+      content: $rank;
+      @if ($rank == 'unknown') {
+        content: '-';
+      }
+    }
   }
 }
 
