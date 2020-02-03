@@ -148,10 +148,6 @@ module.exports = {
     {
       from: 'assets',
       to: 'assets'
-    },
-    {
-      from: 'src/vendor/inboxsdk.js',
-      to: '.'
     }
   ],
   plugins: [
