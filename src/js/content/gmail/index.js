@@ -6,6 +6,7 @@ import {
 
 import browser from 'browser';
 import { getPreference } from '../../utils/storage';
+import logger from '../../utils/logger';
 import { renderScores } from './renderer';
 
 let theme;
@@ -26,7 +27,7 @@ browser.runtime.onMessage.addListener(async request => {
 })();
 
 function handlePageEmails() {
-  console.log('[subscriptionscore]: searching page for emails');
+  logger('searching page for emails');
   const uniqueAddresses = getEmailAddressesOnPage();
   browser.runtime.sendMessage({
     action: 'fetch-scores',

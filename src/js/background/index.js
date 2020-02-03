@@ -97,7 +97,6 @@ async function onPageChange(url) {
   } else {
     browser.browserAction.enable();
 
-    browser.contextMenus.removeAll();
     browser.browserAction.setPopup({ popup: popupUrl });
     try {
       logger('fetching score');

@@ -12,12 +12,12 @@ import Button from '../../components/button';
 import DomainScore from '../../components/domain-score';
 import ReactDOM from 'react-dom';
 import browser from 'browser';
+import logger from '../../utils/logger';
 import styles from './popup.module.scss';
 import useBackground from '../../hooks/use-background';
 import useCurrentUrl from '../../hooks/use-current-url';
 import useNewTab from '../../hooks/use-new-tab';
 import useStorage from '../../hooks/use-storage';
-import logger from '../../utils/logger';
 
 const origin = browser.runtime.getURL('/frame.html');
 
@@ -40,7 +40,7 @@ const Popup = ({ emails }) => {
     });
   }, []);
   const onCancel = useCallback(() => {
-    console.log('sending message cancel from ', origin);
+    logger('sending message cancel from ', origin);
     window.parent.postMessage({ popupResponse: 'cancel' }, '*');
     browser.runtime.sendMessage({
       action: 'signup-blocked'
