@@ -76,8 +76,8 @@ const Popup = ({ emails }) => {
     if (storage.preferences && storage.preferences.darkMode) {
       theme = 'dark';
     }
-    if (storage.preferences.colorset) {
-      colorSet = storage.preferences.colorset;
+    if (storage.preferences.colorSet) {
+      colorSet = storage.preferences.colorSet;
     }
     if (storage.preferences.autoAllow) {
       autoAllow = true;
