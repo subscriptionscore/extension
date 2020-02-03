@@ -5,10 +5,12 @@ export const initialState = {
     preferences: {
       darkMode: false,
       colorSet: 'normal',
-      alertOnSubmit: true,
+      alertOnSubmit: false,
       ignoredEmailAddresses: [],
       ignoredSites: [],
-      blockedRank: 'A'
+      blockedRank: 'A',
+      autoAllow: true,
+      autoAllowTimeout: 10
     }
   },
   licenceKey: '',
