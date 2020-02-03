@@ -66,8 +66,14 @@ const UserProvider = ({ children }) => {
   }, [licenceKey, setStorage, state.initialized, storage.licenceKey]);
 
   const updateStores = useCallback(async () => {
-    await updateUserPreferences(state.user.preferences);
-    await setStorage({ preferences: state.user.preferences });
+    try {
+      await updateUserPreferences(state.user.preferences);
+      await setStorage({ preferences: state.user.preferences });
+    } catch (err) {
+      // we dont need to know if these failed but this stops the extension
+      // from throwing an uncaught promise error
+      return true;
+    }
   }, [setStorage, state.user.preferences]);
 
   useEffect(() => {
