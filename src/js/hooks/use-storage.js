@@ -15,8 +15,6 @@ function useStorage() {
 
   const handleChange = useCallback(
     v => {
-      console.log('use-storage: on storage change', v);
-      console.log('current state:', state.value);
       let newState = state.value;
       if (v.preferences) {
         newState = {
@@ -30,7 +28,6 @@ function useStorage() {
           licenceKey: v.licenceKey.newValue
         };
       }
-      console.log('setting storage state to', newState);
       setState({ value: newState });
     },
     [state.value]
