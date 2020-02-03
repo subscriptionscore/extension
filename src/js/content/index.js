@@ -91,7 +91,7 @@ function onSubmitForm(
     console.log('[subscriptionscore]: ranked', `${rank} - ${domain}`);
 
     const isBelowAlertThreshold =
-      !!rank && ranks.indexOf(rank) <= ranks.indexOf(blockedRank);
+      ranks.indexOf(rank) <= ranks.indexOf(blockedRank);
     const blockFormSubmit = !isIgnored && isBelowAlertThreshold;
 
     if (blockFormSubmit) {
