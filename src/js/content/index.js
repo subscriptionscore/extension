@@ -1,3 +1,4 @@
+import browser from 'browser';
 // This is the content script injected into every page
 // specified in the `matches` param in the manifest
 //
@@ -8,10 +9,9 @@
 // the user has not previously added to their ignore
 // list then we inject our popup that alerts the user
 //
-import logger from '../utils/logger';
-import browser from 'browser';
-import { getPreference } from '../utils/storage';
 import digest from '../utils/digest';
+import { getPreference } from '../utils/storage';
+import logger from '../utils/logger';
 
 const onloadScriptPath = browser.runtime.getURL('/onload.bundle.js');
 const framePath = browser.runtime.getURL('/frame.html');
@@ -39,19 +39,19 @@ function injectPatchScript() {
   // TODO probably can move this into a file rather than
   // inlining it here, we just want to jump to execution
   // as soon as we can
-  $script.textContent = `/** 
+  $script.textContent = `/**
  * Subscription Score patch script
  * More info: https://github.com/subscriptionscore/extension
 */
-EventTarget.prototype._addEventListener = EventTarget.prototype.addEventListener;  
-EventTarget.prototype.addEventListener = function(type, listener, ...args) {       
+EventTarget.prototype._addEventListener = EventTarget.prototype.addEventListener;
+EventTarget.prototype.addEventListener = function(type, listener, ...args) {
   if (type === 'submit') {
     if (typeof listener === 'function') {
       this._onsubmit = listener.bind(this);
     } else if (typeof listener.handleEvent === 'function') {
       this._onsubmit = listener.handleEvent.bind(this);
     }
-  } else {    
+  } else {
     return EventTarget.prototype._addEventListener.apply(this, [type, listener, ...args]);
   }
 };`;
@@ -121,7 +121,12 @@ async function injectScripts({ ignoredEmailAddresses }) {
   browser.runtime.sendMessage({ action: 'get-current-rank' }, response => {
     const { rank, domain } = response;
     const isIgnored = ignoredSites.some(is => is === domain);
-    if (!isIgnored && ranks.indexOf(rank) <= ranks.indexOf(blockedRank)) {
+
+    const isBelowAlertThreshold =
+      ranks.indexOf(rank) <= ranks.indexOf(blockedRank);
+    const blockFormSubmit = !isIgnored && isBelowAlertThreshold;
+
+    if (blockFormSubmit) {
       logger('hijacking form submissions');
       isPatched.then(() =>
         injectScripts({

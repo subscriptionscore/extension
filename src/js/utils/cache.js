@@ -44,8 +44,8 @@ if (indexedDB) {
   };
 }
 
-export function putDomainScore(domain, rank) {
-  return put('domainscores', { domain, rank });
+export function putDomainScore(domain, rank, normalizedDomain) {
+  return put('domainscores', { domain, rank, normalizedDomain });
 }
 export function getDomainScore(domain) {
   return get('domainscores', domain);
