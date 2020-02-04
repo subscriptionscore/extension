@@ -6,7 +6,7 @@
 import './frame.scss';
 
 import { Message, Settings } from '../../components/icons';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import Button from '../../components/button';
 import DomainScore from '../../components/domain-score';
@@ -15,6 +15,7 @@ import browser from 'browser';
 import logger from '../../utils/logger';
 import styles from './popup.module.scss';
 import useBackground from '../../hooks/use-background';
+import useCountdown from '../../hooks/use-countdown';
 import useCurrentUrl from '../../hooks/use-current-url';
 import useNewTab from '../../hooks/use-new-tab';
 import useStorage from '../../hooks/use-storage';
@@ -64,6 +65,19 @@ const Popup = ({ emails }) => {
     });
   }, [domain]);
 
+  const { start, pause, resume } = useCountdown(onContinue);
+
+  useEffect(() => {
+    if (!storageLoading) {
+      const timeout = storage.preferences.autoAllowTimeout || 10;
+      const autoAllow = storage.preferences.autoAllow;
+      if (autoAllow) {
+        console.log('[timer]: starting timer');
+        start(timeout * 1000);
+      }
+    }
+  }, [start, storage.preferences, storageLoading]);
+
   const content = useMemo(() => {
     if (urlLoading || storageLoading) {
       return null;
@@ -79,8 +93,8 @@ const Popup = ({ emails }) => {
     if (storage.preferences.colorSet) {
       colorSet = storage.preferences.colorSet;
     }
-    if (storage.preferences.autoAllow) {
-      autoAllow = true;
+    if (storage.preferences) {
+      autoAllow = storage.preferences.autoAllow;
       autoAllowTimeout = storage.preferences.autoAllowTimeout || 10;
     }
 
@@ -88,7 +102,6 @@ const Popup = ({ emails }) => {
 
     if (autoAllow) {
       const seconds = autoAllowTimeout;
-      setTimeout(onContinue, seconds * 1000);
       continueButton = (
         <button
           role="button"
@@ -109,7 +122,12 @@ const Popup = ({ emails }) => {
     }
 
     return (
-      <div className={styles.container} data-color-theme={theme}>
+      <div
+        className={styles.container}
+        onMouseEnter={pause}
+        onMouseLeave={resume}
+        data-color-theme={theme}
+      >
         <div className={styles.popup}>
           <div className={styles.popupHead}>
             🚨 Wait, this looks like a spammy mailing list!
