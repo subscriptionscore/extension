@@ -59,6 +59,10 @@ function firePageChangeHandlers() {
  * if different from last time we checked. If it is then
  * there are probably now a bunch of different emails on
  * the page so we need to fetch details of them
+ *
+ * This is not *perfect* and I think we'll probably get
+ * reports of race conditions during render, but it's
+ * good enough for a first draft.
  */
 export function checkPageChange() {
   let dirty = false;
