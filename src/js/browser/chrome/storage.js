@@ -13,6 +13,10 @@ export function onStorageChange(fn) {
   chrome.storage.onChanged.addListener(fn);
 }
 
+export function removeOnStorageChange(fn) {
+  chrome.storage.onChanged.removeListener(fn);
+}
+
 export function setItem(data) {
   return new Promise(resolve => {
     chrome.storage.sync.set(data, () => {

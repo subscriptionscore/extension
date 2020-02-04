@@ -1,6 +1,6 @@
 import './reset.scss';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import DomainScore from '../components/domain-score';
 import Footer from './footer/index';
@@ -14,17 +14,26 @@ const UserWrapper = () => {
 };
 const App = () => {
   const { loading: urlLoading, url } = useCurrentUrl();
-  const [{ value, loading }] = useStorage();
+  const [{ value: storage, loading: storageLoading }] = useStorage();
+
   const theme = useMemo(() => {
-    if (value && value.preferences) {
-      return value.preferences.darkMode ? 'dark' : 'light';
+    if (storage && storage.preferences) {
+      return storage.preferences.darkMode ? 'dark' : 'light';
     }
-  }, [value]);
+  }, [storage]);
   const colorSet = useMemo(() => {
-    if (value && value.preferences) {
-      return value.preferences.colorSet;
+    if (storage && storage.preferences) {
+      return storage.preferences.colorSet;
     }
-  }, [value]);
+  }, [storage]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.style.backgroundColor = '#323639';
+    } else {
+      document.body.style.backgroundColor = '#FFFFFF';
+    }
+  }, [theme]);
 
   return (
     <div data-color-theme={theme}>
@@ -32,7 +41,7 @@ const App = () => {
         <DomainScore
           url={url}
           colorSet={colorSet}
-          isLoading={urlLoading || loading}
+          isLoading={urlLoading || storageLoading}
         />
         <Footer />
       </div>

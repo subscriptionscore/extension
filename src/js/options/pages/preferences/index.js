@@ -1,15 +1,17 @@
 import { FormCheckbox, FormInput, InputGroup } from '../../../components/form';
-import browser from 'browser';
 import React, { useCallback, useState } from 'react';
 
 import Button from '../../../components/button';
 import Radio from '../../../components/radio';
 import Rank from '../../../components/rank';
+import browser from 'browser';
 import styles from './preferences.module.scss';
 import { useUser } from '../../../providers/user-provider';
 
-const popupUrl =
-  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup.png';
+const popupImgUrl =
+  'https://cdn.leavemealone.app/images/subscriptionscore/example-popup-new.png';
+// const gmailImgUrl =
+// 'https://cdn.leavemealone.app/images/subscriptionscore/example-gmail-new.png';
 
 const ranks = ['A+', 'A', 'B', 'C', 'D', 'E', 'F'];
 const PreferencesPage = () => {
@@ -27,15 +29,7 @@ function Prefs() {
     { setPreference, changeEmailIgnoreList, changeSiteIgnoreList }
   ] = useUser();
 
-  const {
-    alertOnSubmit,
-    blockedRank = 'A',
-    ignoredEmailAddresses = [],
-    ignoredSites = [],
-    colorSet = 'normal',
-    autoAllow = true,
-    autoAllowTimeout = 10
-  } = user.preferences;
+  const { alertOnSubmit, gmailEnabled } = user.preferences;
 
   const onChange = useCallback(
     (key, value) => {
@@ -63,37 +57,59 @@ function Prefs() {
 
   return (
     <>
-      <form>
-        <div className={styles.pageSection}>
+      <div className={styles.pageSection}>
+        <div className={styles.formGroup}>
+          <FormCheckbox
+            name="gmailEnabled"
+            checked={gmailEnabled}
+            onChange={() => setPreference({ gmailEnabled: !gmailEnabled })}
+            label={`Show mailing list ranks in my inbox`}
+          />
+        </div>
+        {/* {gmailEnabled ? null : (
+          <div className={styles.helpText}>
+            <p>
+              We can show the rank for mailing lists in your inbox like this
+              (Gmail only);
+            </p>
+            <img
+              className={styles.exampleImg}
+              src={gmailImgUrl}
+              alt="Gmail inbox showing mailing lists ranked from A-F"
+            />
+          </div>
+        )} */}
+      </div>
+      <div className={styles.pageSection}>
+        <div className={styles.formGroup}>
           <FormCheckbox
             name="alertOnSubmit"
             checked={alertOnSubmit}
             onChange={() => requestPermission()}
             label="Show alerts when submitting forms"
           />
-          {alertOnSubmit ? null : (
-            <div className={styles.helpText}>
-              <p>
-                We can show you an alert if you are subscribing to a mailing
-                list that we think is particulaly bad.
-              </p>
-              <p>
-                When you submit a form that you have entered your email address
-                into then we will show you a popup like this;
-              </p>
-              <img src={popupUrl} alt="Example popup" />
-            </div>
-          )}
         </div>
-      </form>
+        {alertOnSubmit ? null : (
+          <div className={styles.helpText}>
+            <p>
+              We can show you an alert if you are subscribing to a mailing list
+              that we think is particularly bad.
+            </p>
+            <p>
+              When you submit a form that you have entered your email address
+              into then we will show you a popup like this;
+            </p>
+            <img
+              className={styles.exampleImg}
+              src={popupImgUrl}
+              alt="Example alert showing a warning for a spammy mailing list"
+            />
+          </div>
+        )}
+      </div>
       <AlertContent
         show={alertOnSubmit}
-        blockedRank={blockedRank}
-        ignoredEmailAddresses={ignoredEmailAddresses}
-        ignoredSites={ignoredSites}
-        colorSet={colorSet}
-        autoAllow={autoAllow}
-        autoAllowTimeout={autoAllowTimeout}
+        preferences={user.preferences}
         setPreference={setPreference}
         changeEmailIgnoreList={changeEmailIgnoreList}
         changeSiteIgnoreList={changeSiteIgnoreList}
@@ -104,12 +120,7 @@ function Prefs() {
 
 function AlertContent({
   show,
-  blockedRank,
-  ignoredEmailAddresses,
-  ignoredSites,
-  colorSet,
-  autoAllow,
-  autoAllowTimeout,
+  preferences,
   setPreference,
   changeEmailIgnoreList,
   changeSiteIgnoreList
@@ -117,6 +128,15 @@ function AlertContent({
   if (!show) {
     return null;
   }
+
+  const {
+    blockedRank = 'A',
+    ignoredEmailAddresses = [],
+    ignoredSites = [],
+    colorSet = 'normal',
+    autoAllow = true,
+    autoAllowTimeout = 10
+  } = preferences;
 
   return (
     <>
@@ -256,7 +276,7 @@ function IgnoreForm({ name, type = 'text', onSubmit }) {
   );
 }
 
-const IgnoredList = React.memo(function IgnoredList({ type, items, onRemove }) {
+const IgnoredList = React.memo(function IgnoredList({ items, onRemove }) {
   const [removing, setRemoving] = useState(false);
 
   const remove = useCallback(

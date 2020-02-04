@@ -4,7 +4,7 @@ import browser from 'browser';
 export const ConnectContext = createContext(null);
 
 const ConnectProvider = ({ children }) => {
-  const [state, set] = useState({ domain: null, rank: null });
+  const [, set] = useState({ domain: null, rank: null });
   useEffect(() => {
     var port = browser.extension.connect({
       name: 'Sample Communication'

@@ -4,13 +4,21 @@
   @extend .section;
 }
 
+.example-img {
+  width: 86%;
+  margin: 0;
+}
+
 .toolbar-img {
-  width: 250px;
-  margin: 0 0 1em 35px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.55);
+  @extend .example-img;
+  width: 100%;
+  margin-top: -40px;
 }
 
 .popup-img {
-  width: 450px;
-  margin: 0;
+  @extend .example-img;
+}
+
+.gmail-img {
+  @extend .example-img;
 }

@@ -1,4 +1,5 @@
-import browser from 'browser';
+import './menus';
+
 import {
   addIgnoreEmail,
   addIgnoreSite,
@@ -6,7 +7,13 @@ import {
   addSignupBlockedRequest,
   getDomainScore
 } from './scores';
+
+import browser from 'browser';
+import { getAddressScores } from './addresses';
 import logger from '../utils/logger';
+import { respondToMessage } from 'browser/messages';
+
+const popupUrl = browser.runtime.getURL('/popup.html');
 
 let currentPage = {
   rank: null,
@@ -36,7 +43,7 @@ browser.runtime.onInstalled.addListener(details => {
   }
 });
 
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action == 'signup-allowed') {
     return addSignupAllowedRequest(currentPage.domain);
   }
@@ -44,7 +51,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return addSignupBlockedRequest(currentPage.domain);
   }
   if (request.action === 'get-current-rank') {
-    return sendResponse(currentPage);
+    return respondToMessage(sendResponse, currentPage);
   }
   if (request.action === 'ignore-email') {
     const emails = request.data;
@@ -55,7 +62,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return addIgnoreSite(domain);
   }
   if (request.action === 'get-current-url') {
-    return sendResponse(currentPage.url);
+    return respondToMessage(sendResponse, currentPage.url);
+  }
+  if (request.action === 'fetch-scores') {
+    const scoresIter = getAddressScores(request.data);
+    let nextScores = await scoresIter.next();
+    while (!nextScores.done) {
+      browser.tabs.sendMessage(sender.tab.id, {
+        action: 'fetched-scores',
+        data: { scores: nextScores.value, emails: request.data }
+      });
+      nextScores = await scoresIter.next();
+    }
   }
   if (request.action === 'log') {
     if (sender.id === browser.runtime.id) {
@@ -71,10 +89,15 @@ async function onPageChange(url) {
     url
   };
   browser.browserAction.setBadgeText({ text: '' });
-  if (!/http(s)?:\/\//.test(url)) {
+  if (url.includes('mail.google.com')) {
+    browser.browserAction.disable();
+    browser.browserAction.setPopup({ popup: '' });
+  } else if (!/http(s)?:\/\//.test(url)) {
     browser.browserAction.disable();
   } else {
     browser.browserAction.enable();
+
+    browser.browserAction.setPopup({ popup: popupUrl });
     try {
       logger('fetching score');
       const domainScore = await getDomainScore(url);

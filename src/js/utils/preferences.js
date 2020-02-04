@@ -12,6 +12,7 @@ mutation User($preferences: Preferences!) {
       blockedRank
       autoAllow
       autoAllowTimeout
+      gmailEnabled
     }
   }
 }
@@ -21,9 +22,6 @@ mutation User($preferences: Preferences!) {
 export async function updateUserPreferences(preferences) {
   console.log('[user]: saving user preferences', preferences);
   const options = { variables: { preferences } };
-  const { updateUserPreferences } = await graphqlRequest(updateGql, options);
-  if (!updateUserPreferences) {
-    throw new Error('failed to update preferences');
-  }
-  return updateUserPreferences;
+  const response = await graphqlRequest(updateGql, options);
+  return response.updateUserPreferences;
 }

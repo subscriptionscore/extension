@@ -3,7 +3,7 @@
 TARGET=$1;
 BUILD_CHROME=0;
 BUILD_FF=0;
-webpack=node_modules/webpack-cli/bin/cli.js 
+webpack=node_modules/webpack-cli/bin/cli.js
 
 if [ -z $TARGET ]; then
   echo "Building all targets.";
@@ -11,11 +11,11 @@ if [ -z $TARGET ]; then
   BUILD_FF=1;
 fi;
 
-case "${TARGET[@]}" in  *"chrome"*) 
+case "${TARGET[@]}" in  *"chrome"*)
   BUILD_CHROME=1;
 esac
 
-case "${TARGET[@]}" in  *"firefox"*) 
+case "${TARGET[@]}" in  *"firefox"*)
   BUILD_FF=1;
 esac
 

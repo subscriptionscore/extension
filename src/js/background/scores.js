@@ -1,4 +1,4 @@
-import { get, put } from '../utils/cache';
+import { getDomainScore as get, putDomainScore as put } from '../utils/cache';
 import { getItem, pushPreference } from '../utils/storage';
 
 import { graphqlRequest } from '../utils/request';

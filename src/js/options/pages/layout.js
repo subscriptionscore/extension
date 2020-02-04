@@ -48,7 +48,7 @@ const NAV_ITEMS = [
 const Options = () => {
   const [page, setPage] = useState(NAV_ITEMS[0].value);
   const [params, setParams] = useState({});
-  const [{ user, loaded }] = useUser();
+  const [{ user }] = useUser();
   const { licenceKey, features } = user;
 
   useEffect(() => {
