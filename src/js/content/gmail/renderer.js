@@ -1,3 +1,5 @@
+// Creates and inserts Gmail labels into the DOM
+
 import styles from './gmail.module.scss';
 
 // eslint-disable-next-line

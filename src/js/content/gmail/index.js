@@ -1,3 +1,6 @@
+// Code injected into Gmail tabs
+// Handles the inserting of scores into the
+// Gmail UI.
 import {
   addPageChangeListener,
   getEmailAddressesOnPage,
