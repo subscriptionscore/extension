@@ -11,6 +11,7 @@ import browser from 'browser';
 //
 import digest from '../utils/digest';
 import { getPreference } from '../utils/storage';
+import isExcludedDomain from '../utils/is-excluded-domain';
 import logger from '../utils/logger';
 
 const onloadScriptPath = browser.runtime.getURL('/onload.bundle.js');
@@ -108,7 +109,7 @@ async function injectScripts({ ignoredEmailAddresses }) {
 (async () => {
   // if user has not enabled this functionality then bail out here
   const alertOnSubmit = await getPreference('alertOnSubmit');
-  if (!alertOnSubmit) {
+  if (!alertOnSubmit || isExcludedDomain(window.location.href)) {
     return;
   }
 
