@@ -30,7 +30,7 @@ export function injectModal({
   // handle messages passed up from the modal iframe
   const onMessage = event => {
     let remove = false;
-    if (!$frame || $frame.contentWindow) {
+    if (!$frame || !$frame.contentWindow) {
       return;
     }
     if (event.data.action === 'loaded') {
