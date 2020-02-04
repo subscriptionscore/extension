@@ -1,6 +1,6 @@
 {
   "name": "subscriptionscore-extension",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:squarecat/subscriptionscore-extension.git",
