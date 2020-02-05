@@ -152,8 +152,11 @@ module.exports = {
   ],
   plugins: [
     ...(isDevelopment ? [] : prodPlugins),
-    // expose and write the allowed env vars on the compiled bundle
-    new webpack.EnvironmentPlugin(['NODE_ENV', 'GRAPHQL_URL', 'REFERRAL_URL']),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.GRAPHQL_URL': JSON.stringify(process.env.GRAPHQL_URL),
+      'process.env.REFERRAL_URL': JSON.stringify(process.env.REFERRAL_URL)
+    }),
     new Dotenv(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'popup.html'),

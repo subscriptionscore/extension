@@ -20,9 +20,15 @@ jobs:
         run: yarn
       - name: Build
         env:
+          NODE_ENV: production
           GRAPHQL_URL: https://api.leavemealone.app/graphql
           REFERRAL_URL: https://subscriptionscore.com/r/
         run: ./scripts/build.sh
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: releases
+          path: releases
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

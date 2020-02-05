@@ -5,6 +5,10 @@ BUILD_CHROME=0;
 BUILD_FF=0;
 webpack=node_modules/webpack-cli/bin/cli.js
 
+echo "NODE_ENV: $NODE_ENV"
+echo "REFERRAL_URL: $REFERRAL_URL";
+echo "GRAPHQL_URL: $GRAPHQL_URL";
+
 if [ -z $TARGET ]; then
   echo "Building all targets.";
   BUILD_CHROME=1;
