@@ -24,9 +24,19 @@ export default function useCountdown(done) {
     if (!timer.current.started || timer.current.paused) return;
     if (timeLeft <= 0) {
       done();
+    } else {
+      timer.current.timeLeft = timeLeft;
+      timer.current.timeout = setTimeout(
+        () => setTimeLeft(timeLeft - 100),
+        100
+      );
     }
-    timer.current.timeLeft = timeLeft;
-    timer.current.timeout = setTimeout(() => setTimeLeft(timeLeft - 100), 100);
+
+    return () => {
+      // current is not an element, so eslint warning is not valid here
+      // eslint-disable-next-line
+      clearTimeout(timer.current.timeout);
+    };
   }, [timeLeft, done]);
 
   return { start, pause, resume };

@@ -1,8 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
 
-const Dotenv = require('dotenv-webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`
+});
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
@@ -157,7 +159,6 @@ module.exports = {
       'process.env.GRAPHQL_URL': JSON.stringify(process.env.GRAPHQL_URL),
       'process.env.REFERRAL_URL': JSON.stringify(process.env.REFERRAL_URL)
     }),
-    new Dotenv(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'popup.html'),
       filename: 'popup.html',
