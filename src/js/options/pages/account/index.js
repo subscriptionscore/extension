@@ -62,7 +62,7 @@ const AccountPage = ({ showWelcome, onSetPage }) => {
         </div>
       </>
     );
-  }, [showWelcome]);
+  }, [onSetPage, showWelcome]);
   return content;
 };
 

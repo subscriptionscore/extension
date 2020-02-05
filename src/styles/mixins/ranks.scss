@@ -1,3 +1,4 @@
+$unknown-color: rgb(241, 239, 239);
 $normal-scale: (
   F: #da5d56,
   E: #f6a37c,
@@ -31,10 +32,44 @@ $colorblind-rating-scale: (
 );
 
 @function rankColor($rank, $colorblind: false) {
+  @if $rank == 'unknown' {
+    @return $unknown-color;
+  }
   @if $colorblind {
     @return map-get($colorblind-scale, $rank);
   }
   @return map-get($normal-scale, $rank);
+}
+
+@function rankFontColor($rank, $colorblind: false) {
+  $scale: $normal-scale;
+
+  @if $colorblind {
+    @return black;
+  }
+
+  @if $rank == 'A+' {
+    @return lighten(map-get($scale, 'A'), 75%);
+  }
+  @if $rank == 'A' {
+    @return darken(map-get($scale, 'A'), 50%);
+  }
+  @if $rank == 'B' {
+    @return darken(map-get($scale, 'B'), 65%);
+  }
+  @if $rank == 'C' {
+    @return darken(map-get($scale, 'C'), 75%);
+  }
+  @if $rank == 'D' {
+    @return darken(map-get($scale, 'D'), 75%);
+  }
+  @if $rank == 'E' {
+    @return darken(map-get($scale, 'E'), 55%);
+  }
+  @if $rank == 'F' {
+    @return white;
+  }
+  @return black;
 }
 
 @function ratingColor($rating, $colorblind: false) {
@@ -118,7 +153,7 @@ $colorblind-rating-scale: (
     }
     &[data-rank='unknown'] {
       opacity: 0.25;
-      background-color: rgb(241, 239, 239);
+      background-color: $unknown-color;
       &:after {
         content: '-';
       }

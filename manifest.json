@@ -1,7 +1,7 @@
 {
   "name": "Subscription Score",
   "description": "Never regret subscribing to a mailing list again",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "background": {
     "page": "background.html"
   },
@@ -10,17 +10,31 @@
     "default_icon": "assets/logo.png"
   },
   "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "64": "assets/icon-64.png",
     "128": "assets/icon.png"
   },
-  "web_accessible_resources": ["frame.html", "frame.bundle.js", "frame.css"],
-  "permissions": ["<all_urls>", "tabs", "storage"],
+  "web_accessible_resources": [
+    "onload.bundle.js",
+    "frame.html",
+    "frame.bundle.js",
+    "frame.css"
+  ],
+  "permissions": ["tabs", "storage", "contextMenus"],
+  "optional_permissions": ["<all_urls>"],
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [
     {
+      "matches": ["https://mail.google.com/*/*"],
+      "js": ["/gmail.bundle.js"],
+      "run_at": "document_idle"
+    },
+    {
       "matches": ["<all_urls>"],
       "js": ["/content.bundle.js"],
-      "run_at": "document_idle"
+      "run_at": "document_start"
     }
   ]
 }

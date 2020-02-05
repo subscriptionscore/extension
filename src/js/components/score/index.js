@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from '../../utils/classnames';
 import styles from './score.module.scss';
 
 const Score = ({ emailScore, colorblind = false }) => {
@@ -12,7 +11,7 @@ const Score = ({ emailScore, colorblind = false }) => {
 
 const Content = ({
   frequencyPerWeek = 0,
-  unsubscribeRate = 0,
+  unsubscribeAvg = 0,
   unsubscribeDifficulty = 0,
   contentQuality = 1,
   colorblind = false
@@ -20,7 +19,7 @@ const Content = ({
   return (
     <div data-colorblind={colorblind}>
       <div className={styles.scoreItem}>
-        <UnsubRate unsubscribeRate={unsubscribeRate} />
+        <UnsubRate unsubscribeAvg={unsubscribeAvg} />
       </div>
       <div className={styles.scoreItem}>
         <Frequency frequencyPerWeek={frequencyPerWeek} />
@@ -58,29 +57,26 @@ const UnsubDifficulty = ({ unsubscribeDifficulty }) => {
   );
 };
 
-const UnsubRate = ({ unsubscribeRate }) => {
-  let percentageLabel;
-  let percentage = unsubscribeRate * 100;
-  if (percentage < 1) {
-    percentageLabel = '<1';
-  } else {
-    percentageLabel = Math.floor(percentage);
-  }
+const UnsubRate = ({ unsubscribeAvg }) => {
+  let label;
   let rank;
-  if (percentage < 10) {
+  if (unsubscribeAvg === 1) {
+    label = 'High';
     rank = 'low';
-  } else if (percentage < 50) {
+  } else if (unsubscribeAvg === 0) {
+    label = 'Average';
     rank = 'medium';
   } else {
+    label = 'Low';
     rank = 'high';
   }
 
   return (
     <>
       <span data-rating={rank} className={styles.value}>
-        {percentageLabel}%
+        {label}
       </span>
-      <span className={styles.desc}>of people unsubscribe</span>
+      <span className={styles.desc}>unsubscribe rate</span>
     </>
   );
 };

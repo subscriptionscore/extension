@@ -23,6 +23,7 @@ jobs:
         env:
           GRAPHQL_URL: https://api.leavemealone.app/graphql
           REFERRAL_URL: https://subscriptionscore.com/r/
+          INBOX_SDK_KEY: sdk_Sub-Score_b068febf04
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

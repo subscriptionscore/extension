@@ -1,5 +1,6 @@
 @import '../../../styles/mixins/themes.scss';
 @import '../../../styles/common/colors.scss';
+@import '../../components/button/button.module.scss';
 
 .container {
   padding: 20px 20px 4px 2px;
@@ -14,6 +15,10 @@
     border: 1px solid theme('inputBorder');
     color: theme('textColor');
     background-color: theme('backgroundColor');
+  }
+
+  &:hover .progress-bar {
+    animation-play-state: paused;
   }
 }
 
@@ -63,5 +68,40 @@
 
   li:first-child a {
     margin-left: 0;
+  }
+}
+
+.continue-btn {
+  @extend .btn;
+  overflow: hidden;
+}
+
+.progress-bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  animation-name: progressAnimation;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+
+  @include themify() {
+    background-color: darken(theme('buttonBackground'), 5%);
+  }
+}
+
+.progress-text {
+  z-index: 2;
+}
+
+@keyframes progressAnimation {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
   }
 }

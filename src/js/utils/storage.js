@@ -1,5 +1,25 @@
 import { getItem, setItem } from 'browser/storage';
-export { getItem, setItem, getItems, onStorageChange } from 'browser/storage';
+
+import logger from './logger';
+
+export {
+  getItem,
+  setItem,
+  getItems,
+  onStorageChange,
+  removeOnStorageChange
+} from 'browser/storage';
+
+export async function setPreference(pref, value) {
+  const preferences = await getItem('preferences');
+  const newPrefs = {
+    ...preferences,
+    [pref]: value
+  };
+  logger('setting pref', pref, value);
+  await setItem(newPrefs);
+  return newPrefs;
+}
 
 export async function pushPreference(pref, value) {
   const newValues = value.length ? value : [value];
@@ -12,7 +32,7 @@ export async function pushPreference(pref, value) {
       [pref]: newArr
     }
   };
-  console.log('[subscriptionscore]: updating prefs', newPrefs);
+  logger('updating prefs', newPrefs);
   return setItem(newPrefs);
 }
 

@@ -32,6 +32,14 @@ const prodPlugins = [
 
 const entrypoints = [
   {
+    name: 'onload',
+    path: path.join(__dirname, 'src', 'js', 'content', 'onload.js')
+  },
+  {
+    name: 'frame',
+    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+  },
+  {
     name: 'content',
     path: path.join(__dirname, 'src', 'js', 'content', 'index.js')
   },
@@ -48,15 +56,15 @@ const entrypoints = [
     path: path.join(__dirname, 'src', 'js', 'background', 'index.js')
   },
   {
-    name: 'frame',
-    path: path.join(__dirname, 'src', 'js', 'content', 'frame', 'index.js')
+    name: 'gmail',
+    path: path.join(__dirname, 'src', 'js', 'content', 'gmail', 'index.js')
   }
 ];
 
 const entry = entrypoints.reduce(
   (out, { name, path }) => ({
     ...out,
-    [name]: ['babel-polyfill', path]
+    [name]: name.startsWith('gmail') ? [path] : ['babel-polyfill', path]
   }),
   {}
 );
@@ -65,6 +73,14 @@ module.exports = {
   isDevelopment: isDevelopment,
   entry,
   mode: process.env.NODE_ENV || 'development',
+  devtool:
+    process.env.NODE_ENV === 'production' ? null : 'cheap-module-source-map',
+  optimization: {
+    minimize: false
+  },
+  node: {
+    global: false
+  },
   module: {
     rules: [
       {
@@ -128,6 +144,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.scss']
   },
+  copyFiles: [
+    {
+      from: 'assets',
+      to: 'assets'
+    }
+  ],
   plugins: [
     ...(isDevelopment ? [] : prodPlugins),
     // expose and write the allowed env vars on the compiled bundle
@@ -158,6 +180,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].[hash].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+    }),
+    // Placeholder for global used in any node_modules
+    new webpack.DefinePlugin({
+      global: 'window'
     })
   ]
 };

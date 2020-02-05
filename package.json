@@ -1,12 +1,13 @@
 {
   "name": "subscriptionscore-extension",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "private": true,
   "main": "index.js",
   "repository": "git@github.com:squarecat/subscriptionscore-extension.git",
   "author": "James Ivings <james@squarecat.io>",
   "license": "MIT",
   "scripts": {
+    "lint": "eslint ./src/js",
     "build": "./scripts/build.sh",
     "build:dev": "./scripts/build-dev.sh",
     "verify": "npx lockfile-lint --path yarn.lock --type yarn --validate-https --allowed-hosts yarnpkg.org registry.yarnpkg.com"
@@ -30,6 +31,7 @@
     "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "5.1.1",
+    "crx3": "^1.1.2",
     "css-loader": "^3.2.1",
     "dotenv-webpack": "^1.7.0",
     "eslint": "^6.7.2",

@@ -1,4 +1,9 @@
-import { getItems, setItem } from '../utils/storage';
+import {
+  getItems,
+  onStorageChange,
+  removeOnStorageChange,
+  setItem
+} from '../utils/storage';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 function useStorage() {
@@ -7,6 +12,33 @@ function useStorage() {
     value: {},
     error: null
   });
+
+  const handleChange = useCallback(
+    v => {
+      let newState = state.value;
+      if (v.preferences) {
+        newState = {
+          ...newState,
+          preferences: v.preferences.newValue
+        };
+      }
+      if (v.licenceKey) {
+        newState = {
+          ...newState,
+          licenceKey: v.licenceKey.newValue
+        };
+      }
+      setState({ value: newState });
+    },
+    [state.value]
+  );
+
+  useEffect(() => {
+    onStorageChange(handleChange);
+    return function unmount() {
+      return removeOnStorageChange(handleChange);
+    };
+  }, [handleChange]);
 
   useEffect(() => {
     setState({ loading: true });

@@ -1,0 +1,74 @@
+@import '../../../styles/mixins/ranks.scss';
+
+$ranks: ('unknown', 'F', 'E', 'D', 'C', 'B', 'A', 'A+');
+
+.icon {
+  display: inline-flex !important;
+  margin: 0 !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 3px;
+  align-items: center;
+  justify-content: center;
+  font-weight: bolder;
+  margin: 0 6px 0 0 !important;
+
+  &:after {
+    position: absolute;
+  }
+}
+
+:global(.inboxsdk__thread_row_label .inboxsdk__button_icon + .au) {
+  width: 12px;
+}
+
+:global(.inboxsdk__thread_row_label .inboxsdk__button_icon + .au .av) {
+  display: none;
+}
+
+@each $rank in $ranks {
+  [data-rank='#{$rank}'] {
+    @if ($rank == 'unknown') {
+      opacity: 0.25;
+    }
+    background-color: rankColor($rank);
+    [data-theme='colorblind'] & {
+      background-color: rankColor($rank, $colorblind: true);
+    }
+    &:after {
+      color: rankFontColor($rank);
+      [data-theme='colorblind'] & {
+        color: rankFontColor($rank, $colorblind: true);
+      }
+      content: $rank;
+      @if ($rank == 'unknown') {
+        content: '-';
+      }
+    }
+  }
+}
+
+.numeric {
+  width: auto;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.score-tooltip {
+  width: 300px;
+  font-size: 14px;
+  padding: 10px 5px;
+
+  max-width: calc(100vw - 200px);
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.scores {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

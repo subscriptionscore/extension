@@ -1,4 +1,5 @@
-import browser from 'browser';
+import './menus';
+
 import {
   addIgnoreEmail,
   addIgnoreSite,
@@ -6,6 +7,13 @@ import {
   addSignupBlockedRequest,
   getDomainScore
 } from './scores';
+
+import browser from 'browser';
+import { getAddressScores } from './addresses';
+import logger from '../utils/logger';
+import { respondToMessage } from 'browser/messages';
+
+const popupUrl = browser.runtime.getURL('/popup.html');
 
 let currentPage = {
   rank: null,
@@ -35,7 +43,7 @@ browser.runtime.onInstalled.addListener(details => {
   }
 });
 
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action == 'signup-allowed') {
     return addSignupAllowedRequest(currentPage.domain);
   }
@@ -43,7 +51,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return addSignupBlockedRequest(currentPage.domain);
   }
   if (request.action === 'get-current-rank') {
-    return sendResponse(currentPage);
+    return respondToMessage(sendResponse, currentPage);
   }
   if (request.action === 'ignore-email') {
     const emails = request.data;
@@ -54,42 +62,44 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return addIgnoreSite(domain);
   }
   if (request.action === 'get-current-url') {
-    return sendResponse(currentPage.url);
+    return respondToMessage(sendResponse, currentPage.url);
+  }
+  if (request.action === 'fetch-scores') {
+    const scoresIter = getAddressScores(request.data);
+    let nextScores = await scoresIter.next();
+    while (!nextScores.done) {
+      browser.tabs.sendMessage(sender.tab.id, {
+        action: 'fetched-scores',
+        data: { scores: nextScores.value, emails: request.data }
+      });
+      nextScores = await scoresIter.next();
+    }
   }
   if (request.action === 'log') {
     if (sender.id === browser.runtime.id) {
-      return console.log(`[subscriptionscore]:`, request.data);
+      return logger(request.data);
     }
   }
 });
 
-// FIXME, inject script here would be better because then
-// we would only inject if the user has enabled blocking
-async function injectScript() {
-  // browser.contentScripts.register({
-  //   js: [
-  //     {
-  //       file: '/content.bundle.js'
-  //     }
-  //   ],
-  //   matches: ['<all_urls>'],
-  //   runAt: 'document_idle'
-  // });
-}
-
 // call when the page changes and we need to
 // fetch a new rank for the current url
-async function onPageChange(url, { inject = false } = {}) {
+async function onPageChange(url) {
   currentPage = {
     url
   };
   browser.browserAction.setBadgeText({ text: '' });
-  if (!/http(s)?:\/\//.test(url)) {
+  if (url.includes('mail.google.com')) {
+    browser.browserAction.disable();
+    browser.browserAction.setPopup({ popup: '' });
+  } else if (!/http(s)?:\/\//.test(url)) {
     browser.browserAction.disable();
   } else {
     browser.browserAction.enable();
+
+    browser.browserAction.setPopup({ popup: popupUrl });
     try {
-      console.log('[subscriptionscore]: fetching score');
+      logger('fetching score');
       const domainScore = await getDomainScore(url);
       if (domainScore) {
         const { rank, domain } = domainScore;
@@ -101,9 +111,6 @@ async function onPageChange(url, { inject = false } = {}) {
         if (rank) {
           browser.browserAction.setBadgeText({ text: rank });
         }
-      }
-      if (inject) {
-        injectScript();
       }
     } catch (err) {
       console.error(err);

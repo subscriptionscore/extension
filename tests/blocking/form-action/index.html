@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Form 1 - Submit Action</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <h2>Form with Submit Action</h2>
+    <form name="submit-action-form" method="get" action="/submit.html">
+      <label>
+        <span>Email:</span>
+        <input
+          name="email"
+          required
+          type="text"
+          value="test@subscriptionscore.com"
+          autocomplete="username"
+        />
+      </label>
+      <label>
+        <span>Password:</span>
+        <input name="password" type="password" autocomplete="new-password" />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

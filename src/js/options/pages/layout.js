@@ -7,6 +7,7 @@ import Emails from './emails';
 import Feedback from './feedback';
 import Help from './help';
 import Preferences from './preferences';
+import { TextLink } from '../../components/text';
 import { VERSION_NAME } from '../../constants';
 import cx from '../../utils/classnames';
 import logo from '../../../../assets/logo.png';
@@ -48,7 +49,7 @@ const NAV_ITEMS = [
 const Options = () => {
   const [page, setPage] = useState(NAV_ITEMS[0].value);
   const [params, setParams] = useState({});
-  const [{ user, loaded }] = useUser();
+  const [{ user }] = useUser();
   const { licenceKey, features } = user;
 
   useEffect(() => {
@@ -127,6 +128,18 @@ const Options = () => {
           </a>
 
           <span className={styles.version}>{VERSION_NAME}</span>
+          <span className={styles.metaLinks}>
+            <span className={styles.metaLink}>
+              <TextLink href="https://subscriptionscore.com/privacy?ref=extension">
+                Privacy
+              </TextLink>
+            </span>
+            <span className={styles.metaLink}>
+              <TextLink href="https://subscriptionscore.com/terms?ref=extension">
+                Terms
+              </TextLink>
+            </span>
+          </span>
         </div>
       </div>
       <div className={styles.content}>{content}</div>

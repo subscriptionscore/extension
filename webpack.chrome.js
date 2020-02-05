@@ -8,10 +8,7 @@ const commonOptions = require('./webpack.config');
 
 const options = {
   mode: commonOptions.mode,
-  optimization: {
-    // We do not want to minimize our code.
-    minimize: false
-  },
+  optimization: commonOptions.optimization,
   entry: commonOptions.entry,
   output: {
     path: path.join(__dirname, 'build/chrome'),
@@ -29,6 +26,7 @@ const options = {
   plugins: [
     ...commonOptions.plugins,
     new CopyWebpackPlugin([
+      ...commonOptions.copyFiles,
       {
         from: 'src/manifest.chrome.json',
         to: 'manifest.json',
@@ -52,10 +50,6 @@ const options = {
             })
           );
         }
-      },
-      {
-        from: 'assets',
-        to: 'assets'
       }
     ]),
     ...(commonOptions.isDevelopment
