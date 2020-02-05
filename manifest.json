@@ -29,6 +29,7 @@
     {
       "matches": ["https://mail.google.com/*/*"],
       "js": ["/gmail.bundle.js"],
+      "css": ["/gmail.bundle.css"],
       "run_at": "document_idle"
     },
     {

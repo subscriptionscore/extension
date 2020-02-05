@@ -181,8 +181,8 @@ module.exports = {
     new WriteFilePlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({
-      filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-      chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css'
+      filename: isDevelopment ? '[name].css' : '[name].bundle.css',
+      chunkFilename: isDevelopment ? '[id].css' : '[id].bundle.css'
     }),
     // Placeholder for global used in any node_modules
     new webpack.DefinePlugin({
