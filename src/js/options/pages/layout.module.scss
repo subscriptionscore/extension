@@ -119,3 +119,12 @@
   margin-top: 0.25em;
   font-weight: 600px;
 }
+
+.meta-links {
+  display: flex;
+}
+.meta-link {
+  display: inline-block;
+  margin-top: 5px;
+  margin-right: 10px;
+}
