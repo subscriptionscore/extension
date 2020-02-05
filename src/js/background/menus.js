@@ -16,7 +16,7 @@ import { updateUserPreferences } from '../utils/preferences';
     id: 'show-gmail-ranks',
     type: 'checkbox',
     title: 'Show ranks in Gmail',
-    contexts: ['all'],
+    contexts: ['browser_action'],
     checked: gmailEnabled,
     async onclick({ checked }) {
       const prefs = await setPreference('gmailEnabled', checked);
@@ -27,11 +27,27 @@ import { updateUserPreferences } from '../utils/preferences';
     id: 'show-alerts',
     type: 'checkbox',
     title: 'Show form submit alerts',
-    contexts: ['all'],
+    contexts: ['browser_action'],
     checked: alertOnSubmit,
     async onclick({ checked }) {
-      const prefs = await setPreference('alertOnSubmit', checked);
-      updateUserPreferences(prefs);
+      if (checked) {
+        browser.permissions.request(
+          {
+            permissions: [],
+            origins: ['<all_urls>']
+          },
+          async granted => {
+            // The callback argument will be true if the user granted the permissions.
+            if (granted) {
+              const prefs = await setPreference('alertOnSubmit', checked);
+              updateUserPreferences(prefs);
+            }
+          }
+        );
+      } else {
+        const prefs = await setPreference('alertOnSubmit', checked);
+        updateUserPreferences(prefs);
+      }
     }
   });
 })();
