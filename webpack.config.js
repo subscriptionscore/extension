@@ -66,7 +66,8 @@ const entrypoints = [
 const entry = entrypoints.reduce(
   (out, { name, path }) => ({
     ...out,
-    [name]: name.startsWith('gmail') ? [path] : ['babel-polyfill', path]
+    [name]:
+      name === 'gmail' || name === 'onload' ? [path] : ['babel-polyfill', path]
   }),
   {}
 );
@@ -108,7 +109,7 @@ module.exports = {
       {
         test: /\.module\.s[ac]ss$/,
         loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
