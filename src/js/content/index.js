@@ -44,38 +44,31 @@ function injectPatchScript() {
  * Subscription Score patch script
  * More info: https://github.com/subscriptionscore/extension
 */
-window.__subscriptionscore_is_active = true;
 EventTarget.prototype._addEventListener = EventTarget.prototype.addEventListener;
-EventTarget.prototype.addEventListener = function(type, listener, ...args) {
-  let newListener = listener;
-  if (type === 'submit') {    
+EventTarget.prototype.addEventListener = function patchedAddEventListener(type, listener, ...args) {
+  // This is a patched version of the addEventListener function,
+  // created by your Subscription Score browser extension
+  var newListener = listener;
+  if (type === 'submit') {
     if (typeof listener === 'function') {
       this._onsubmit = listener.bind(this);
     } else if (typeof listener.handleEvent === 'function') {
       this._onsubmit = listener.handleEvent.bind(this);
     }
-    const newListener = function(...args) {
-      if (!window.__subscriptionscore_is_active) {
+    newListener = function subscriptionScoreSubmitHandler(...args) {
+      if (!this.__subscriptionscore_is_patched) {
+        // pass through to the listener attached by the page
         return listener.apply(this, args);
       } else {
-        // do nothing
+        // do nothing, this has been intercepted
+        // by the Subscription Score extension script
       }
     }
   }
-  return EventTarget.prototype._addEventListener.apply(this, [type, listener, ...args]);
+  return EventTarget.prototype._addEventListener.apply(this, [type, newListener, ...args]);
 };`;
   return awaitDomLoaded.then(() => {
     return document.head.prepend($script);
-  });
-}
-
-function injectUnpatchScript() {
-  const $script = document.createElement('script');
-  $script.id = 'subscription-score-unpatch-script';
-  $script.type = 'text/javascript';
-  $script.textContent = `window.__subscriptionscore_is_active=false;`;
-  return awaitDomLoaded.then(() => {
-    return document.body.append($script);
   });
 }
 
@@ -152,8 +145,6 @@ async function injectScripts({ ignoredEmailAddresses }) {
           ignoredEmailAddresses
         })
       );
-    } else {
-      // injectUnpatchScript();
     }
   });
 })();
