@@ -165,13 +165,15 @@ const Popup = ({ emails }) => {
     urlLoading,
     storageLoading,
     storage.preferences,
+    pause,
+    resume,
     url,
     onCancel,
-    onContinue,
     onIgnoreEmail,
     onIgnoreSite,
     openFeedbackPage,
-    openSettingsPage
+    openSettingsPage,
+    onContinue
   ]);
 
   return content;

@@ -1,4 +1,4 @@
-import './menus';
+// import './menus';
 
 import {
   addIgnoreEmail,
