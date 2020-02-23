@@ -139,15 +139,23 @@ function hasCriticalEmailAddress($form, ignoredEmailAddresses) {
 
 function doSubmit($form) {
   $form.removeEventListener('submit', $form._internalSubmit);
+  let doNativeSubmit = true;
+  // create our own submit event in case there is a eventListener
+  // and it returns false or preventDefault is called within it
+  const e = new Event('submit', { cancelable: true, bubbles: true });
   if ($form._onsubmit) {
-    const e = $form._originalEvent;
     $form.onsubmit = $form._onsubmit;
     if (typeof $form.onsubmit === 'function') {
-      return $form.onsubmit(e);
+      let output = $form.onsubmit(e);
+      if (typeof output !== 'boolean') {
+        output = true;
+      }
     }
   }
-  // fallback to default submit action
-  return $form.submit();
+  if (!e.defaultPrevented && doNativeSubmit) {
+    // default submit action
+    return $form.submit();
+  }
 }
 
 function onApproved() {
