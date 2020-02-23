@@ -146,9 +146,11 @@ function doSubmit($form) {
   if ($form._onsubmit) {
     $form.onsubmit = $form._onsubmit;
     if (typeof $form.onsubmit === 'function') {
-      let output = $form.onsubmit(e);
-      if (typeof output !== 'boolean') {
-        output = true;
+      doNativeSubmit = $form.onsubmit(e);
+      // submit doesn't need to return a bool, it just needs
+      // to not be false in order to allow submit
+      if (typeof doNativeSubmit !== 'boolean') {
+        doNativeSubmit = true;
       }
     }
   }
