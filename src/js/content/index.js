@@ -44,6 +44,7 @@ function injectPatchScript() {
  * Subscription Score patch script
  * More info: https://github.com/subscriptionscore/extension
 */
+debugger;
 EventTarget.prototype._addEventListener = EventTarget.prototype.addEventListener;
 EventTarget.prototype.addEventListener = function patchedAddEventListener(type, listener, ...args) {
   // This is a patched version of the addEventListener function,
@@ -67,9 +68,7 @@ EventTarget.prototype.addEventListener = function patchedAddEventListener(type, 
   }
   return EventTarget.prototype._addEventListener.apply(this, [type, newListener, ...args]);
 };`;
-  return awaitDomLoaded.then(() => {
-    return document.head.prepend($script);
-  });
+  document.documentElement.appendChild($script);
 }
 
 let awaitDomLoaded = new Promise(resolve => {
@@ -123,8 +122,8 @@ async function injectScripts({ ignoredEmailAddresses }) {
   if (!alertOnSubmit || isExcludedDomain(window.location.href)) {
     return;
   }
-
   let isPatched = injectPatchScript();
+
   const ignoredSites = await getPreference('ignoredSites');
   const ignoredEmailAddresses = await getPreference('ignoredEmailAddresses');
   const blockedRank = await getPreference('blockedRank');
@@ -140,11 +139,9 @@ async function injectScripts({ ignoredEmailAddresses }) {
 
     if (blockFormSubmit) {
       logger('hijacking form submissions');
-      isPatched.then(() =>
-        injectScripts({
-          ignoredEmailAddresses
-        })
-      );
+      injectScripts({
+        ignoredEmailAddresses
+      });
     }
   });
 })();
