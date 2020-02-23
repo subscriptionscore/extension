@@ -1,3 +1,6 @@
+import logger, { errorLogger } from '../utils/logger';
+
+import digest from '../utils/digest';
 /**
  * This script runs after the DOM has loaded and we have fetched
  * the current scores.
@@ -25,8 +28,6 @@
  * </script>
  */
 import { injectModal } from './modal';
-import logger, { errorLogger } from '../utils/logger';
-import digest from '../utils/digest';
 
 let haltedForm;
 const FORM_DATA_ATTRIBUTE = 'data-ss-approved';
@@ -38,7 +39,7 @@ logger('running content script');
  * that contains an input[type=email] or input[type=password]
  * because this is likely a login or signup form we want to intercept
  */
-async function attachToEmailForms({ framePath, ignoredEmailAddresses }) {
+function attachToEmailForms({ framePath, ignoredEmailAddresses }) {
   logger('loaded');
   const $inputs = document.querySelectorAll(
     'input[type="email"],input[type="password"]'
@@ -50,6 +51,7 @@ async function attachToEmailForms({ framePath, ignoredEmailAddresses }) {
 }
 
 function addSubmitListener($form, ignoredEmailAddresses, framePath) {
+  $form.__subscriptionscore_is_patched = true;
   if ($form.onsubmit) {
     $form._onsubmit = $form.onsubmit;
     $form.onsubmit = () => {
@@ -118,20 +120,23 @@ function onSubmitForm($form, ignoredEmailAddresses, framePath, e) {
   return false;
 }
 
-async function hasCriticalEmailAddress($form, ignoredEmailAddresses) {
+function hasCriticalEmailAddress($form, ignoredEmailAddresses) {
   const formData = new FormData($form);
   for (let item of formData) {
     const [, value] = item;
     if (typeof value === 'undefined' || !value.includes('@')) {
       continue; // definitely not an email
     }
-    const hashedValue = await digest(value);
-    if (!ignoredEmailAddresses.includes(hashedValue)) {
-      return true;
-    }
+    return digest(value).then(hashedValue => {
+      if (!ignoredEmailAddresses.includes(hashedValue)) {
+        return true;
+      }
+      return false;
+    });
   }
-  return false;
+  return Promise.resolve(false);
 }
+
 function doSubmit($form) {
   $form.removeEventListener('submit', $form._internalSubmit);
   if ($form._onsubmit) {
@@ -177,7 +182,7 @@ function getEmailValues($form) {
 /**
  * Lets get started
  */
-(async () => {
+(() => {
   // if the script has already run for some reason then
   // don't run it again
   if (document.currentScript.getAttribute('data-ss-running')) {
@@ -188,6 +193,6 @@ function getEmailValues($form) {
   const { framePath, ignoredEmailAddresses } = JSON.parse(
     document.currentScript.innerText
   );
-  // attach to forms!
+  // attach to forms
   attachToEmailForms({ framePath, ignoredEmailAddresses });
 })();

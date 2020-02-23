@@ -45,16 +45,27 @@ function injectPatchScript() {
  * More info: https://github.com/subscriptionscore/extension
 */
 EventTarget.prototype._addEventListener = EventTarget.prototype.addEventListener;
-EventTarget.prototype.addEventListener = function(type, listener, ...args) {
+EventTarget.prototype.addEventListener = function patchedAddEventListener(type, listener, ...args) {
+  // This is a patched version of the addEventListener function,
+  // created by your Subscription Score browser extension
+  var newListener = listener;
   if (type === 'submit') {
     if (typeof listener === 'function') {
       this._onsubmit = listener.bind(this);
     } else if (typeof listener.handleEvent === 'function') {
       this._onsubmit = listener.handleEvent.bind(this);
     }
-  } else {
-    return EventTarget.prototype._addEventListener.apply(this, [type, listener, ...args]);
+    newListener = function subscriptionScoreSubmitHandler(...args) {
+      if (!this.__subscriptionscore_is_patched) {
+        // pass through to the listener attached by the page
+        return listener.apply(this, args);
+      } else {
+        // do nothing, this has been intercepted
+        // by the Subscription Score extension script
+      }
+    }
   }
+  return EventTarget.prototype._addEventListener.apply(this, [type, newListener, ...args]);
 };`;
   return awaitDomLoaded.then(() => {
     return document.head.prepend($script);
