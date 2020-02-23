@@ -44,7 +44,6 @@ function injectPatchScript() {
  * Subscription Score patch script
  * More info: https://github.com/subscriptionscore/extension
 */
-debugger;
 EventTarget.prototype._addEventListener = EventTarget.prototype.addEventListener;
 EventTarget.prototype.addEventListener = function patchedAddEventListener(type, listener, ...args) {
   // This is a patched version of the addEventListener function,
@@ -56,10 +55,13 @@ EventTarget.prototype.addEventListener = function patchedAddEventListener(type, 
     } else if (typeof listener.handleEvent === 'function') {
       this._onsubmit = listener.handleEvent.bind(this);
     }
-    newListener = function subscriptionScoreSubmitHandler(...args) {
+    newListener = function subscriptionScoreSubmitHandler() {      
       if (!this.__subscriptionscore_is_patched) {
-        // pass through to the listener attached by the page
-        return listener.apply(this, args);
+        const isPatchable = window.__subscriptionscore_patchForm.apply(this, [this, ...arguments]);
+        if (!isPatchable) {
+          // pass through to the listener attached by the page
+          return listener.apply(this, arguments);
+        }
       } else {
         // do nothing, this has been intercepted
         // by the Subscription Score extension script
@@ -122,7 +124,7 @@ async function injectScripts({ ignoredEmailAddresses }) {
   if (!alertOnSubmit || isExcludedDomain(window.location.href)) {
     return;
   }
-  let isPatched = injectPatchScript();
+  injectPatchScript();
 
   const ignoredSites = await getPreference('ignoredSites');
   const ignoredEmailAddresses = await getPreference('ignoredEmailAddresses');
