@@ -9,7 +9,33 @@ import { TextLink } from '../../../components/text';
 import { TwitterIcon } from '../../../components/icons';
 import { shareOnTwitter } from '../../../utils/social';
 import styles from './account.module.scss';
+import useGraphQl from '../../../hooks/use-graphql';
 import { useUser } from '../../../providers/user-provider';
+
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'July',
+  'Aug',
+  'Sept',
+  'Oct',
+  'Nov',
+  'Dec'
+];
+const formatDate = d => {
+  const date = new Date(d);
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  const paddedDay = day < 10 ? `0${day}` : day;
+
+  return `${paddedDay} ${month} ${year}`;
+};
 
 const AccountPage = ({ showWelcome, onSetPage }) => {
   const content = useMemo(() => {
@@ -68,7 +94,7 @@ const AccountPage = ({ showWelcome, onSetPage }) => {
 
 function Referral() {
   const [{ user }, { setSuccess }] = useUser();
-  const { referralCode } = user;
+  const { referralCode, referralCount } = user;
 
   const referralUrl = `https://subscriptionscore.com/r/${referralCode}`;
 
@@ -90,6 +116,18 @@ function Referral() {
         up to Subscription Score.
       </p>
 
+      <p>
+        You have referred{' '}
+        <strong>
+          {referralCount} {referralCount === 1 ? 'person' : 'people'}
+        </strong>
+        {referralCount > 0 ? (
+          <span> - that's {referralCount} months free!</span>
+        ) : (
+          <span>- start sharing your referral link!</span>
+        )}
+      </p>
+
       <InviteForm onSuccess={() => setSuccess(`Invite sent!`)} />
 
       <div className={styles.btnGroup}>
@@ -100,6 +138,61 @@ function Referral() {
       </div>
     </div>
   );
+}
+
+const gql = `
+query ($id: ID!) {
+  getUserPlan(id: $id) {
+    id
+    upcomingInvoiceDate
+    upcomingInvoiceAmount
+  }
+}`;
+function Plan({ userId }) {
+  const options = useMemo(
+    () => ({
+      variables: {
+        id: userId
+      }
+    }),
+    [userId]
+  );
+  const { loading, value, error } = useGraphQl(gql, options);
+
+  const content = useMemo(() => {
+    if (loading) {
+      return <p>Loading...</p>;
+    }
+    if (error) {
+      return (
+        <p>Failed to get plan details, please try again or contact support.</p>
+      );
+    }
+
+    const { upcomingInvoiceDate, upcomingInvoiceAmount } = value.getUserPlan;
+
+    return (
+      <>
+        <p>
+          You will next be billed{' '}
+          <span className={styles.key}>
+            ${(upcomingInvoiceAmount / 100).toFixed(2)}
+          </span>{' '}
+          on the{' '}
+          <span className={styles.key}>{formatDate(upcomingInvoiceDate)}</span>.
+        </p>
+        <p>
+          Please{' '}
+          <TextLink href="mailto:hello@subscriptionscore.com">
+            contact us
+          </TextLink>{' '}
+          to make changes to or cancel your plan.
+        </p>
+      </>
+    );
+  }, [loading, value, error]);
+
+  return content;
 }
 
 function Billing() {
@@ -130,13 +223,7 @@ function Billing() {
             You are subscribed to the{' '}
             <span className={styles.key}>{planName} plan</span>
           </p>
-          <p>
-            Please{' '}
-            <TextLink href="mailto:hello@subscriptionscore.com">
-              contact us
-            </TextLink>{' '}
-            to make changes to or cancel your plan.
-          </p>
+          <Plan userId={user.id} />
         </>
       );
     }
@@ -157,7 +244,7 @@ function Billing() {
         </div>
       </>
     );
-  }, [email, initialized, licenceKey, planName]);
+  }, [email, initialized, licenceKey, planName, user.id]);
 
   return content;
 }
