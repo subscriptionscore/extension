@@ -245,7 +245,6 @@ const UserProvider = ({ children }) => {
 const getGql = `
 query User($licenceKey: ID!) {
   getUserByLicenceKey(licenceKey: $licenceKey) {
-    id
     email
     licenceKey
     planName

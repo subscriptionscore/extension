@@ -141,21 +141,19 @@ function Referral() {
 }
 
 const gql = `
-query ($id: ID!) {
-  getUserPlan(id: $id) {
+query {
+  getUserPlan {
     id
     upcomingInvoiceDate
     upcomingInvoiceAmount
   }
 }`;
-function Plan({ userId }) {
+function Plan() {
   const options = useMemo(
     () => ({
-      variables: {
-        id: userId
-      }
+      variables: {}
     }),
-    [userId]
+    []
   );
   const { loading, value, error } = useGraphQl(gql, options);
 
@@ -223,7 +221,7 @@ function Billing() {
             You are subscribed to the{' '}
             <span className={styles.key}>{planName} plan</span>
           </p>
-          <Plan userId={user.id} />
+          <Plan />
         </>
       );
     }
@@ -244,7 +242,7 @@ function Billing() {
         </div>
       </>
     );
-  }, [email, initialized, licenceKey, planName, user.id]);
+  }, [email, initialized, licenceKey, planName]);
 
   return content;
 }
