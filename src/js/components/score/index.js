@@ -61,13 +61,13 @@ const UnsubRate = ({ unsubscribeAvg }) => {
   let label;
   let rank;
   if (unsubscribeAvg === 1) {
-    label = 'High';
+    label = 'Low';
     rank = 'low';
   } else if (unsubscribeAvg === 0) {
-    label = 'Average';
+    label = 'Avg';
     rank = 'medium';
   } else {
-    label = 'Low';
+    label = 'High';
     rank = 'high';
   }
 
@@ -87,7 +87,7 @@ const Frequency = ({ frequencyPerWeek }) => {
   let frequencyRank;
   if (frequencyPerWeek < 0.25) {
     frequencyValue = '0-1';
-    frequencyDesc = 'email per month';
+    frequencyDesc = 'emails per month';
     frequencyRank = 'low';
   } else if (frequencyPerWeek < 1) {
     frequencyValue = '1';
