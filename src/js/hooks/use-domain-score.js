@@ -1,22 +1,16 @@
-import { useMemo } from 'react';
 import useGraphQl from './use-graphql';
+import { useMemo } from 'react';
 
 const gql = `
 query Search($domain: String!) {
   searchDomain(domain: $domain) {
-    count
     score
     rank
     domain
-    unsubscribeRate
+    unsubscribeAvg
     frequencyPerWeek
     unsubscribeDifficulty
     contentQuality
-    scores {
-        rank
-        score
-        email
-    }
   }
 }
 `;
