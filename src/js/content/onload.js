@@ -32,6 +32,9 @@ import { injectModal } from './modal';
 let haltedForm;
 const FORM_DATA_ATTRIBUTE = 'data-ss-approved';
 
+const { framePath, ignoredEmailAddresses } = JSON.parse(
+  document.currentScript.innerText
+);
 logger('running content script');
 
 /**
@@ -39,18 +42,27 @@ logger('running content script');
  * that contains an input[type=email] or input[type=password]
  * because this is likely a login or signup form we want to intercept
  */
-function attachToEmailForms({ framePath, ignoredEmailAddresses }) {
-  logger('loaded');
+function attachToEmailForms() {
   const $inputs = document.querySelectorAll(
     'input[type="email"],input[type="password"]'
   );
   $inputs.forEach($input => {
     logger(`attached to form ${$input.form.name}`);
-    addSubmitListener($input.form, ignoredEmailAddresses, framePath);
+    addSubmitListener($input.form);
   });
 }
 
-function addSubmitListener($form, ignoredEmailAddresses, framePath) {
+function patchSubmittingForm($form, e) {
+  const isPatchable = $form.querySelector(
+    'input[type="email"],input[type="password"]'
+  );
+  if (isPatchable) {
+    onSubmitForm($form, e);
+  }
+  return isPatchable;
+}
+
+function addSubmitListener($form) {
   $form.__subscriptionscore_is_patched = true;
   if ($form.onsubmit) {
     $form._onsubmit = $form.onsubmit;
@@ -61,12 +73,7 @@ function addSubmitListener($form, ignoredEmailAddresses, framePath) {
     };
   }
   // replace the submit handler with ours...
-  $form._internalSubmit = onSubmitForm.bind(
-    this,
-    $form,
-    ignoredEmailAddresses,
-    framePath
-  );
+  $form._internalSubmit = onSubmitForm.bind(this, $form);
   // ...and add the submit event
   $form._addEventListener('submit', e => $form._internalSubmit(e));
 }
@@ -83,7 +90,7 @@ function addSubmitListener($form, ignoredEmailAddresses, framePath) {
  * @param {String} framePath
  * @param {submit Event} e
  */
-function onSubmitForm($form, ignoredEmailAddresses, framePath, e) {
+function onSubmitForm($form, e) {
   $form._originalEvent = e;
   const previouslyApproved = $form.getAttribute(FORM_DATA_ATTRIBUTE) === 'true';
   if (previouslyApproved) {
@@ -139,15 +146,25 @@ function hasCriticalEmailAddress($form, ignoredEmailAddresses) {
 
 function doSubmit($form) {
   $form.removeEventListener('submit', $form._internalSubmit);
+  let doNativeSubmit = true;
+  // create our own submit event in case there is a eventListener
+  // and it returns false or preventDefault is called within it
+  const e = new Event('submit', { cancelable: true, bubbles: true });
   if ($form._onsubmit) {
-    const e = $form._originalEvent;
     $form.onsubmit = $form._onsubmit;
     if (typeof $form.onsubmit === 'function') {
-      return $form.onsubmit(e);
+      doNativeSubmit = $form.onsubmit(e);
+      // submit doesn't need to return a bool, it just needs
+      // to not be false in order to allow submit
+      if (typeof doNativeSubmit !== 'boolean') {
+        doNativeSubmit = true;
+      }
     }
   }
-  // fallback to default submit action
-  return $form.submit();
+  if (!e.defaultPrevented && doNativeSubmit) {
+    // default submit action
+    return $form.submit();
+  }
 }
 
 function onApproved() {
@@ -190,9 +207,7 @@ function getEmailValues($form) {
   }
   document.currentScript.setAttribute('data-ss-running', true);
   // get the variables passed in from the script content
-  const { framePath, ignoredEmailAddresses } = JSON.parse(
-    document.currentScript.innerText
-  );
   // attach to forms
   attachToEmailForms({ framePath, ignoredEmailAddresses });
+  window.__subscriptionscore_patchForm = patchSubmittingForm;
 })();

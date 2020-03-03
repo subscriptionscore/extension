@@ -55,10 +55,13 @@ EventTarget.prototype.addEventListener = function patchedAddEventListener(type, 
     } else if (typeof listener.handleEvent === 'function') {
       this._onsubmit = listener.handleEvent.bind(this);
     }
-    newListener = function subscriptionScoreSubmitHandler(...args) {
+    newListener = function subscriptionScoreSubmitHandler() {      
       if (!this.__subscriptionscore_is_patched) {
-        // pass through to the listener attached by the page
-        return listener.apply(this, args);
+        const isPatchable = window.__subscriptionscore_patchForm.apply(this, [this, ...arguments]);
+        if (!isPatchable) {
+          // pass through to the listener attached by the page
+          return listener.apply(this, arguments);
+        }
       } else {
         // do nothing, this has been intercepted
         // by the Subscription Score extension script
@@ -67,9 +70,7 @@ EventTarget.prototype.addEventListener = function patchedAddEventListener(type, 
   }
   return EventTarget.prototype._addEventListener.apply(this, [type, newListener, ...args]);
 };`;
-  return awaitDomLoaded.then(() => {
-    return document.head.prepend($script);
-  });
+  document.documentElement.appendChild($script);
 }
 
 let awaitDomLoaded = new Promise(resolve => {
@@ -123,8 +124,8 @@ async function injectScripts({ ignoredEmailAddresses }) {
   if (!alertOnSubmit || isExcludedDomain(window.location.href)) {
     return;
   }
+  injectPatchScript();
 
-  let isPatched = injectPatchScript();
   const ignoredSites = await getPreference('ignoredSites');
   const ignoredEmailAddresses = await getPreference('ignoredEmailAddresses');
   const blockedRank = await getPreference('blockedRank');
@@ -140,11 +141,9 @@ async function injectScripts({ ignoredEmailAddresses }) {
 
     if (blockFormSubmit) {
       logger('hijacking form submissions');
-      isPatched.then(() =>
-        injectScripts({
-          ignoredEmailAddresses
-        })
-      );
+      injectScripts({
+        ignoredEmailAddresses
+      });
     }
   });
 })();
