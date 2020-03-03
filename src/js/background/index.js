@@ -36,7 +36,7 @@ browser.tabs.onActivated.addListener(() => {
 });
 
 browser.runtime.onInstalled.addListener(details => {
-  if (details.reason !== 'update') {
+  if (details.reason === 'install') {
     // first install, launch the settings page
     const url = '/options.html?welcome=true';
     browser.tabs.create({ url });

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Form - Submit Handler</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <h2>Form with Submit Handler</h2>
+    <form id="handlerForm" name="handler-action-form" action="/submit.html">
+      <label>
+        <span>Email:</span>
+        <input
+          name="email"
+          required
+          type="text"
+          value="test@subscriptionscore.com"
+        />
+      </label>
+      <label>
+        <span>Password:</span>
+        <input name="password" type="password" />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
+    <span id="output"></span>
+    <script>
+      window.handlerForm.addEventListener('submit', e => {
+        window.output.innerText = `submitting...`;
+        return true;
+      });
+    </script>
+  </body>
+</html>
