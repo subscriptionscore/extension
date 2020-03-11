@@ -261,6 +261,7 @@ query User($licenceKey: ID!) {
     }
     features
     referralCode
+    referralCount
   }
 }
 `;
